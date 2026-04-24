@@ -78,9 +78,15 @@ impl XcspCallback for PrintingSolver {
     }
 
     // -- Contraintes ---------------------------------------------------------
-    fn on_constraint_all_different(&mut self, c: &XAllDifferent) {
+    fn on_constraint_all_different(&mut self, scope: &[String]) {
         self.nb_constraints += 1;
-        println!("  [AllDiff]  {}", c);
+        println!("  [AllDiff]  {:?}", scope);
+    }
+
+    fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
+
+        self.nb_constraints += 1;
+        println!("  [AllDiff Except]  {:?} with except values: {:?}", scope, except);
     }
     fn on_constraint_extension(&mut self, c: &XExtension) {
         self.nb_constraints += 1;

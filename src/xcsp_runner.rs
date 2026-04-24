@@ -7,6 +7,7 @@
  * Usage :
  *   XcspRunner::run("mon_fichier.xml", &mut mon_callback)?;
  */
+use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
@@ -41,6 +42,8 @@ impl XcspRunner {
             }
         }
 
+
+
         let model = XcspXmlModel::from_path(path)?;
 
         callback.begin_instance(model.get_instance_type());
@@ -68,14 +71,16 @@ impl XcspRunner {
 
         // ── Contraintes ──────────────────────────────────────────────────────
         callback.begin_constraints();
-        let constraints = model.build_constraints(&variables);
-        for c in constraints.iter() {
+        let mut constraints = model.build_constraints(&variables);
+        for  c in constraints.iter_mut() {
             match c {
-                XConstraintType::XAllDifferent(inner) => {
-                    callback.on_constraint_all_different(inner)
+                XConstraintType::XAllDifferent( inner) => {
+                    let scope: Vec<String> = inner.get_scope().iter().map(|(s, _)| s.to_string()).collect();
+                    callback.on_constraint_all_different(&*scope);
                 }
                 XConstraintType::XAllDifferentExcept(inner) => {
-                    callback.on_constraint_all_different_except(inner)
+                    let scope: Vec<String> = inner.get_scope().iter().map(|(s, _)| s.to_string()).collect();
+                    callback.on_constraint_all_different_except(&*scope, &*inner.get_except());
                 }
                 XConstraintType::XAllEqual(inner) => callback.on_constraint_all_equal(inner),
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),

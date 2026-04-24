@@ -71,10 +71,14 @@ pub trait XcspCallback {
     // -------------------------------------------------------------------------
 
     /// Variable entière simple : <var id="x"> 1..10 </var>
-    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) { }
+    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) {
+        panic!("You must implement callbacks for variables");
+    }
 
     /// Tableau de variables : <array id="x[]" size="5"> 0..4 </array>
-    fn on_variable_values(&mut self, id: String, values: &[i32]) { }
+    fn on_variable_values(&mut self, id: String, values: &[i32]) {
+        panic!("You must implement callbacks for variables");
+    }
     fn begin_variable_array(&mut self, name: String) {}
 
     fn end_variable_array(&mut self) {}
@@ -87,10 +91,10 @@ pub trait XcspCallback {
     // -------------------------------------------------------------------------
 
     /// <allDifferent> x y z </allDifferent>
-    fn on_constraint_all_different(&mut self, _c: &XAllDifferent) {}
+    fn on_constraint_all_different(&mut self, scope: &[String]) {}
 
     /// <allDifferent> x y z <except> 0 </except> </allDifferent>
-    fn on_constraint_all_different_except(&mut self, _c: &XAllDifferentExcept) {}
+    fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {}
 
     /// <allEqual> x y z </allEqual>
     fn on_constraint_all_equal(&mut self, _c: &XAllEqual) {}

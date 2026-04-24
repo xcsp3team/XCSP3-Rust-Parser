@@ -44,7 +44,7 @@ pub mod xcsp3_core {
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
-
+    use crate::utils::utils_functions::to_int_list;
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, list_with_bracket_comma_to_values,
     };
@@ -128,8 +128,8 @@ pub mod xcsp3_core {
         }
 
         /// return the except vec of the XAllDifferentExcept constraint
-        pub fn get_except(&self) -> &Vec<XVarVal> {
-            &self.except
+        pub fn get_except(&self) -> Vec<i32> {
+            to_int_list(self.except.clone())
         }
     }
 }

@@ -35,6 +35,8 @@
  * <p>@this_file_name:xcsp3domain
  * </p>
  */
+use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
+use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
 pub mod xcsp3_utils {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
@@ -480,6 +482,27 @@ pub mod xcsp3_utils {
 
         Ok((ret, sz))
     }
+}
+
+
+pub fn to_int_list(the_list: Vec<XVarVal>) -> Vec<i32> {
+    let mut tmp = vec![];
+    for v in the_list {
+        println!(   "{}", v);
+        match v {
+            XVarVal::IntVal(value) => {
+                tmp.push(value)
+            }
+            XVarVal::IntInterval(v1, v2) => {
+                for i in v1..v2 {
+                    tmp.push(i);
+                }
+            }
+            _ => {panic!("Only integers are allowed in an except part of an AllDiferent Constraint")}
+        }
+    }
+    tmp
+
 }
 
 
