@@ -54,13 +54,24 @@ impl XcspCallback for PrintingSolver {
     }
 
     // -- Variables -----------------------------------------------------------
-    fn on_variable_int(&mut self, var: &XVariableType) {
+    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) {
         self.nb_variables += 1;
-        println!("  [INT]   {}", var);
+        println!("  Interval Var     {}: {}..{}", id, minimum, maximum);
     }
+
+    fn on_variable_values(&mut self, id: String, values: &[i32]) {
+        self.nb_variables += 1;
+        print!("  Values Variable   {}: ", id);
+        for v in values {
+            print!("{} ", v)
+        }
+        println!()
+    }
+
     fn begin_variable_array(&mut self, name: String) {
         println!("An array of variables named {}", name);
     }
+
 
     fn end_variable_array(&mut self) {
         println!("Array of variables done");

@@ -53,7 +53,8 @@ pub mod xcsp3_core {
     pub struct XVariableArray {
         pub(crate) id: String,
         sizes: Vec<usize>,
-        domain: XDomainInteger,
+        pub domain: XDomainInteger,
+        pub variables: Vec<String>
     }
 
 
@@ -135,13 +136,24 @@ pub mod xcsp3_core {
             Ok(ret)
         }
 
-
+        pub fn associated_variables(id: &str, sizes: &[usize]) -> Vec<String> {
+            let lower = vec![0; sizes.len()];
+            let upper = sizes.to_vec();
+            let all = get_all_variables_between_lower_and_upper(lower, upper);
+            let mut result = vec![];
+            for current in all {
+                result.push(size_to_string(id, &*current));
+            }
+            result
+        }
         pub fn new(id: &str, sizes: &str, domain: XDomainInteger) -> Result<Self, Xcsp3Error> {
-            match sizes_to_vec(sizes) {
-                Ok((size_vec, sz)) => Ok(XVariableArray {
+            let result = sizes_to_vec(sizes);
+            match result {
+                Ok((size_vec, _)) => Ok(XVariableArray {
                     id: id.to_string(),
-                    sizes: size_vec,
+                    sizes: size_vec.clone(),
                     domain,
+                    variables: Self::associated_variables(id, &size_vec),
                 }),
                 Err(e) => Err(e),
             }

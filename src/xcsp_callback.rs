@@ -71,10 +71,10 @@ pub trait XcspCallback {
     // -------------------------------------------------------------------------
 
     /// Variable entière simple : <var id="x"> 1..10 </var>
-    fn on_variable_int(&mut self, _var: &XVariableType) {}
+    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) { }
 
     /// Tableau de variables : <array id="x[]" size="5"> 0..4 </array>
-
+    fn on_variable_values(&mut self, id: String, values: &[i32]) { }
     fn begin_variable_array(&mut self, name: String) {}
 
     fn end_variable_array(&mut self) {}

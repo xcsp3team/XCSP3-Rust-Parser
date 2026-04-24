@@ -10,6 +10,7 @@
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
+use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::XcspXmlModel;
@@ -21,10 +22,25 @@ impl XcspRunner {
     /// au fur et à mesure du parsing.
     ///
     /// Retourne une erreur si le fichier est introuvable ou mal formé.
+
+
     pub fn run<C: XcspCallback>(
         path: &str,
         callback: &mut C,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        pub fn call_var(id: String, domain: &XDomainInteger, callback: &mut dyn XcspCallback) {
+            if(domain.is_interval()) {
+                callback.on_variable_interval(id, domain.minimum(), domain.maximum());
+            }
+            else {
+                let mut result = vec![];
+                for v in domain.iter() {
+                    result.push(v)
+                }
+                callback.on_variable_values(id, &result)
+            }
+        }
+
         let model = XcspXmlModel::from_path(path)?;
 
         callback.begin_instance(model.get_instance_type());
@@ -33,15 +49,14 @@ impl XcspRunner {
         let variables = model.build_variables();
         for v in variables.iter() {
             match v {
-                XVariableType::XVariableInt(_) => callback.on_variable_int(v),
+                XVariableType::XVariableInt(var) =>  {
+                    call_var(v.get_id(), &var.domain, callback);
+                },
                 XVariableType::XVariableArray(av) => {
                     callback.begin_variable_array(v.get_id());
-
-
-                    /*let all_variables = v.get_all_variables();
-                    for v in all_variables {
-                        println!(v);
-                    }*/
+                    for var_id in av.variables.iter() {
+                        call_var(var_id.clone(), &av.domain, callback);
+                    }
 
                     callback.end_variable_array();
                 },

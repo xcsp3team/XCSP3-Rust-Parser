@@ -1,7 +1,7 @@
 <instance format="XCSP3" type="CSP">
     <variables>
-        <array id="x" size="[60]">0 2 4..10 61..65 77</array>
         <array id="y" size="[6]">0 2</array>
+        <array id="x" size="[3][4]">0 2 4..10 61..65 77</array>
         <array id="z" size="[6]">0..10 14 22..24</array>
         <array id="yy" note="x[i] is the ith value of the series" size="[9]">0..8</array>
         <var id="vv2">0..70</var>
