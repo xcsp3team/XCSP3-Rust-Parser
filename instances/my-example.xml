@@ -264,15 +264,6 @@
             <condition>(eq,k5)</condition>
         </count>
 
-        <mdd>
-            <list>z[1..3]</list>
-            <transitions>
-                (r,0,n1)(r,1,n2)(r,2,n3)
-                (n1,2,n4)(n2,2,n4)(n3,0,n5)
-                (n4,0,t)(n5,0,t)
-            </transitions>
-        </mdd>
-
 
         <group>
             <extension>
@@ -328,6 +319,14 @@
             <start>a</start>
             <final>e d</final>
         </regular>
+        <mdd>
+            <list>z[1..3]</list>
+            <transitions>
+                (r,0,n1)(r,1,n2)(r,2,n3)
+                (n1,2,n4)(n2,2,n4)(n3,0,n5)
+                (n4,0,t)(n5,0,t)
+            </transitions>
+        </mdd>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>

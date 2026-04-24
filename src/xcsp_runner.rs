@@ -101,7 +101,12 @@ impl XcspRunner {
                         inner.transitions(),
                     );
                 }
-                XConstraintType::XMdd(inner) => callback.on_constraint_mdd(inner),
+
+                // MDD Constraint
+                XConstraintType::XMdd(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_mdd(&*scope, inner.transitions());
+                }
                 XConstraintType::XInstantiation(inner) => {
                     callback.on_constraint_instantiation(inner)
                 }

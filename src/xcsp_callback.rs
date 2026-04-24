@@ -133,7 +133,10 @@ pub trait XcspCallback {
     }
 
     /// <mdd> ... </mdd>  (diagramme de décision multi-valué)
-    fn on_constraint_mdd(&mut self, _c: &XMdd) {}
+    fn on_constraint_mdd(&mut self, _scope: &[String], transitions: &Vec<(String, i32, String)>) {
+        println!("c MDD not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <instantiation> ... </instantiation>
     fn on_constraint_instantiation(&mut self, _c: &XInstantiation) {}

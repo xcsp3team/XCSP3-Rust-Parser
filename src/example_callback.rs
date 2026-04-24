@@ -108,16 +108,20 @@ impl XcspCallback for PrintingSolver {
         scope: &[String],
         start: String,
         finals: &[String],
-        _transitions: &[(String, i32, String)],
+        transitions: &[(String, i32, String)],
     ) {
         self.nb_constraints += 1;
         println!(
             "  [Regular]  {:?}. start={}, finals={:?}",
             scope, start, finals
         );
-        println!("           transitions: {:?}", _transitions);
+        println!("           transitions: {:?}", transitions);
     }
 
+    fn on_constraint_mdd(&mut self, scope: &[String], transitions: &Vec<(String, i32, String)>) {
+        println!("  [MDD]  {:?}", scope);
+        println!("           transitions: {:?}", transitions);
+    }
     fn on_constraint_sum(&mut self, c: &XSum) {
         self.nb_constraints += 1;
         println!("  [Sum]      {}", c);

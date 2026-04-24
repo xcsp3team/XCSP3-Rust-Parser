@@ -51,7 +51,6 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     pub struct XMdd<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         transitions: Vec<(String, i32, String)>,
     }
@@ -66,31 +65,6 @@ pub mod xcsp3_core {
             }
             ret.push_str(&format!("transitions = {:?}", self.transitions));
             write!(f, "XMdd: list =  {}", ret)
-        }
-    }
-
-    impl XConstraintTrait for XMdd<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
     }
 
@@ -109,9 +83,6 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn get_transitions(&self) -> &Vec<(String, i32, String)> {
-            &self.transitions
-        }
         pub fn new(
             scope: Vec<XVarVal>,
             set: &'a XVariableSet,
@@ -119,10 +90,21 @@ pub mod xcsp3_core {
         ) -> Self {
             XMdd {
                 scope,
-                map: Default::default(),
                 set,
                 transitions,
             }
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn transitions(&self) -> &Vec<(String, i32, String)> {
+            &self.transitions
         }
     }
 }
