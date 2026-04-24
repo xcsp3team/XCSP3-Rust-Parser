@@ -51,9 +51,8 @@ pub mod xcsp3_core {
 
     // #[derive(Clone)]
     pub struct XAllEqual<'a> {
-        scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
-        set: &'a XVariableSet,
+        pub(crate) scope: Vec<XVarVal>,
+        pub(crate) set: &'a XVariableSet,
     }
 
     impl Display for XAllEqual<'_> {
@@ -68,31 +67,6 @@ pub mod xcsp3_core {
         }
     }
 
-    impl XConstraintTrait for XAllEqual<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
-    }
-
     impl<'a> XAllEqual<'a> {
         pub fn from_str(list: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
@@ -101,11 +75,7 @@ pub mod xcsp3_core {
             }
         }
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
-            XAllEqual {
-                scope,
-                map: Default::default(),
-                set,
-            }
+            XAllEqual { scope, set }
         }
     }
 }

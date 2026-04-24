@@ -37,6 +37,8 @@
  */
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+use crate::variables::xdomain::xcsp3_core::XDomainInteger;
+use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
@@ -484,25 +486,37 @@ pub mod xcsp3_utils {
     }
 }
 
-
 pub fn to_int_list(the_list: Vec<XVarVal>) -> Vec<i32> {
     let mut tmp = vec![];
     for v in the_list {
         match v {
-            XVarVal::IntVal(value) => {
-                tmp.push(value)
-            }
+            XVarVal::IntVal(value) => tmp.push(value),
             XVarVal::IntInterval(v1, v2) => {
                 for i in v1..v2 {
                     tmp.push(i);
                 }
             }
-            _ => {panic!("Only integers are allowed in an except part of an AllDiferent Constraint")}
+            _ => {
+                panic!("Only integers are allowed in this list")
+            }
         }
     }
     tmp
 }
 
+pub fn to_var_list(the_list: &Vec<XVarVal>, set: &XVariableSet) -> Vec<String> {
+    let mut tmp = vec![];
+    for e in the_list {
+        if let XVarVal::IntVar(s) = e {
+            if let Ok(vec) = set.construct_scope(&[&s]) {
+                for (vs, vv) in vec.into_iter() {
+                    tmp.push(vs);
+                }
+            }
+        }
+    }
+    tmp
+}
 
 // #[allow(dead_code)]
 // pub mod xcsp3_core {

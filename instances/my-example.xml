@@ -7,8 +7,8 @@
         <var id="vv2">0..70</var>
         <var id="vv1">0..7</var>
         <var id="foo">0 1 2 3 4 5 6</var>
-        <var id="vv3"> 2 5 8 9 12 15 22 25 30 50 </var>
-        <var id="v44" as="vv1" />
+        <var id="vv3">2 5 8 9 12 15 22 25 30 50</var>
+        <var id="v44" as="vv1"/>
         <array id="v" size="[3][5]">
             <domain for="v[0][]">1..10</domain>
             <domain for="v[1][]">1..20</domain>
@@ -30,8 +30,8 @@
         <block class="clues">
             <block class="clues">
                 <extension>
-                    <list> treez[3][3][3] </list>
-                    <conflicts> 0..2 4 5..7 9 </conflicts>
+                    <list>treez[3][3][3]</list>
+                    <conflicts>0..2 4 5..7 9</conflicts>
                 </extension>
                 <extension>
                     <list>treea[1..3]</list>
@@ -43,29 +43,29 @@
         <block class="symmetryBreaking">
             <block class="clues">
                 <intension>
-                    <function> ge(treea[6],x[3]) </function>
+                    <function>ge(treea[6],x[3])</function>
                 </intension>
             </block>
         </block>
         <intension>
-            <function> eq(add(bar,qux),v[0][0]) </function>
+            <function>eq(add(bar,qux),v[0][0])</function>
         </intension>
         <intension>
-            <function> ge(treea[4],treea[9]) </function>
+            <function>ge(treea[4],treea[9])</function>
         </intension>
-        <intension> eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0]) </intension>
-        <intension> ge(treez[1][1][1],v[2][2]) </intension>
+        <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
+        <intension>ge(treez[1][1][1],v[2][2])</intension>
         <instantiation>
-            <list> vv2 bar qux </list>
-            <values> 12 4 30 </values>
+            <list>vv2 bar qux</list>
+            <values>12 4 30</values>
         </instantiation>
         <instantiation>
-            <list> v[1][]  v[2][2</list>
-            <values> 1 0 2 1 3 1 </values>
+            <list>v[1][] v[2][2</list>
+            <values>1 0 2 1 3 1</values>
         </instantiation>
         <extension>
-            <list> treez[4][4][4] </list>
-            <conflicts> 0..2 4 5..7 9 </conflicts>
+            <list>treez[4][4][4]</list>
+            <conflicts>0..2 4 5..7 9</conflicts>
         </extension>
         <extension>
             <list>treea[7..9]</list>
@@ -75,6 +75,9 @@
             <list>v[2][1..3]</list>
             <supports>(0,0,1)(0,1,0)(1,0,0)(1,1,1)</supports>
         </extension>
+        <allEqual>
+            v[0][1..4] x[]
+        </allEqual>
         <allDifferent>
             x[]
         </allDifferent>
@@ -82,7 +85,7 @@
             v[0][1..4]
         </allDifferent>
         <allDifferent>
-            <list> y[] </list>
+            <list>y[]</list>
             <except>3 4</except>
         </allDifferent>
         <allDifferent>
@@ -91,15 +94,15 @@
             </matrix>
         </allDifferent>
         <allDifferent id="c1">
-            <list> v[0][1] v[1][2] v[2][0] </list>
-            <list> v[1][1] v[2][2] v[2][0] treez[3][3][3] </list>
-            <list> treez[0..3][1][0..3] </list>
+            <list>v[0][1] v[1][2] v[2][0]</list>
+            <list>v[1][1] v[2][2] v[2][0] treez[3][3][3]</list>
+            <list>treez[0..3][1][0..3]</list>
         </allDifferent>
         <allDifferent id="c2">
-            <list> treez[1][0..3][2] </list>
-            <list> treez[1][1][1..4] </list>
-            <list> treez[1][0..1][2] treez[1][1][3..4]</list>
-            <except> (0,0,0,0) </except>
+            <list>treez[1][0..3][2]</list>
+            <list>treez[1][1][1..4]</list>
+            <list>treez[1][0..1][2] treez[1][1][3..4]</list>
+            <except>(0,0,0,0)</except>
         </allDifferent>
         <maximum>
             <list>x[1] x[2] x[3] x[4]</list>
@@ -127,14 +130,7 @@
             <condition>(gt,y)</condition>
         </sum>
 
-        <regular>
-            <list>treez[1][][3] treez[2][1][3]</list>
-            <transitions>
-                (a,0,a)(a,1,b)(b,1,c)(c,0,d)(d,0,d)(d,1,e)(e,0,e)
-            </transitions>
-            <start>a</start>
-            <final>e d</final>
-        </regular>
+
         <ordered>
             <list>x[1..4]</list>
             <operator>lt</operator>
@@ -145,8 +141,8 @@
             <operator>ge</operator>
         </ordered>
         <allEqual>
-            <list>  treez[] </list>
-            <list>  v[][2] </list>
+            <list>treez[]</list>
+            <list>v[][2]</list>
         </allEqual>
         <allEqual>
             z[]
@@ -154,24 +150,24 @@
 
 
         <extension>
-            <list> x[1] </list>
-            <conflicts> 2 6 </conflicts>
+            <list>x[1]</list>
+            <conflicts>2 6</conflicts>
         </extension>
         <extension>
-            <list> treez[3][0..1][2..3] </list>
-            <conflicts> (1,2,3,4)(3,1,3,4) </conflicts>
+            <list>treez[3][0..1][2..3]</list>
+            <conflicts>(1,2,3,4)(3,1,3,4)</conflicts>
         </extension>
 
         <channel>
-            <list> z1 z2 z3 z4 z5 </list>
-            <value> v </value>
+            <list>z1 z2 z3 z4 z5</list>
+            <value>v</value>
         </channel>
         <channel>
-            <list startIndex = "32"> x1 x2 x3 x4 </list>
-            <list> y1 y2 y3 y4 </list>
+            <list startIndex="32">x1 x2 x3 x4</list>
+            <list>y1 y2 y3 y4</list>
         </channel>
         <channel>
-           y7 y8 x3 y9
+            y7 y8 x3 y9
         </channel>
         <slide id="c1">
             <list>x1 x2 x3 x4</list>
@@ -190,33 +186,33 @@
         </slide>
 
         <cumulative>
-            <origins> s1 s2 s3 s4 </origins>
-            <lengths> l1 l2 l3 l4 </lengths>
-            <heights> h1 h2 h3 h4 </heights>
-            <condition> (le,4) </condition>
+            <origins>s1 s2 s3 s4</origins>
+            <lengths>l1 l2 l3 l4</lengths>
+            <heights>h1 h2 h3 h4</heights>
+            <condition>(le,4)</condition>
         </cumulative>
         <noOverlap>
-            <origins> x1 x2 x3 </origins>
-            <lengths> l1 l2 l3 </lengths>
+            <origins>x1 x2 x3</origins>
+            <lengths>l1 l2 l3</lengths>
         </noOverlap>
         <noOverlap>
-            <origins> (x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4) </origins>
-            <lengths> (2,4,1)(4,2,3)(5,1,2)(3,3,2) </lengths>
+            <origins>(x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4)</origins>
+            <lengths>(2,4,1)(4,2,3)(5,1,2)(3,3,2)</lengths>
         </noOverlap>
         <stretch>
-            <list> x1 x2 x3 x4 x5 x6 x7 </list>
-            <values> 1 2 3 0 </values>
-            <widths> 1..3 1..3 2..3 2..4 </widths>
-            <patterns> 23 x5 x[4] </patterns>
+            <list>x1 x2 x3 x4 x5 x6 x7</list>
+            <values>1 2 3 0</values>
+            <widths>1..3 1..3 2..3 2..4</widths>
+            <patterns>23 x5 x[4]</patterns>
         </stretch>
         <element>
-            <list startIndex="1"> x1 x2 x3 x4 </list>
-            <index> i </index>
-            <value> v </value>
+            <list startIndex="1">x1 x2 x3 x4</list>
+            <index>i</index>
+            <value>v</value>
         </element>
         <element>
-            <list> y[] </list>
-            <value> z </value>
+            <list>y[]</list>
+            <value>z</value>
         </element>
 
         <cardinality>
@@ -268,15 +264,6 @@
             <condition>(eq,k5)</condition>
         </count>
 
-        <mdd>
-            <list>z[1..3]</list>
-            <transitions>
-                (r,0,n1)(r,1,n2)(r,2,n3)
-                (n1,2,n4)(n2,2,n4)(n3,0,n5)
-                (n4,0,t)(n5,0,t)
-            </transitions>
-        </mdd>
-
 
         <group>
             <extension>
@@ -324,7 +311,22 @@
             <args>x[27] x[30] x[26]</args>
         </group>
 
-
+        <regular>
+            <list>treez[1][][3] treez[2][1][3]</list>
+            <transitions>
+                (a,0,a)(a,1,b)(b,1,c)(c,0,d)(d,0,d)(d,1,e)(e,0,e)
+            </transitions>
+            <start>a</start>
+            <final>e d</final>
+        </regular>
+        <mdd>
+            <list>z[1..3]</list>
+            <transitions>
+                (r,0,n1)(r,1,n2)(r,2,n3)
+                (n1,2,n4)(n2,2,n4)(n3,0,n5)
+                (n4,0,t)(n5,0,t)
+            </transitions>
+        </mdd>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>
@@ -338,3 +340,4 @@
         <maximize>add(x,mul(y,2))</maximize>
     </objectives>
 </instance>
+

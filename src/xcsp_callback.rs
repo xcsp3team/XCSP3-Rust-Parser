@@ -44,7 +44,7 @@ pub trait XcspCallback {
     // Hooks de cycle de vie — appelés avant/après chaque section du fichier XML
     // -------------------------------------------------------------------------
 
-    fn begin_instance(&mut self, _type : &InstanceType) {}
+    fn begin_instance(&mut self, _type: &InstanceType) {}
 
     fn end_instance(&mut self) {}
 
@@ -91,13 +91,22 @@ pub trait XcspCallback {
     // -------------------------------------------------------------------------
 
     /// <allDifferent> x y z </allDifferent>
-    fn on_constraint_all_different(&mut self, scope: &[String]) {}
+    fn on_constraint_all_different(&mut self, scope: &[String]) {
+        println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <allDifferent> x y z <except> 0 </except> </allDifferent>
-    fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {}
+    fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
+        println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <allEqual> x y z </allEqual>
-    fn on_constraint_all_equal(&mut self, _c: &XAllEqual) {}
+    fn on_constraint_all_equal(&mut self, scope: &[String]) {
+        println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <extension> ... </extension>  (table de tuples autorisés/interdits)
     fn on_constraint_extension(&mut self, _c: &XExtension) {}
@@ -112,10 +121,22 @@ pub trait XcspCallback {
     fn on_constraint_ordered(&mut self, _c: &XOrdered) {}
 
     /// <regular> ... </regular>  (automate fini déterministe)
-    fn on_constraint_regular(&mut self, _c: &XRegular) {}
+    fn on_constraint_regular(
+        &mut self,
+        _scope: &[String],
+        _start: String,
+        _finals: &[String],
+        _transitions: &[(String, i32, String)],
+    ) {
+        println!("c Regular not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <mdd> ... </mdd>  (diagramme de décision multi-valué)
-    fn on_constraint_mdd(&mut self, _c: &XMdd) {}
+    fn on_constraint_mdd(&mut self, _scope: &[String], transitions: &Vec<(String, i32, String)>) {
+        println!("c MDD not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <instantiation> ... </instantiation>
     fn on_constraint_instantiation(&mut self, _c: &XInstantiation) {}

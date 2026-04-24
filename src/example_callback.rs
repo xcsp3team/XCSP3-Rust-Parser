@@ -72,7 +72,6 @@ impl XcspCallback for PrintingSolver {
         println!("An array of variables named {}", name);
     }
 
-
     fn end_variable_array(&mut self) {
         println!("Array of variables done");
     }
@@ -84,9 +83,16 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
-
         self.nb_constraints += 1;
-        println!("  [AllDiff Except]  {:?} with except values: {:?}", scope, except);
+        println!(
+            "  [AllDiff Except]  {:?} with except values: {:?}",
+            scope, except
+        );
+    }
+
+    fn on_constraint_all_equal(&mut self, scope: &[String]) {
+        self.nb_constraints += 1;
+        println!("  [AllEqual]  {:?}", scope);
     }
     fn on_constraint_extension(&mut self, c: &XExtension) {
         self.nb_constraints += 1;
@@ -95,6 +101,26 @@ impl XcspCallback for PrintingSolver {
     fn on_constraint_intention(&mut self, c: &XIntention) {
         self.nb_constraints += 1;
         println!("  [Intent]   {}", c);
+    }
+
+    fn on_constraint_regular(
+        &mut self,
+        scope: &[String],
+        start: String,
+        finals: &[String],
+        transitions: &[(String, i32, String)],
+    ) {
+        self.nb_constraints += 1;
+        println!(
+            "  [Regular]  {:?}. start={}, finals={:?}",
+            scope, start, finals
+        );
+        println!("           transitions: {:?}", transitions);
+    }
+
+    fn on_constraint_mdd(&mut self, scope: &[String], transitions: &Vec<(String, i32, String)>) {
+        println!("  [MDD]  {:?}", scope);
+        println!("           transitions: {:?}", transitions);
     }
     fn on_constraint_sum(&mut self, c: &XSum) {
         self.nb_constraints += 1;
