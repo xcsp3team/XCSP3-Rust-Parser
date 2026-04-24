@@ -83,7 +83,7 @@
         </allDifferent>
         <allDifferent>
             <list> y[] </list>
-            <except> 0 </except>
+            <except>3 4</except>
         </allDifferent>
         <allDifferent>
             <matrix>

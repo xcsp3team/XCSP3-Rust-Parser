@@ -225,7 +225,7 @@ pub mod xcsp3_utils {
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
             match e.parse::<i32>() {
-                Ok(n) => ret.push(XVarVal::IntArgument(n)),
+                Ok(n) => ret.push(XVarVal::IntVal(n)),
                 Err(_) => {
                     return Err(Xcsp3Error::get_constraint_list_of_values_error(
                         "parse the list of values error. ",
@@ -488,7 +488,6 @@ pub mod xcsp3_utils {
 pub fn to_int_list(the_list: Vec<XVarVal>) -> Vec<i32> {
     let mut tmp = vec![];
     for v in the_list {
-        println!(   "{}", v);
         match v {
             XVarVal::IntVal(value) => {
                 tmp.push(value)
@@ -502,7 +501,6 @@ pub fn to_int_list(the_list: Vec<XVarVal>) -> Vec<i32> {
         }
     }
     tmp
-
 }
 
 
