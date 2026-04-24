@@ -71,14 +71,17 @@ impl XcspRunner {
         let mut constraints = model.build_constraints(&variables);
         for c in constraints.iter_mut() {
             match c {
+                // All Diff constraints
                 XConstraintType::XAllDifferent(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_all_different(&*scope);
                 }
                 XConstraintType::XAllDifferentExcept(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
-                    callback.on_constraint_all_different_except(&*scope, &*inner.get_except());
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_all_different_except(&*scope, &*inner.except());
                 }
+
+                // All Equal constraints
                 XConstraintType::XAllEqual(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
                     callback.on_constraint_all_equal(&*scope);
@@ -87,7 +90,17 @@ impl XcspRunner {
                 XConstraintType::XIntention(inner) => callback.on_constraint_intention(inner),
                 XConstraintType::XSum(inner) => callback.on_constraint_sum(inner),
                 XConstraintType::XOrdered(inner) => callback.on_constraint_ordered(inner),
-                XConstraintType::XRegular(inner) => callback.on_constraint_regular(inner),
+
+                // Regular Constraint
+                XConstraintType::XRegular(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_regular(
+                        &*scope,
+                        inner.start().parse()?,
+                        inner.finals(),
+                        inner.transitions(),
+                    );
+                }
                 XConstraintType::XMdd(inner) => callback.on_constraint_mdd(inner),
                 XConstraintType::XInstantiation(inner) => {
                     callback.on_constraint_instantiation(inner)

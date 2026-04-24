@@ -52,7 +52,6 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     pub struct XRegular<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         start: String,
         r#final: Vec<String>,
@@ -72,31 +71,6 @@ pub mod xcsp3_core {
                 "XRegular: list =  {}, transitions = {:?}, start = {}, final = {:?}",
                 ret, self.transitions, self.start, self.r#final
             )
-        }
-    }
-
-    impl XConstraintTrait for XRegular<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
     }
 
@@ -139,7 +113,6 @@ pub mod xcsp3_core {
         ) -> Self {
             XRegular {
                 scope,
-                map: Default::default(),
                 set,
                 start,
                 r#final,
@@ -147,16 +120,24 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn get_start(&self) -> &str {
+        pub fn start(&self) -> &str {
             &self.start
         }
 
-        pub fn get_final(&self) -> &Vec<String> {
+        pub fn finals(&self) -> &Vec<String> {
             &self.r#final
         }
 
-        pub fn get_transitions(&self) -> &Vec<(String, i32, String)> {
+        pub fn transitions(&self) -> &Vec<(String, i32, String)> {
             &self.transitions
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
     }
 }

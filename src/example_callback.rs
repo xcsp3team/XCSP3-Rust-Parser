@@ -102,6 +102,22 @@ impl XcspCallback for PrintingSolver {
         self.nb_constraints += 1;
         println!("  [Intent]   {}", c);
     }
+
+    fn on_constraint_regular(
+        &mut self,
+        scope: &[String],
+        start: String,
+        finals: &[String],
+        _transitions: &[(String, i32, String)],
+    ) {
+        self.nb_constraints += 1;
+        println!(
+            "  [Regular]  {:?}. start={}, finals={:?}",
+            scope, start, finals
+        );
+        println!("           transitions: {:?}", _transitions);
+    }
+
     fn on_constraint_sum(&mut self, c: &XSum) {
         self.nb_constraints += 1;
         println!("  [Sum]      {}", c);

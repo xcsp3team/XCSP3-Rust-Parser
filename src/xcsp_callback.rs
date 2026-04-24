@@ -121,7 +121,16 @@ pub trait XcspCallback {
     fn on_constraint_ordered(&mut self, _c: &XOrdered) {}
 
     /// <regular> ... </regular>  (automate fini déterministe)
-    fn on_constraint_regular(&mut self, _c: &XRegular) {}
+    fn on_constraint_regular(
+        &mut self,
+        _scope: &[String],
+        _start: String,
+        _finals: &[String],
+        _transitions: &[(String, i32, String)],
+    ) {
+        println!("c Regular not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <mdd> ... </mdd>  (diagramme de décision multi-valué)
     fn on_constraint_mdd(&mut self, _c: &XMdd) {}
