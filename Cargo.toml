@@ -31,10 +31,10 @@ repository = "https://github.com/luhanzhen/xcsp3-rust"
 [dependencies]
 quick-xml = {version = "0.29.0", features = ["serialize"]}
 serde = {version = "1.0.166", features = ["serde_derive"]}
-walkdir = {version = "2.3.3"}
 regex = "1.9.1"
 
 
 [lib]
 name = "xcsp3_rust"
 path = "src/lib.rs"
+doctest = false

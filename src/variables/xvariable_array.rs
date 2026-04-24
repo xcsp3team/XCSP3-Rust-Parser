@@ -138,7 +138,7 @@ pub mod xcsp3_core {
 
         pub fn associated_variables(id: &str, sizes: &[usize]) -> Vec<String> {
             let lower = vec![0; sizes.len()];
-            let upper = sizes.to_vec();
+            let upper: Vec<usize> = sizes.iter().map(|size| size - 1).collect();
             let all = get_all_variables_between_lower_and_upper(lower, upper);
             let mut result = vec![];
             for current in all {
@@ -160,5 +160,3 @@ pub mod xcsp3_core {
         }
     }
 }
-
-
