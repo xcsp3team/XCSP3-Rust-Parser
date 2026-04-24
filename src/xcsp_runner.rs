@@ -10,6 +10,7 @@
 use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
+use crate::utils::utils_functions::to_var_list;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
@@ -24,16 +25,14 @@ impl XcspRunner {
     ///
     /// Retourne une erreur si le fichier est introuvable ou mal formé.
 
-
     pub fn run<C: XcspCallback>(
         path: &str,
         callback: &mut C,
     ) -> Result<(), Box<dyn std::error::Error>> {
         pub fn call_var(id: String, domain: &XDomainInteger, callback: &mut dyn XcspCallback) {
-            if(domain.is_interval()) {
+            if (domain.is_interval()) {
                 callback.on_variable_interval(id, domain.minimum(), domain.maximum());
-            }
-            else {
+            } else {
                 let mut result = vec![];
                 for v in domain.iter() {
                     result.push(v)
@@ -41,8 +40,6 @@ impl XcspRunner {
                 callback.on_variable_values(id, &result)
             }
         }
-
-
 
         let model = XcspXmlModel::from_path(path)?;
 
@@ -52,9 +49,9 @@ impl XcspRunner {
         let variables = model.build_variables();
         for v in variables.iter() {
             match v {
-                XVariableType::XVariableInt(var) =>  {
+                XVariableType::XVariableInt(var) => {
                     call_var(v.get_id(), &var.domain, callback);
-                },
+                }
                 XVariableType::XVariableArray(av) => {
                     callback.begin_variable_array(v.get_id());
                     for var_id in av.variables.iter() {
@@ -62,7 +59,7 @@ impl XcspRunner {
                     }
 
                     callback.end_variable_array();
-                },
+                }
                 XVariableType::XVariableTree(_) => callback.on_variable_tree(v),
                 XVariableType::XVariableNone(_) => {}
             }
@@ -72,17 +69,20 @@ impl XcspRunner {
         // ── Contraintes ──────────────────────────────────────────────────────
         callback.begin_constraints();
         let mut constraints = model.build_constraints(&variables);
-        for  c in constraints.iter_mut() {
+        for c in constraints.iter_mut() {
             match c {
-                XConstraintType::XAllDifferent( inner) => {
-                    let scope: Vec<String> = inner.get_scope().iter().map(|(s, _)| s.to_string()).collect();
+                XConstraintType::XAllDifferent(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
                     callback.on_constraint_all_different(&*scope);
                 }
                 XConstraintType::XAllDifferentExcept(inner) => {
-                    let scope: Vec<String> = inner.get_scope().iter().map(|(s, _)| s.to_string()).collect();
+                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
                     callback.on_constraint_all_different_except(&*scope, &*inner.get_except());
                 }
-                XConstraintType::XAllEqual(inner) => callback.on_constraint_all_equal(inner),
+                XConstraintType::XAllEqual(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
+                    callback.on_constraint_all_equal(&*scope);
+                }
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
                 XConstraintType::XIntention(inner) => callback.on_constraint_intention(inner),
                 XConstraintType::XSum(inner) => callback.on_constraint_sum(inner),

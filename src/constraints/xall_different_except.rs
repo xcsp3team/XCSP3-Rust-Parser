@@ -42,20 +42,20 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
     use crate::utils::utils_functions::to_int_list;
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, list_with_bracket_comma_to_values,
     };
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::collections::HashMap;
+    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
     pub struct XAllDifferentExcept<'a> {
         map: HashMap<String, &'a XDomainInteger>,
-        scope: Vec<XVarVal>,
-        set: &'a XVariableSet,
+        pub(crate) scope: Vec<XVarVal>,
+        pub(crate) set: &'a XVariableSet,
         except: Vec<XVarVal>,
     }
 

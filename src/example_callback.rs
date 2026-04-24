@@ -72,7 +72,6 @@ impl XcspCallback for PrintingSolver {
         println!("An array of variables named {}", name);
     }
 
-
     fn end_variable_array(&mut self) {
         println!("Array of variables done");
     }
@@ -84,9 +83,16 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
-
         self.nb_constraints += 1;
-        println!("  [AllDiff Except]  {:?} with except values: {:?}", scope, except);
+        println!(
+            "  [AllDiff Except]  {:?} with except values: {:?}",
+            scope, except
+        );
+    }
+
+    fn on_constraint_all_equal(&mut self, scope: &[String]) {
+        self.nb_constraints += 1;
+        println!("  [AllEqual]  {:?}", scope);
     }
     fn on_constraint_extension(&mut self, c: &XExtension) {
         self.nb_constraints += 1;
