@@ -1,0 +1,40 @@
+[package]
+name = "xcsp3-rust"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.70"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = [
+    "xml",
+    "csp",
+    "xcsp3",
+    "combinatorial",
+    "parser",
+]
+authors = [
+    "Luhan Zhen <zhenlh20@mails.jlu.edu.cn>",
+]
+include = [
+    "src/*",
+    "README.md",
+    "LICENSE",
+]
+
+
+description = "xcsp3-rust is a library that help constraint programming solvers implemented by Rust to read XCSP3 files."
+readme = "README.md"
+categories = ["Text processing"]
+license = "MIT"
+repository = "https://github.com/luhanzhen/xcsp3-rust"
+
+
+[dependencies]
+quick-xml = {version = "0.29.0", features = ["serialize"]}
+serde = {version = "1.0.166", features = ["serde_derive"]}
+walkdir = {version = "2.3.3"}
+regex = "1.9.1"
+
+
+[lib]
+name = "xcsp3_rust"
+path = "src/lib.rs"

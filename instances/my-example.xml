@@ -1,0 +1,340 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="x" size="[60]">0 2 4..10 61..65 77</array>
+        <array id="y" size="[6]">0 2</array>
+        <array id="z" size="[6]">0..10 14 22..24</array>
+        <array id="yy" note="x[i] is the ith value of the series" size="[9]">0..8</array>
+        <var id="vv2">0..70</var>
+        <var id="vv1">0..7</var>
+        <var id="foo">0 1 2 3 4 5 6</var>
+        <var id="vv3"> 2 5 8 9 12 15 22 25 30 50 </var>
+        <var id="v44" as="vv1" />
+        <array id="v" size="[3][5]">
+            <domain for="v[0][]">1..10</domain>
+            <domain for="v[1][]">1..20</domain>
+            <domain for="v[2][]">1..15</domain>
+        </array>
+        <array id="treea" size="[10]">
+            <domain for="treea[4..8]">0 1</domain>
+            <domain for="others">2 4 6</domain>
+        </array>
+        <array id="treez" size="[5][5][5]">
+            <domain for="treez[][0..1][2..3] treez[][2][2..4]">0..10</domain>
+            <domain for="others">0 1</domain>
+        </array>
+        <var id="bar">0..6</var>
+        <var id="qux">-6..-2 0 1..3 4 7 8..11</var>
+
+    </variables>
+    <constraints>
+        <block class="clues">
+            <block class="clues">
+                <extension>
+                    <list> treez[3][3][3] </list>
+                    <conflicts> 0..2 4 5..7 9 </conflicts>
+                </extension>
+                <extension>
+                    <list>treea[1..3]</list>
+                    <supports>(0,0,0)(0,1,1)(1,0,1)(1,*,0)</supports>
+                </extension>
+            </block>
+
+        </block>
+        <block class="symmetryBreaking">
+            <block class="clues">
+                <intension>
+                    <function> ge(treea[6],x[3]) </function>
+                </intension>
+            </block>
+        </block>
+        <intension>
+            <function> eq(add(bar,qux),v[0][0]) </function>
+        </intension>
+        <intension>
+            <function> ge(treea[4],treea[9]) </function>
+        </intension>
+        <intension> eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0]) </intension>
+        <intension> ge(treez[1][1][1],v[2][2]) </intension>
+        <instantiation>
+            <list> vv2 bar qux </list>
+            <values> 12 4 30 </values>
+        </instantiation>
+        <instantiation>
+            <list> v[1][]  v[2][2</list>
+            <values> 1 0 2 1 3 1 </values>
+        </instantiation>
+        <extension>
+            <list> treez[4][4][4] </list>
+            <conflicts> 0..2 4 5..7 9 </conflicts>
+        </extension>
+        <extension>
+            <list>treea[7..9]</list>
+            <supports>(0,0,0)(0,1,1)(1,0,1)(1,*,0)</supports>
+        </extension>
+        <extension>
+            <list>v[2][1..3]</list>
+            <supports>(0,0,1)(0,1,0)(1,0,0)(1,1,1)</supports>
+        </extension>
+        <allDifferent>
+            x[]
+        </allDifferent>
+        <allDifferent>
+            v[0][1..4]
+        </allDifferent>
+        <allDifferent>
+            <matrix>
+                (x[1] x[2] x[3] x[4] x[5])( y[1] y[2] y[3] y[4] y[5])(z[1] z[2] z[3] z[4] z[5])
+            </matrix>
+        </allDifferent>
+        <allDifferent>
+            <list> y[] </list>
+            <except> 0 </except>
+        </allDifferent>
+        <allDifferent id="c1">
+            <list> v[0][1] v[1][2] v[2][0] </list>
+            <list> v[1][1] v[2][2] v[2][0] treez[3][3][3] </list>
+            <list> treez[0..3][1][0..3] </list>
+        </allDifferent>
+        <allDifferent id="c2">
+            <list> treez[1][0..3][2] </list>
+            <list> treez[1][1][1..4] </list>
+            <list> treez[1][0..1][2] treez[1][1][3..4]</list>
+            <except> (0,0,0,0) </except>
+        </allDifferent>
+        <maximum>
+            <list>x[1] x[2] x[3] x[4]</list>
+            <condition>(eq,y)</condition>
+        </maximum>
+        <maximum>
+            <list>x[10] x[20] x[30] x[40]</list>
+            <condition>(lt,w)</condition>
+        </maximum>
+        <minimum>
+            <list>x[11] x[22] x[33] x[44]</list>
+            <condition>(eq,y)</condition>
+        </minimum>
+        <minimum>
+            <list>x[32] x[22] x[34] x[47]</list>
+            <condition>(ne,w)</condition>
+        </minimum>
+        <sum>
+            <list>x[1] x[2] x[3]</list>
+            <coeffs>1 2 3</coeffs>
+            <condition>(gt,y)</condition>
+        </sum>
+        <sum>
+            <list>x[10] x[22] x[30]</list>
+            <condition>(gt,y)</condition>
+        </sum>
+
+        <regular>
+            <list>treez[1][][3] treez[2][1][3]</list>
+            <transitions>
+                (a,0,a)(a,1,b)(b,1,c)(c,0,d)(d,0,d)(d,1,e)(e,0,e)
+            </transitions>
+            <start>a</start>
+            <final>e d</final>
+        </regular>
+        <ordered>
+            <list>x[1..4]</list>
+            <operator>lt</operator>
+        </ordered>
+        <ordered>
+            <list>y[1..3]</list>
+            <lengths>5 3</lengths>
+            <operator>ge</operator>
+        </ordered>
+        <allEqual>
+            <list>  treez[] </list>
+            <list>  v[][2] </list>
+        </allEqual>
+        <allEqual>
+            z[]
+        </allEqual>
+
+
+        <extension>
+            <list> x[1] </list>
+            <conflicts> 2 6 </conflicts>
+        </extension>
+        <extension>
+            <list> treez[3][0..1][2..3] </list>
+            <conflicts> (1,2,3,4)(3,1,3,4) </conflicts>
+        </extension>
+
+        <channel>
+            <list> z1 z2 z3 z4 z5 </list>
+            <value> v </value>
+        </channel>
+        <channel>
+            <list startIndex = "32"> x1 x2 x3 x4 </list>
+            <list> y1 y2 y3 y4 </list>
+        </channel>
+        <channel>
+           y7 y8 x3 y9
+        </channel>
+        <slide id="c1">
+            <list>x1 x2 x3 x4</list>
+            <intension>eq(add(%0,%1),%2)</intension>
+        </slide>
+        <slide id="c2" circular="true">
+            <list>y1 y2 y3 y4</list>
+            <extension>
+                <list>%0 %1</list>
+                <supports>(0,1)(0,2)(1,1)(3,2)(3,3)</supports>
+            </extension>
+        </slide>
+        <slide id="c3">
+            <list offset="2">w1 z1 w2 z2 w3 z3</list>
+            <intension>ne(%0,%1)</intension>
+        </slide>
+
+        <cumulative>
+            <origins> s1 s2 s3 s4 </origins>
+            <lengths> l1 l2 l3 l4 </lengths>
+            <heights> h1 h2 h3 h4 </heights>
+            <condition> (le,4) </condition>
+        </cumulative>
+        <noOverlap>
+            <origins> x1 x2 x3 </origins>
+            <lengths> l1 l2 l3 </lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins> (x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4) </origins>
+            <lengths> (2,4,1)(4,2,3)(5,1,2)(3,3,2) </lengths>
+        </noOverlap>
+        <stretch>
+            <list> x1 x2 x3 x4 x5 x6 x7 </list>
+            <values> 1 2 3 0 </values>
+            <widths> 1..3 1..3 2..3 2..4 </widths>
+            <patterns> 23 x5 x[4] </patterns>
+        </stretch>
+        <element>
+            <list startIndex="1"> x1 x2 x3 x4 </list>
+            <index> i </index>
+            <value> v </value>
+        </element>
+        <element>
+            <list> y[] </list>
+            <value> z </value>
+        </element>
+
+        <cardinality>
+            <list>x1 x2 x3 x4</list>
+            <values>2 5 10</values>
+            <occurs>0..1 1..3 2..3</occurs>
+        </cardinality>
+        <cardinality>
+            <list>y1 y2 y3 y4 y5</list>
+            <values closed="false">0 1 2 3</values>
+            <occurs>z0 z1 z2 z3</occurs>
+        </cardinality>
+        <nValues id="c1">
+            <list>x1 x2 x3 x4</list>
+            <condition>(eq,3)</condition>
+        </nValues>
+        <nValues id="c2">
+            <list>y1 y2 y3 y4 y5</list>
+            <condition>(le,w)</condition>
+        </nValues>
+        <nValues id="c3">
+            <list>z1 z2 z3 z4</list>
+            <except>0</except>
+            <condition>(eq,2)</condition>
+        </nValues>
+        <count id="c1">
+            <list>v1 v2 v3 v4</list>
+            <values>v</values>
+            <condition>(ne,k1)</condition>
+        </count>
+        <count id="c2">   <!-- among -->
+            <list>w1 w2 w3 w4</list>
+            <values>1 5 8</values>
+            <condition>(eq,k2)</condition>
+        </count>
+        <count id="c3">  <!-- atLeast -->
+            <list>x1 x2 x3 x4 x5</list>
+            <values>1</values>
+            <condition>(ge,k3)</condition>
+        </count>
+        <count id="c4">  <!-- atMost -->
+            <list>y1 y2 y3 y4</list>
+            <values>0</values>
+            <condition>(le,2)</condition>
+        </count>
+        <count id="c5">  <!-- exactly -->
+            <list>z1 z3 z3</list>
+            <values>z</values>
+            <condition>(eq,k5)</condition>
+        </count>
+
+        <mdd>
+            <list>z[1..3]</list>
+            <transitions>
+                (r,0,n1)(r,1,n2)(r,2,n3)
+                (n1,2,n4)(n2,2,n4)(n3,0,n5)
+                (n4,0,t)(n5,0,t)
+            </transitions>
+        </mdd>
+
+
+        <group>
+            <extension>
+                <list>%...</list>
+                <supports>(0,0,1)(0,1,0)(1,0,0)(1,1,1)</supports>
+            </extension>
+            <args>x[0] x[30] x[1]</args>
+            <args>x[1] x[31] x[2]</args>
+            <args>x[2] x[32] x[3]</args>
+            <args>x[3] x[33] x[4]</args>
+            <args>x[4] x[34] x[5]</args>
+            <args>x[5] x[35] x[6]</args>
+            <args>x[6] x[36] x[7]</args>
+            <args>x[7] x[37] x[8]</args>
+            <args>x[8] x[38] x[9]</args>
+            <args>x[9] x[39] x[10]</args>
+            <args>x[10] x[40] x[11]</args>
+            <args>x[11] x[41] x[12]</args>
+            <args>x[12] x[42] x[13]</args>
+        </group>
+        <group>
+            <extension>
+                <list>%0 %1 %2</list>
+                <supports>(0,0,1)(0,1,0)(1,0,0)(1,1,1)</supports>
+            </extension>
+            <args>x[13] x[43..44]</args>
+            <args>x[14] x[43..44]</args>
+        </group>
+        <group>
+            <intension>
+                <function>eq(add(%0,%1),%2)</function>
+            </intension>
+            <args>x[15] x[42] x[14]</args>
+            <args>x[16] x[41] x[15]</args>
+            <args>x[17] x[40] x[16]</args>
+            <args>x[18] x[39] x[17]</args>
+            <args>x[19] x[38] x[18]</args>
+            <args>x[20] x[37] x[19]</args>
+            <args>x[21] x[36] x[20]</args>
+            <args>x[22] x[35] x[21]</args>
+            <args>x[23] x[34] x[22]</args>
+            <args>x[24] x[33] x[23]</args>
+            <args>x[25] x[32] x[24]</args>
+            <args>x[26] x[31] x[25]</args>
+            <args>x[27] x[30] x[26]</args>
+        </group>
+
+
+    </constraints>
+    <objectives>
+        <minimize type="sum">x[]</minimize>
+        <minimize type="sum">
+            <list>x1 x2 x3 x4 x5</list>
+            <coeffs>2 4 1 4 8</coeffs>
+        </minimize>
+        <minimize type="maximum">
+            <list>y1 y2 y3 y4</list>
+        </minimize>
+        <maximize>add(x,mul(y,2))</maximize>
+    </objectives>
+</instance>
