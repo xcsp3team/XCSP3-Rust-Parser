@@ -115,6 +115,11 @@ impl XcspCallback for PrintingSolver {
         println!("  [Intent]   {}", c);
     }
 
+    fn on_constraint_instantiation(&mut self, scope: &[String], values: &[i32]) {
+        self.nb_constraints += 1;
+        println!("  [Instantiation]   {:?} = {:?}", scope, values);
+    }
+
     fn on_constraint_regular(
         &mut self,
         scope: &[String],

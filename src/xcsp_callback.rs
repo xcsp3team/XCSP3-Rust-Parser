@@ -148,7 +148,7 @@ pub trait XcspCallback {
     }
 
     /// <instantiation> ... </instantiation>
-    fn on_constraint_instantiation(&mut self, _c: &XInstantiation) {}
+    fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {}
 
     /// <group> ... </group>  (groupe de contraintes)
     fn on_constraint_group(&mut self, _c: &XGroup) {}

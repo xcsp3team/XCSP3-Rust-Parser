@@ -92,7 +92,6 @@ impl XcspRunner {
 
                 // Ordered constraints
                 XConstraintType::XOrdered(inner) => {
-                    println!("TEST");
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     match inner.lengths() {
                         Some(val) => {
@@ -122,7 +121,11 @@ impl XcspRunner {
                     callback.on_constraint_mdd(&*scope, inner.transitions());
                 }
                 XConstraintType::XInstantiation(inner) => {
-                    callback.on_constraint_instantiation(inner)
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    if scope.len() != inner.values().len() {
+                        panic!("In instantiation constraint: list and values must have same size");
+                    }
+                    callback.on_constraint_instantiation(&*scope, inner.values())
                 }
                 XConstraintType::XGroup(inner) => callback.on_constraint_group(inner),
                 XConstraintType::XMaximum(inner) => callback.on_constraint_maximum(inner),

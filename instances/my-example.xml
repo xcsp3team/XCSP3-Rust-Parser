@@ -55,14 +55,6 @@
         </intension>
         <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
         <intension>ge(treez[1][1][1],v[2][2])</intension>
-        <instantiation>
-            <list>vv2 bar qux</list>
-            <values>12 4 30</values>
-        </instantiation>
-        <instantiation>
-            <list>v[1][] v[2][2</list>
-            <values>1 0 2 1 3 1</values>
-        </instantiation>
         <extension>
             <list>treez[4][4][4]</list>
             <conflicts>0..2 4 5..7 9</conflicts>
@@ -328,7 +320,14 @@
             <operator>ge</operator>
         </ordered>
         <ordered id="c" case="strictly_increasing">y[1..3]</ordered>
-
+        <instantiation>
+            <list>vv2 bar qux</list>
+            <values>12 4 30</values>
+        </instantiation>
+        <instantiation>
+            <list>v[1][] v[2][2]</list>
+            <values>1 0 2 1 3 1</values>
+        </instantiation>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>
