@@ -65,6 +65,8 @@ the SYNTAX of xcsp3 is as follows:
  */
 pub mod xcsp3_xml {
     use crate::constraints::xconstraint_set::xcsp3_core::XConstraintSet;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator::{Ge, Gt, Le, Lt};
     use crate::objectives::xobjectives_set::xcsp3_core::XObjectivesSet;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use crate::xcsp_xml::constraint::xcsp3_xml::Constraint;
@@ -247,8 +249,24 @@ pub mod xcsp3_xml {
                 ConstraintType::Ordered {
                     vars,
                     operator,
+                    case,
                     lengths,
-                } => set.build_ordered(vars, lengths, operator),
+                    list,
+                } => {
+                    if (list.is_empty()) {
+                        let op: String = match case.as_str() {
+                            "increasing" => String::from("ge"),
+                            "strictly_increasing" => String::from("gt"),
+                            "decreasing" => String::from("le"),
+                            "strictly_decreasing" => String::from("lt"),
+                            _ => panic!("case undefined in ordered constraint: {}", case), // default case
+                        };
+                        set.build_ordered(vars, lengths, &*op)
+                    } else {
+                        set.build_ordered(list, lengths, operator)
+                    }
+                }
+
                 ConstraintType::Intension { value, function } => {
                     if !value.is_empty() {
                         set.build_intention(value);

@@ -10,8 +10,8 @@
 use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
-use crate::utils::utils_functions::to_var_list;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
+use crate::utils::utils_functions::{to_int_list, to_var_list};
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
@@ -89,7 +89,21 @@ impl XcspRunner {
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
                 XConstraintType::XIntention(inner) => callback.on_constraint_intention(inner),
                 XConstraintType::XSum(inner) => callback.on_constraint_sum(inner),
-                XConstraintType::XOrdered(inner) => callback.on_constraint_ordered(inner),
+
+                // Ordered constraints
+                XConstraintType::XOrdered(inner) => {
+                    println!("TEST");
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    match inner.lengths() {
+                        Some(val) => {
+                            let tmp = to_int_list(val);
+                            callback.on_constraint_ordered_v2(&*scope, &*tmp, *inner.operator());
+                        }
+                        None => {
+                            callback.on_constraint_ordered_v1(&*scope, *inner.operator());
+                        }
+                    }
+                }
 
                 // Regular Constraint
                 XConstraintType::XRegular(inner) => {

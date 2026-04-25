@@ -131,15 +131,6 @@
         </sum>
 
 
-        <ordered>
-            <list>x[1..4]</list>
-            <operator>lt</operator>
-        </ordered>
-        <ordered>
-            <list>y[1..3]</list>
-            <lengths>5 3</lengths>
-            <operator>ge</operator>
-        </ordered>
         <allEqual>
             <list>treez[]</list>
             <list>v[][2]</list>
@@ -327,6 +318,17 @@
                 (n4,0,t)(n5,0,t)
             </transitions>
         </mdd>
+        <ordered>
+            <list>z[1..3]</list>
+            <operator>lt</operator>
+        </ordered>
+        <ordered>
+            <list>y[1..3]</list>
+            <lengths>5 3</lengths>
+            <operator>ge</operator>
+        </ordered>
+        <ordered id="c" case="strictly_increasing">y[1..3]</ordered>
+
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>

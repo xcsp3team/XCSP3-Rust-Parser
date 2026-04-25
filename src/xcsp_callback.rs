@@ -35,6 +35,7 @@ use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::constraints::xsum::xcsp3_core::XSum;
+use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
@@ -118,7 +119,15 @@ pub trait XcspCallback {
     fn on_constraint_sum(&mut self, _c: &XSum) {}
 
     /// <ordered> x y z <operator> lt </operator> </ordered>
-    fn on_constraint_ordered(&mut self, _c: &XOrdered) {}
+    fn on_constraint_ordered_v1(&mut self, scope: &[String], operator: Operator) {
+        println!("c Ordered Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_ordered_v2(&mut self, scope: &[String], lengths: &[i32], operator: Operator) {
+        println!("c Ordered Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <regular> ... </regular>  (automate fini déterministe)
     fn on_constraint_regular(
