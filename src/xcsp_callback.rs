@@ -784,7 +784,25 @@ pub trait XcspCallback {
     fn on_constraint_cumulative(&mut self, _c: &XCumulative) {}
 
     /// <noOverlap> ... </noOverlap>  (2D)
-    fn on_constraint_no_overlap(&mut self, _c: &XNoOverlap) {}
+    fn on_constraint_no_overlap_v1(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[i32],
+        _zero_ignored: bool,
+    ) {
+        println!("c No Overlap Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_no_overlap_v2(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[String],
+        _zero_ignored: bool,
+    ) {
+        println!("c No Overlap Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <noOverlap> ... </noOverlap>  (k dimensions)
     fn on_constraint_no_overlap_k_dim(&mut self, _c: &XNoOverlapKDim) {}

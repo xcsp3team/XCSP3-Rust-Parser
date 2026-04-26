@@ -1,6 +1,7 @@
 <instance format="XCSP3" type="CSP">
     <variables>
         <array id="y" size="[6]">0 2</array>
+        <array id="t" size="[6]">0 2</array>
         <array id="x" size="[3][4]">0 2 4..10 61..65 77</array>
         <array id="z" size="[6]">0..10 14 22..24</array>
         <array id="yy" note="x[i] is the ith value of the series" size="[9]">0..8</array>
@@ -341,7 +342,7 @@
             <condition>(eq,k5)</condition>
         </count>
         <nValues id="c1">
-            <list>y[]</list>
+            <list>x1 x2 x3 x4</list>
             <condition>(eq,3)</condition>
         </nValues>
         <nValues id="c2">
@@ -353,6 +354,17 @@
             <except>0</except>
             <condition>(eq,2)</condition>
         </nValues>
+        <allDifferent>
+            <matrix>x[][]</matrix>
+        </allDifferent>
+        <noOverlap>
+            <origins>y[]</origins>
+            <lengths>1 2 3 4 5 6</lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins>y[]</origins>
+            <lengths>t[]</lengths>
+        </noOverlap>
 
     </constraints>
     <objectives>

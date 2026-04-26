@@ -365,7 +365,31 @@ impl XcspRunner {
                 XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
                 XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
                 XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
-                XConstraintType::XNoOverlap(inner) => callback.on_constraint_no_overlap(inner),
+                //---------------------------------------------------------------------------------------------------
+                // NoOverlap Constraint
+                //---------------------------------------------------------------------------------------------------
+                XConstraintType::XNoOverlap(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    match inner.lengths().first() {
+                        Some(XVarVal::IntVal(_)) => {
+                            let tmp = to_int_list(inner.lengths());
+                            callback.on_constraint_no_overlap_v1(
+                                &*scope,
+                                &*tmp,
+                                inner.zero_ignored(),
+                            )
+                        }
+                        Some(XVarVal::IntVar(_)) => {
+                            let tmp = to_var_list(&inner.lengths(), inner.set());
+                            callback.on_constraint_no_overlap_v2(
+                                &*scope,
+                                &*tmp,
+                                inner.zero_ignored(),
+                            )
+                        }
+                        _ => {}
+                    }
+                }
                 XConstraintType::XNoOverlapKDim(inner) => {
                     callback.on_constraint_no_overlap_k_dim(inner)
                 }

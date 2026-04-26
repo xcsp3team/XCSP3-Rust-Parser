@@ -307,6 +307,29 @@ impl XcspCallback for PrintingSolver {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_no_overlap_v1(
+        &mut self,
+        scope: &[String],
+        lengths: &[i32],
+        zero_ignored: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            scope, lengths, zero_ignored
+        );
+    }
+
+    fn on_constraint_no_overlap_v2(
+        &mut self,
+        scope: &[String],
+        lengths: &[String],
+        zero_ignored: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            scope, lengths, zero_ignored
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
