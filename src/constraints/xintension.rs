@@ -51,7 +51,6 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     pub struct XIntention<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         tree: ExpressionTree,
     }
@@ -74,31 +73,6 @@ pub mod xcsp3_core {
         }
     }
 
-    impl XConstraintTrait for XIntention<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
-    }
-
     impl<'a> XIntention<'a> {
         pub fn get_expression(&self) -> &ExpressionTree {
             &self.tree
@@ -118,12 +92,19 @@ pub mod xcsp3_core {
         }
 
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, tree: ExpressionTree) -> Self {
-            Self {
-                scope,
-                map: Default::default(),
-                set,
-                tree,
-            }
+            Self { scope, set, tree }
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn tree(&self) -> &ExpressionTree {
+            &self.tree
         }
     }
 }
