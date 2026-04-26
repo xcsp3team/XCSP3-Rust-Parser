@@ -276,7 +276,59 @@ impl XcspRunner {
 
                 XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
                 XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
-                XConstraintType::XCount(inner) => callback.on_constraint_count(inner),
+                //---------------------------------------------------------------------------------------------------
+                // Extremum Constraint
+                //---------------------------------------------------------------------------------------------------
+                XConstraintType::XCount(inner) => match inner.values().first() {
+                    Some(XVarVal::IntVal(_)) => {
+                        // Values are integers
+                        let values = to_int_list(inner.values());
+                        if (scope_contains_expressions(inner.scope())) {
+                            // scope is expressions
+                            let scope: Vec<ExpressionTree> =
+                                to_expression_list(&inner.scope(), &inner.set());
+                            callback.on_constraint_count_v1(
+                                &*scope,
+                                &*values,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        } else {
+                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                            callback.on_constraint_count_v2(
+                                &*scope,
+                                &*values,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        }
+                    }
+                    Some(XVarVal::IntVar(_)) => {
+                        let values: Vec<String> = to_var_list(inner.values(), &inner.set());
+                        if (scope_contains_expressions(inner.scope())) {
+                            // scope is expressions
+                            let scope: Vec<ExpressionTree> =
+                                to_expression_list(&inner.scope(), &inner.set());
+                            callback.on_constraint_count_v3(
+                                &*scope,
+                                &*values,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        } else {
+                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                            callback.on_constraint_count_v4(
+                                &*scope,
+                                &*values,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        }
+                    }
+                    Some(_) => panic!("Unexpected variant in coeffs"),
+                    None => panic!("coeffs is empty"),
+                },
+
                 XConstraintType::XNValues(inner) => callback.on_constraint_n_values(inner),
                 XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
                 XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),

@@ -228,6 +228,58 @@ impl XcspCallback for PrintingSolver {
     ) {
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
+
+    fn on_constraint_count_v1(
+        &mut self,
+        scope: &[ExpressionTree],
+        values: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v2(
+        &mut self,
+        scope: &[String],
+        values: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v4(
+        &mut self,
+        scope: &[String],
+        values: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v3(
+        &mut self,
+        scope: &[ExpressionTree],
+        values: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
