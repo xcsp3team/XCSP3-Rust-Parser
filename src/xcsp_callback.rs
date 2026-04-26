@@ -601,11 +601,178 @@ pub trait XcspCallback {
     /// <slide> ... </slide>
     fn on_constraint_slide(&mut self, _c: &XSlide) {}
 
-    /// <count> ... </count>
-    fn on_constraint_count(&mut self, _c: &XCount) {}
+    /**
+     * The callback function related to a count constraint with expressions
+     * See http://xcsp.org/specifications/count
+     * Example:
+     * &lt;count id="c1">
+     *     &lt;list> eq(x,1) ne(z,2) </list>
+     *     &lt;values> 2 </values>
+     *     &lt;condition> (ne,k1) </condition>
+     * &lt;/count>
+     *
+     * @param _scope the expression
+     * @param values the set of integer values
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)     */
+    fn on_constraint_count_v1(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _values: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Count Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <nValues> ... </nValues>
-    fn on_constraint_n_values(&mut self, _c: &XNValues) {}
+    /**
+     * The callback function related to a count constraint
+     * See http://xcsp.org/specifications/count
+     * Example:
+     * &lt;count id="c1">
+     *     &lt;list> y[] </list>
+     *     &lt;values> 1 2 </values>
+     *     &lt;condition> (ne,k1) </condition>
+     * &lt;/count>
+     *
+     * @param _scope the expression
+     * @param values the set of integer values
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)     */
+    fn on_constraint_count_v2(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Count Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a count constraint with expressions
+     * See http://xcsp.org/specifications/count
+     * Example:
+     * &lt;count id="c1">
+     *     &lt;list> eq(x,1) ne(z,2) </list>
+     *     &lt;values> 2 </values>
+     *     &lt;condition> (ne,k1) </condition>
+     * &lt;/count>
+     *
+     * @param _scope the expression
+     * @param values the set of variables values
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)     */
+    fn on_constraint_count_v3(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _values: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Count Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a count constraint
+     * See http://xcsp.org/specifications/count
+     * Example:
+     * &lt;count id="c1">
+     *     &lt;list> y[] </list>
+     *     &lt;values> x </values>
+     *     &lt;condition> (ne,k1) </condition>
+     * &lt;/count>
+     *
+     * @param _scope the expression
+     * @param values the set of variables values
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+    fn on_constraint_count_v4(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Count Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a nValues constraint
+     * See http://xcsp.org/specifications/nValues
+     * Example:
+     * &lt;nValues id="c3">
+     *   &lt;list> z1 z2 z3 &lt;/list>
+     *    &lt;condition> (eq,2) &lt;/condition>
+     * &lt;/nValues>
+     *
+     * @param _scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+    fn on_constraint_nvalues_v1(
+        &mut self,
+        _scope: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c NValues Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a nValues constraint with exceptions
+     * See http://xcsp.org/specifications/nValues
+     * Example:
+     * &lt;nValues id="c3">
+     *   &lt;list> z1 z2 z3 &lt;/list>
+     *   &lt;except> 0 &lt;\except>
+     *    &lt;condition> (eq,2) &lt;/condition>
+     * &lt;/nValues>
+     *
+     * @param _scope the scope of the constraint
+     * @param _except the set of exceptions
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+    fn on_constraint_nvalues_v2(
+        &mut self,
+        _scope: &[String],
+        _except: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c NValues Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a nValues constraint with expressions
+     * See http://xcsp.org/specifications/nValues
+     * Example:
+     * &lt;nValues id="c3">
+     *   &lt;list> eq(z1,5) ne(z2,4) &lt;/list>
+     *    &lt;condition> (eq,2) &lt;/condition>
+     * &lt;/nValues>
+     *
+     * @param _scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+    fn on_constraint_nvalues_v3(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c NValues Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <cardinality> ... </cardinality>
     fn on_constraint_cardinality(&mut self, _c: &XCardinality) {}
@@ -617,7 +784,25 @@ pub trait XcspCallback {
     fn on_constraint_cumulative(&mut self, _c: &XCumulative) {}
 
     /// <noOverlap> ... </noOverlap>  (2D)
-    fn on_constraint_no_overlap(&mut self, _c: &XNoOverlap) {}
+    fn on_constraint_no_overlap_v1(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[i32],
+        _zero_ignored: bool,
+    ) {
+        println!("c No Overlap Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_no_overlap_v2(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[String],
+        _zero_ignored: bool,
+    ) {
+        println!("c No Overlap Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <noOverlap> ... </noOverlap>  (k dimensions)
     fn on_constraint_no_overlap_k_dim(&mut self, _c: &XNoOverlapKDim) {}

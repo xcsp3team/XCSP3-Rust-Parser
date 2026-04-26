@@ -228,6 +228,108 @@ impl XcspCallback for PrintingSolver {
     ) {
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
+
+    fn on_constraint_count_v1(
+        &mut self,
+        scope: &[ExpressionTree],
+        values: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v2(
+        &mut self,
+        scope: &[String],
+        values: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v4(
+        &mut self,
+        scope: &[String],
+        values: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_count_v3(
+        &mut self,
+        scope: &[ExpressionTree],
+        values: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Count]  {:?} - values: {:?} {:?} {:?}",
+            scope, values, operator, operand
+        );
+    }
+
+    fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_nvalues_v2(
+        &mut self,
+        scope: &[String],
+        except: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [NValues]  {:?} (exception: {:?}) {:?} {:?}",
+            scope, except, operator, operand
+        );
+    }
+
+    fn on_constraint_nvalues_v3(
+        &mut self,
+        scope: &[ExpressionTree],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_no_overlap_v1(
+        &mut self,
+        scope: &[String],
+        lengths: &[i32],
+        zero_ignored: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            scope, lengths, zero_ignored
+        );
+    }
+
+    fn on_constraint_no_overlap_v2(
+        &mut self,
+        scope: &[String],
+        lengths: &[String],
+        zero_ignored: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            scope, lengths, zero_ignored
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
