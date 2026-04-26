@@ -35,6 +35,7 @@ use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::constraints::xsum::xcsp3_core::XSum;
+use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
@@ -213,8 +214,78 @@ pub trait XcspCallback {
     /// <intension> eq(x, add(y,1)) </intension>
     fn on_constraint_intention(&mut self, _c: &XIntention) {}
 
-    /// <sum> ... <condition> (ge, 10) </condition> </sum>
-    fn on_constraint_sum(&mut self, _c: &XSum) {}
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+        println!("c Sum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;coeffs>1 3 5 &lt;coeffs>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param coeefs the coefficient of the sum (int)
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v2(
+        &mut self,
+        _scope: &[String],
+        _coeffs: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;coeffs>w z t &lt;coeffs>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param coeefs the coefficient of the sum (variables)
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v3(
+        &mut self,
+        _scope: &[String],
+        _coeffs: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /**
      * The callback function related to an ordered constraint

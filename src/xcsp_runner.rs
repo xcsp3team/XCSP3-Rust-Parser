@@ -9,6 +9,7 @@
  */
 use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
+use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{to_int_list, to_var_list};
@@ -83,12 +84,53 @@ impl XcspRunner {
 
                 // All Equal constraints
                 XConstraintType::XAllEqual(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope, &inner.set);
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_all_equal(&*scope);
                 }
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
                 XConstraintType::XIntention(inner) => callback.on_constraint_intention(inner),
-                XConstraintType::XSum(inner) => callback.on_constraint_sum(inner),
+
+                // Sum constraints
+                XConstraintType::XSum(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    match inner.coeffs() {
+                        None => {
+                            callback.on_constraint_sum_v1(
+                                &*scope,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        }
+                        Some(vals) => match vals.first() {
+                            Some(XVarVal::IntVal(_)) => {
+                                let tmp = to_int_list(vals);
+                                if tmp.len() != scope.len() {
+                                    panic!("In constraint sum: scope and coefs must have the same size");
+                                }
+                                callback.on_constraint_sum_v2(
+                                    &*scope,
+                                    &*tmp,
+                                    inner.operator(),
+                                    inner.operand().clone(),
+                                );
+                            }
+                            Some(XVarVal::IntVar(_)) => {
+                                let coefs: Vec<String> = to_var_list(vals, &inner.set());
+                                if coefs.len() != scope.len() {
+                                    panic!("In constraint sum: scope and coefs must have the same size");
+                                }
+                                callback.on_constraint_sum_v3(
+                                    &*scope,
+                                    &*coefs,
+                                    inner.operator(),
+                                    inner.operand().clone(),
+                                );
+                            }
+                            Some(_) => panic!("Unexpected variant in coeffs"),
+                            None => panic!("coeffs is empty"),
+                        },
+                    }
+                }
 
                 // Ordered constraints
                 XConstraintType::XOrdered(inner) => {
@@ -120,6 +162,8 @@ impl XcspRunner {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_mdd(&*scope, inner.transitions());
                 }
+
+                // Instantiation constraint
                 XConstraintType::XInstantiation(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     if scope.len() != inner.values().len() {
