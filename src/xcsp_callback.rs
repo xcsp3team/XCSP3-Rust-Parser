@@ -35,6 +35,7 @@ use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::constraints::xsum::xcsp3_core::XSum;
+use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
@@ -211,8 +212,19 @@ pub trait XcspCallback {
     /// <extension> ... </extension>  (table de tuples autorisés/interdits)
     fn on_constraint_extension(&mut self, _c: &XExtension) {}
 
-    /// <intension> eq(x, add(y,1)) </intension>
-    fn on_constraint_intention(&mut self, _c: &XIntention) {}
+    /**
+     * The callback function related to a constraint in intension
+     * See http://xcsp.org/specifications/intension
+     * Example:
+     * &lt;intension> eq(add(x,y),z) &lt;/intension>
+     *
+     * @param id the id (name) of the constraint
+     * @param tree the canonized form related to the tree
+     */
+    fn on_constraint_intention(&mut self, _scope: &[String], _tree: &ExpressionTree) {
+        println!("c Intension not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /**
      * The callback function related to a sum constraint with all coefs are equal to one

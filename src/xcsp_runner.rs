@@ -88,7 +88,12 @@ impl XcspRunner {
                     callback.on_constraint_all_equal(&*scope);
                 }
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
-                XConstraintType::XIntention(inner) => callback.on_constraint_intention(inner),
+
+                // Intension constraint
+                XConstraintType::XIntention(inner) => {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_intention(&*scope, inner.tree());
+                }
 
                 // Sum constraints
                 XConstraintType::XSum(inner) => {

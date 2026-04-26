@@ -47,14 +47,6 @@
                 </intension>
             </block>
         </block>
-        <intension>
-            <function>eq(add(bar,qux),v[0][0])</function>
-        </intension>
-        <intension>
-            <function>ge(treea[4],treea[9])</function>
-        </intension>
-        <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
-        <intension>ge(treez[1][1][1],v[2][2])</intension>
         <extension>
             <list>treez[4][4][4]</list>
             <conflicts>0..2 4 5..7 9</conflicts>
@@ -337,6 +329,16 @@
             <coeffs>y[1] y[2] y[3]</coeffs>
             <condition>(gt,2)</condition>
         </sum>
+        <intension>
+            <function>eq(add(bar,qux),v[0][0])</function>
+        </intension>
+        <intension>
+            <function>ge(treea[4],treea[9])</function>
+        </intension>
+        <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
+        <intension>ge(treez[1][1][1],v[2][2])</intension>
+
+        
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>
