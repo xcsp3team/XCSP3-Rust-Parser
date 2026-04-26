@@ -337,8 +337,9 @@
         </intension>
         <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
         <intension>ge(treez[1][1][1],v[2][2])</intension>
-
-        
+        <allDifferent>
+            eq(y[1],1) ne(y[2],3) ge(y[3],4)
+        </allDifferent>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>

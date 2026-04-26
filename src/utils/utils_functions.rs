@@ -36,6 +36,7 @@
  * </p>
  */
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
+use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
@@ -515,6 +516,24 @@ pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
         .flatten()
         .map(|(vs, _vv)| vs)
         .collect()
+}
+
+pub fn to_expression_list(the_list: &[XVarVal], _set: &XVariableSet) -> Vec<ExpressionTree> {
+    let mut trees = vec![];
+
+    for v in the_list {
+        match v {
+            XVarVal::IntVar(expr) => match ExpressionTree::from_string(expr) {
+                Ok(tree) => trees.push(tree),
+                Err(_) => panic!("Invalid expression tree: {}", expr),
+            },
+            _ => panic!("Only IntVar expressions are allowed in this list"),
+        }
+    }
+    trees
+}
+pub fn scope_contains_expressions(scope: &[XVarVal]) -> bool {
+    scope.iter().any(|s| s.to_string().contains('('))
 }
 
 // #[allow(dead_code)]

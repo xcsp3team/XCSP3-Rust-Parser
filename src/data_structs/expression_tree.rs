@@ -163,7 +163,7 @@ pub mod xcsp3_utils {
     //     }
     // }
 
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct ExpressionTree {
         root: TreeNode,
         // expression: String,

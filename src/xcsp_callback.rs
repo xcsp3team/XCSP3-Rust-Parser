@@ -169,8 +169,24 @@ pub trait XcspCallback {
      *
      * @param scope the scope of the constraint
      */
-    fn on_constraint_all_different(&mut self, _scope: &[String]) {
+    fn on_constraint_all_different_v1(&mut self, _scope: &[String]) {
         println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a alldifferent constraint with expressions
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * &lt;allDifferent>
+     *   add(q[0],0) add(q[1],1) add(q[2],2) add(q[3],3) add(q[4],4) add(q[5],5) add(q[6],6) add(q[7],7)
+     * &lt;/allDifferent>
+     *
+     * @param scope the trees of the constraint
+     */
+    fn on_constraint_all_different_v2(&mut self, _scope: &[ExpressionTree]) {
+        println!("c Alldifferent with expressions in list not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -204,8 +220,24 @@ pub trait XcspCallback {
      * @param list the scope of the constraint
      *
      */
-    fn on_constraint_all_equal(&mut self, _scope: &[String]) {
+    fn on_constraint_all_equal_v1(&mut self, _scope: &[String]) {
         println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a allEqual constraint with expressions
+     * See http://xcsp.org/specifications/allEqual
+     *
+     * Example:
+     * &lt;allEqual>
+     *   add(q[0],0) add(q[1],1) add(q[2],2) add(q[3],3) add(q[4],4) add(q[5],5) add(q[6],6) add(q[7],7)
+     * &lt;/allEqual>
+     *
+     * @param list the trees of the constraint
+     */
+    fn on_constraint_all_equal_v2(&mut self, _scope: &[ExpressionTree]) {
+        println!("c Alldifferent with expressions in scope not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -237,7 +269,7 @@ pub trait XcspCallback {
      * &lt;/sum>
      *
      * @param scope the scope of the constraint
-     * @param Operaor the condition (Le, Gt...)
+     * @param operaor the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
     fn on_constraint_sum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
@@ -285,7 +317,7 @@ pub trait XcspCallback {
      *
      * @param scope the scope of the constraint
      * @param coeefs the coefficient of the sum (variables)
-     * @param Operaor the condition (Le, Gt...)
+     * @param tperator the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
     fn on_constraint_sum_v3(
@@ -296,6 +328,55 @@ pub trait XcspCallback {
         _operand: Operand,
     ) {
         println!("c Sum Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a sum constraint with expressions in list and weights
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list>or(eq(x[5],0),eq(x[7],0)) or(eq(x[1],0),eq(x[2],0),eq(x[8],0)) or(eq(x[0],0),eq(x[3],0),eq(x[4],0),eq(x[6],0),eq(x[9],0))</list>
+     *   &lt;coeff>1 2 3 &lt;coeff>
+     *   &lt;condition> (gt,y) </condition>
+     * &lt;/sum>
+     *
+     * @param _scope the different trees
+     * @param coeefs the coefficient of the sum (variables)
+     * @param _operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v5(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _coeffs: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a sum constraint with expressions in list
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list>or(eq(x[5],0),eq(x[7],0)) or(eq(x[1],0),eq(x[2],0),eq(x[8],0)) or(eq(x[0],0),eq(x[3],0),eq(x[4],0),eq(x[6],0),eq(x[9],0))</list>
+     *   &lt;condition> (gt,y) </condition>
+     * &lt;/sum>
+     *
+     * @param _scope the different trees
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v4(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 

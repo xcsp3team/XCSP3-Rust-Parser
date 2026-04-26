@@ -9,10 +9,13 @@
  */
 use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
+use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
-use crate::utils::utils_functions::{to_int_list, to_var_list};
+use crate::utils::utils_functions::{
+    scope_contains_expressions, to_expression_list, to_int_list, to_var_list,
+};
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
@@ -72,43 +75,86 @@ impl XcspRunner {
         let mut constraints = model.build_constraints(&variables);
         for c in constraints.iter_mut() {
             match c {
+                //---------------------------------------------------------------------------------------------------
                 // All Diff constraints
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XAllDifferent(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_all_different(&*scope);
+                    if (scope_contains_expressions(inner.scope())) {
+                        let scope: Vec<ExpressionTree> =
+                            to_expression_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_all_different_v2(&*scope);
+                    } else {
+                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_all_different_v1(&*scope);
+                    }
                 }
                 XConstraintType::XAllDifferentExcept(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_all_different_except(&*scope, &*inner.except());
                 }
 
+                //---------------------------------------------------------------------------------------------------
                 // All Equal constraints
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XAllEqual(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_all_equal(&*scope);
+                    if (scope_contains_expressions(inner.scope())) {
+                        let scope: Vec<ExpressionTree> =
+                            to_expression_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_all_equal_v2(&*scope);
+                    } else {
+                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_all_equal_v1(&*scope);
+                    }
                 }
                 XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
 
+                //---------------------------------------------------------------------------------------------------
                 // Intension constraint
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XIntention(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_intention(&*scope, inner.tree());
                 }
 
+                //---------------------------------------------------------------------------------------------------
                 // Sum constraints
-                XConstraintType::XSum(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    match inner.coeffs() {
-                        None => {
+                //---------------------------------------------------------------------------------------------------
+                XConstraintType::XSum(inner) => match inner.coeffs() {
+                    None => {
+                        if (scope_contains_expressions(inner.scope())) {
+                            let scope: Vec<ExpressionTree> =
+                                to_expression_list(&inner.scope(), &inner.set());
+                            callback.on_constraint_sum_v4(
+                                &*scope,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        } else {
+                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                             callback.on_constraint_sum_v1(
                                 &*scope,
                                 inner.operator(),
                                 inner.operand().clone(),
                             );
                         }
-                        Some(vals) => match vals.first() {
-                            Some(XVarVal::IntVal(_)) => {
-                                let tmp = to_int_list(vals);
+                    }
+                    Some(vals) => match vals.first() {
+                        Some(XVarVal::IntVal(_)) => {
+                            let tmp = to_int_list(vals);
+                            if (scope_contains_expressions(inner.scope())) {
+                                let scope: Vec<ExpressionTree> =
+                                    to_expression_list(&inner.scope(), &inner.set());
+                                if tmp.len() != scope.len() {
+                                    panic!("In constraint sum: scope and coefs must have the same size");
+                                }
+                                callback.on_constraint_sum_v5(
+                                    &*scope,
+                                    &*tmp,
+                                    inner.operator(),
+                                    inner.operand().clone(),
+                                );
+                            } else {
+                                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                                 if tmp.len() != scope.len() {
                                     panic!("In constraint sum: scope and coefs must have the same size");
                                 }
@@ -119,25 +165,30 @@ impl XcspRunner {
                                     inner.operand().clone(),
                                 );
                             }
-                            Some(XVarVal::IntVar(_)) => {
-                                let coefs: Vec<String> = to_var_list(vals, &inner.set());
-                                if coefs.len() != scope.len() {
-                                    panic!("In constraint sum: scope and coefs must have the same size");
-                                }
-                                callback.on_constraint_sum_v3(
-                                    &*scope,
-                                    &*coefs,
-                                    inner.operator(),
-                                    inner.operand().clone(),
+                        }
+                        Some(XVarVal::IntVar(_)) => {
+                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                            let coefs: Vec<String> = to_var_list(vals, &inner.set());
+                            if coefs.len() != scope.len() {
+                                panic!(
+                                    "In constraint sum: scope and coefs must have the same size"
                                 );
                             }
-                            Some(_) => panic!("Unexpected variant in coeffs"),
-                            None => panic!("coeffs is empty"),
-                        },
-                    }
-                }
+                            callback.on_constraint_sum_v3(
+                                &*scope,
+                                &*coefs,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            );
+                        }
+                        Some(_) => panic!("Unexpected variant in coeffs"),
+                        None => panic!("coeffs is empty"),
+                    },
+                },
 
+                //---------------------------------------------------------------------------------------------------
                 // Ordered constraints
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XOrdered(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     match inner.lengths() {
@@ -151,7 +202,9 @@ impl XcspRunner {
                     }
                 }
 
+                //---------------------------------------------------------------------------------------------------
                 // Regular Constraint
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XRegular(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_regular(
@@ -162,13 +215,17 @@ impl XcspRunner {
                     );
                 }
 
+                //---------------------------------------------------------------------------------------------------
                 // MDD Constraint
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XMdd(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_mdd(&*scope, inner.transitions());
                 }
 
+                //---------------------------------------------------------------------------------------------------
                 // Instantiation constraint
+                //---------------------------------------------------------------------------------------------------
                 XConstraintType::XInstantiation(inner) => {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     if scope.len() != inner.values().len() {

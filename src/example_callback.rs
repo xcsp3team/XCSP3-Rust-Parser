@@ -80,7 +80,12 @@ impl XcspCallback for PrintingSolver {
     }
 
     // -- Contraintes ---------------------------------------------------------
-    fn on_constraint_all_different(&mut self, scope: &[String]) {
+    fn on_constraint_all_different_v1(&mut self, scope: &[String]) {
+        self.nb_constraints += 1;
+        println!("  [AllDiff]  {:?}", scope);
+    }
+
+    fn on_constraint_all_different_v2(&mut self, scope: &[ExpressionTree]) {
         self.nb_constraints += 1;
         println!("  [AllDiff]  {:?}", scope);
     }
@@ -93,7 +98,11 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
-    fn on_constraint_all_equal(&mut self, scope: &[String]) {
+    fn on_constraint_all_equal_v1(&mut self, scope: &[String]) {
+        self.nb_constraints += 1;
+        println!("  [AllEqual]  {:?}", scope);
+    }
+    fn on_constraint_all_equal_v2(&mut self, scope: &[ExpressionTree]) {
         self.nb_constraints += 1;
         println!("  [AllEqual]  {:?}", scope);
     }
@@ -168,6 +177,28 @@ impl XcspCallback for PrintingSolver {
     ) {
         println!(
             "  [Sum]  {:?} * {:?} {:?}, {:?}",
+            scope, coeffs, operator, operand
+        );
+    }
+
+    fn on_constraint_sum_v4(
+        &mut self,
+        scope: &[ExpressionTree],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_sum_v5(
+        &mut self,
+        scope: &[ExpressionTree],
+        coeffs: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Sum]  {:?} * {:?} {:?} {:?}",
             scope, coeffs, operator, operand
         );
     }
