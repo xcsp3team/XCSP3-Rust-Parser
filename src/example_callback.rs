@@ -280,6 +280,33 @@ impl XcspCallback for PrintingSolver {
             scope, values, operator, operand
         );
     }
+
+    fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_nvalues_v2(
+        &mut self,
+        scope: &[String],
+        except: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [NValues]  {:?} (exception: {:?}) {:?} {:?}",
+            scope, except, operator, operand
+        );
+    }
+
+    fn on_constraint_nvalues_v3(
+        &mut self,
+        scope: &[ExpressionTree],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
+    }
+
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);

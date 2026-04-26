@@ -51,7 +51,6 @@ pub mod xcsp3_core {
 
     pub struct XNValues<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         operator: Operator,
         operand: Operand,
@@ -79,30 +78,6 @@ pub mod xcsp3_core {
                 "XNValues: scope =  {}, condition = ({:?}, {:?})",
                 ret, self.operator, self.operand
             )
-        }
-    }
-    impl XConstraintTrait for XNValues<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
     }
 
@@ -158,7 +133,6 @@ pub mod xcsp3_core {
         ) -> Self {
             Self {
                 scope,
-                map: Default::default(),
                 set,
                 operator,
                 operand,
@@ -166,15 +140,24 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn get_except(&self) -> &Option<Vec<XVarVal>> {
-            &self.except
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
         }
-        pub fn get_operand(&self) -> &Operand {
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn operator(&self) -> Operator {
+            self.operator
+        }
+
+        pub fn operand(&self) -> &Operand {
             &self.operand
         }
 
-        pub fn get_operator(&self) -> &Operator {
-            &self.operator
+        pub fn except(&self) -> &Option<Vec<XVarVal>> {
+            &self.except
         }
     }
 }

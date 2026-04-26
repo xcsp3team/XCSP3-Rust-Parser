@@ -329,7 +329,39 @@ impl XcspRunner {
                     None => panic!("coeffs is empty"),
                 },
 
-                XConstraintType::XNValues(inner) => callback.on_constraint_n_values(inner),
+                //---------------------------------------------------------------------------------------------------
+                // NVALUES Constraint
+                //---------------------------------------------------------------------------------------------------
+                XConstraintType::XNValues(inner) => {
+                    if (scope_contains_expressions(inner.scope())) {
+                        let scope: Vec<ExpressionTree> =
+                            to_expression_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_nvalues_v3(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        )
+                    } else {
+                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                        match inner.except() {
+                            None => callback.on_constraint_nvalues_v1(
+                                &*scope,
+                                inner.operator(),
+                                inner.operand().clone(),
+                            ),
+                            Some(vals) => {
+                                let tmp = to_int_list(vals);
+                                callback.on_constraint_nvalues_v2(
+                                    &*scope,
+                                    &*tmp,
+                                    inner.operator(),
+                                    inner.operand().clone(),
+                                )
+                            }
+                            _ => {}
+                        }
+                    }
+                }
                 XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
                 XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
                 XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),

@@ -340,6 +340,19 @@
             <values>foo</values>
             <condition>(eq,k5)</condition>
         </count>
+        <nValues id="c1">
+            <list>y[]</list>
+            <condition>(eq,3)</condition>
+        </nValues>
+        <nValues id="c2">
+            <list>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</list>
+            <condition>(le,w)</condition>
+        </nValues>
+        <nValues id="c3">
+            <list>y[]</list>
+            <except>0</except>
+            <condition>(eq,2)</condition>
+        </nValues>
 
     </constraints>
     <objectives>
