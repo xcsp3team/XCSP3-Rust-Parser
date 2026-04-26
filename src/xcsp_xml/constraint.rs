@@ -75,4 +75,12 @@ pub mod xcsp3_xml {
         #[serde(rename = "@startIndex", default)]
         pub start_index: String,
     }
+
+    #[derive(Deserialize, Debug, Default)]
+    pub struct ListWithCase {
+        #[serde(rename = "$value", default)]
+        pub value: String,
+        #[serde(rename = "@case", default)]
+        pub order: String,
+    }
 }

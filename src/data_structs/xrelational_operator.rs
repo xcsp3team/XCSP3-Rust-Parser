@@ -39,7 +39,7 @@
  */
 
 pub mod xcsp3_core {
-    #[derive(Clone, Debug)]
+    #[derive(Clone, Debug, Copy)]
     pub enum Operator {
         Lt,
         Le,

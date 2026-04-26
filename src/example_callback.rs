@@ -8,6 +8,8 @@ use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
 use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xintension::xcsp3_core::XIntention;
 use crate::constraints::xsum::xcsp3_core::XSum;
+use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjective;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
@@ -94,6 +96,17 @@ impl XcspCallback for PrintingSolver {
         self.nb_constraints += 1;
         println!("  [AllEqual]  {:?}", scope);
     }
+
+    fn on_constraint_ordered_v1(&mut self, scope: &[String], operator: Operator) {
+        println!("  [Ordered]  {:?}, operator {:?}", scope, operator);
+    }
+
+    fn on_constraint_ordered_v2(&mut self, scope: &[String], lengths: &[i32], operator: Operator) {
+        println!(
+            "  [Ordered]  {:?}, length: {:?} operator {:?}",
+            scope, lengths, operator
+        );
+    }
     fn on_constraint_extension(&mut self, c: &XExtension) {
         self.nb_constraints += 1;
         println!("  [Ext]      {}", c);
@@ -101,6 +114,11 @@ impl XcspCallback for PrintingSolver {
     fn on_constraint_intention(&mut self, c: &XIntention) {
         self.nb_constraints += 1;
         println!("  [Intent]   {}", c);
+    }
+
+    fn on_constraint_instantiation(&mut self, scope: &[String], values: &[i32]) {
+        self.nb_constraints += 1;
+        println!("  [Instantiation]   {:?} = {:?}", scope, values);
     }
 
     fn on_constraint_regular(
@@ -122,11 +140,36 @@ impl XcspCallback for PrintingSolver {
         println!("  [MDD]  {:?}", scope);
         println!("           transitions: {:?}", transitions);
     }
-    fn on_constraint_sum(&mut self, c: &XSum) {
-        self.nb_constraints += 1;
-        println!("  [Sum]      {}", c);
+
+    fn on_constraint_sum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_sum_v2(
+        &mut self,
+        scope: &[String],
+        coeffs: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Sum]  {:?} * {:?} {:?}, {:?}",
+            scope, coeffs, operator, operand
+        );
+    }
+
+    fn on_constraint_sum_v3(
+        &mut self,
+        scope: &[String],
+        coeffs: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Sum]  {:?} * {:?} {:?}, {:?}",
+            scope, coeffs, operator, operand
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);

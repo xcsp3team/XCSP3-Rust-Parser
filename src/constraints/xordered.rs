@@ -53,7 +53,6 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     pub struct XOrdered<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         lengths: Option<Vec<XVarVal>>,
         operator: Operator,
@@ -82,31 +81,6 @@ pub mod xcsp3_core {
                 "XOrdered: scope =  {} operator = {:?}",
                 ret, self.operator
             )
-        }
-    }
-
-    impl XConstraintTrait for XOrdered<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
     }
 
@@ -157,16 +131,25 @@ pub mod xcsp3_core {
         ) -> Self {
             XOrdered {
                 scope,
-                map: Default::default(),
                 set,
                 lengths,
                 operator,
             }
         }
-        pub fn get_lengths(&self) -> &Option<Vec<XVarVal>> {
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn lengths(&self) -> &Option<Vec<XVarVal>> {
             &self.lengths
         }
-        pub fn get_operator(&self) -> &Operator {
+
+        pub fn operator(&self) -> &Operator {
             &self.operator
         }
     }

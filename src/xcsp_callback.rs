@@ -35,6 +35,8 @@ use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::constraints::xsum::xcsp3_core::XSum;
+use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
@@ -44,43 +46,108 @@ pub trait XcspCallback {
     // Hooks de cycle de vie — appelés avant/après chaque section du fichier XML
     // -------------------------------------------------------------------------
 
+    /**
+     * Start to parse a XCSP instance.
+     * Related to tag <instance type="CSP/COP">
+     * See http://xcsp.org/specifications/skeleton
+     * @param type COP or CSP
+     */
     fn begin_instance(&mut self, _type: &InstanceType) {}
 
+    /**
+     * End of parsing
+     * Related to tag </instance>
+     * See http://xcsp.org/specifications/skeleton
+     */
     fn end_instance(&mut self) {}
 
-    /// Appelé juste avant de traiter la section <variables>
+    /**
+     * Start to parse variables
+     * Related to tag <variables>
+     * See http://xcsp.org/specifications/skeleton
+     */
     fn begin_variables(&mut self) {}
 
-    /// Appelé juste après avoir traité toutes les variables
+    /**
+     * The end of parsing variables
+     * Related to tag </variables>
+     * See http://xcsp.org/specifications/skeleton
+     */
     fn end_variables(&mut self) {}
 
-    /// Appelé juste avant de traiter la section <constraints>
+    /**
+     * Start to parse constraints
+     * Related to tag <constraints>
+     * See http://xcsp.org/specifications/skeleton
+     */
     fn begin_constraints(&mut self) {}
 
-    /// Appelé juste après avoir traité toutes les contraintes
+    /**
+     * The end of parsing constraints
+     * Related to tag </constraints>
+     * See http://xcsp.org/specifications/skeleton
+     */
     fn end_constraints(&mut self) {}
 
-    /// Appelé juste avant de traiter la section <objectives>
+    /**
+     * Start to parse objectives
+     * Related to tag <objectives>
+     * See http://xcsp.org/specifications/objectives
+     */
     fn begin_objectives(&mut self) {}
 
-    /// Appelé juste après avoir traité tous les objectifs
+    /**
+     * The end of parsing objectives
+     * Related to tag </objectives>
+     * See http://xcsp.org/specifications/objectives
+     */
     fn end_objectives(&mut self) {}
 
     // -------------------------------------------------------------------------
     // Variables
     // -------------------------------------------------------------------------
 
-    /// Variable entière simple : <var id="x"> 1..10 </var>
+    /**
+     * The callback function related to an integer variable with a range domain
+     * See http://xcsp.org/specifications/integers
+     *
+     * Example: &lt;var id="bar"> 0..6 </var>
+     *
+     * @param id the id (name) of the group
+     * @param minimum the minimum value in the range
+     * @param maximum the maxnimum value in the range
+     */
     fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) {
         panic!("You must implement callbacks for variables");
     }
 
-    /// Tableau de variables : <array id="x[]" size="5"> 0..4 </array>
+    /**
+     * The callback function related to an integer variable with a domain consisting in a sequence of integers
+     * See http://xcsp.org/specifications/integers
+     *
+     * Example <var id="bar"> 1 3 5 10 </var>
+     *
+     * @param id the id (name) of the group
+     * @param values the set of values in the domain
+     */
     fn on_variable_values(&mut self, id: String, values: &[i32]) {
         panic!("You must implement callbacks for variables");
     }
+    /**
+     * Start to parse an array of variables
+     * Related to tag <array>
+     * See http://xcsp.org/specifications/arrays
+     * Note that for each variable in the array a call is done to one of the functions #buildVariableInteger
+     *
+     * @param id the id (name) of the array variable
+     */
     fn begin_variable_array(&mut self, name: String) {}
 
+    /**
+     * End of parsing an array of variables
+     * Related to tag </array>
+     * See http://xcsp.org/specifications/arrays
+     */
     fn end_variable_array(&mut self) {}
 
     /// Variable arbre (domaines complexes)
@@ -90,20 +157,53 @@ pub trait XcspCallback {
     // Contraintes
     // -------------------------------------------------------------------------
 
-    /// <allDifferent> x y z </allDifferent>
-    fn on_constraint_all_different(&mut self, scope: &[String]) {
+    /**
+     * The callback function related to a alldifferent constraint.
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * &lt;allDifferent>
+     *   x1 x2 x3 x4 x5
+     * &lt;/allDifferent>
+     *
+     * @param scope the scope of the constraint
+     */
+    fn on_constraint_all_different(&mut self, _scope: &[String]) {
         println!("c Alldifferent not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    /// <allDifferent> x y z <except> 0 </except> </allDifferent>
-    fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
+    /**
+     * The callback function related to a alldifferent with some excepted values constraint
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * &lt;allDifferent>
+     *   x1 x2 x3 x4 x5
+     *   &lt;except>0</except>
+     * &lt;/allDifferent>
+     *
+     * @param scope the scope of the constraint
+     * @param except the set of excepted values
+     */
+    fn on_constraint_all_different_except(&mut self, _scope: &[String], _except: &[i32]) {
         println!("c Alldifferent not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    /// <allEqual> x y z </allEqual>
-    fn on_constraint_all_equal(&mut self, scope: &[String]) {
+    /**
+     * The callback function related to a allequal constraint
+     * See http://xcsp.org/specifications/allEqual
+     *
+     * Example:
+     * &lt;allEqual>
+     *  x1 x2 x3 x4 x5
+     * &lt;/allEqual>
+     *
+     * @param list the scope of the constraint
+     *
+     */
+    fn on_constraint_all_equal(&mut self, _scope: &[String]) {
         println!("c Alldifferent not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -114,13 +214,144 @@ pub trait XcspCallback {
     /// <intension> eq(x, add(y,1)) </intension>
     fn on_constraint_intention(&mut self, _c: &XIntention) {}
 
-    /// <sum> ... <condition> (ge, 10) </condition> </sum>
-    fn on_constraint_sum(&mut self, _c: &XSum) {}
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+        println!("c Sum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <ordered> x y z <operator> lt </operator> </ordered>
-    fn on_constraint_ordered(&mut self, _c: &XOrdered) {}
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;coeffs>1 3 5 &lt;coeffs>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param coeefs the coefficient of the sum (int)
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v2(
+        &mut self,
+        _scope: &[String],
+        _coeffs: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <regular> ... </regular>  (automate fini déterministe)
+    /**
+     * The callback function related to a sum constraint with all coefs are equal to one
+     * See http://xcsp.org/specifications/sum
+     *
+     * Example:
+     * &lt;sum>
+     *   &lt;list> x1 x2 x3 &lt;/list>
+     *   &lt;coeffs>w z t &lt;coeffs>
+     *   &lt;condition> (gt,y) &lt;/condition>
+     * &lt;/sum>
+     *
+     * @param scope the scope of the constraint
+     * @param coeefs the coefficient of the sum (variables)
+     * @param Operaor the condition (Le, Gt...)
+     * @param operand the operant (Var, val, ...)
+     */
+    fn on_constraint_sum_v3(
+        &mut self,
+        _scope: &[String],
+        _coeffs: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Sum Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an ordered constraint
+     * See http://xcsp.org/specifications/ordered
+     *
+     * Ordered is Le, Lt, Ge, Gt...
+     *
+     * Example:
+     * &lt;ordered>
+     *   &lt;list> x1 x2 x3 x4 </list>
+     *   &lt;operator> lt </operator>
+     * &lt;/ordered>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the order Lt, Le...
+     */
+    fn on_constraint_ordered_v1(&mut self, _scope: &[String], _operator: Operator) {
+        println!("c Ordered Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an ordered constraint
+     * See http://xcsp.org/specifications/ordered
+     *
+     * Ordered is Lt, Le, Gt, Ge...
+     *
+     * Example:
+     * &lt;ordered>
+     *   &lt;list> x1 x2 x3 x4 </list>
+     *   <&lt;operator> lt </operator>
+     * &lt;/ordered>
+     *
+     * @param _scope the scope of the constraint
+     * @param _lengths the lengths
+
+    * @param order the order Lt, Le...
+     */
+    fn on_constraint_ordered_v2(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[i32],
+        _operator: Operator,
+    ) {
+        println!("c Ordered Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a regular constraint.
+     * See http://xcsp.org/specifications/regular
+     * Example:
+     * &lt;regular>
+     *  &lt;list> x1 x2 x3 x4 x5 x6 x7 </list>
+     *  &lt;transitions>
+     *    (a,0,a)(a,1,b)(b,1,c)(c,0,d)(d,0,d)(d,1,e)(e,0,e)
+     *  &lt;/transitions>
+     *  &lt;start> a </start>
+     * </&lt;regular>
+     * XTransition is an object with 3 fields: from (string), val(int) and to(string)
+     * Then, in the first transition of the example from=a, to=a and val=0
+     *
+     * @param _scope the scope of the constraint
+     * @param _start the starting node
+     * @param _final the set of final nodes
+     * @param _transitions the set of transitions
+     */
     fn on_constraint_regular(
         &mut self,
         _scope: &[String],
@@ -132,14 +363,42 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    /// <mdd> ... </mdd>  (diagramme de décision multi-valué)
-    fn on_constraint_mdd(&mut self, _scope: &[String], transitions: &Vec<(String, i32, String)>) {
+    /**
+     * The callback function related to a MDD constraint.
+     * See http://xcsp.org/specifications/mdd
+     *
+     * Example:
+     * &lt;mdd>
+     *   &lt;list> x1 x2 x3 </list>
+     *   &lt;transitions>
+     *     (r,0,n1)(r,1,n2)(r,2,n3)
+     *     (n1,2,n4)(n2,2,n4)(n3,0,n5)
+     *     (n4,0,t)(n5,0,t)
+     *   &lt;/transitions>
+     * &lt;/mdd>
+     *
+     * @param scope the scope of the constraint
+     * @param transitions the set of transitions
+     */
+    fn on_constraint_mdd(&mut self, _scope: &[String], _transitions: &Vec<(String, i32, String)>) {
         println!("c MDD not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    /// <instantiation> ... </instantiation>
-    fn on_constraint_instantiation(&mut self, _c: &XInstantiation) {}
+    /**
+     * The callback function related to an instantiation  constraint
+     * See http://xcsp.org/specifications/instantiation
+     *
+     * Example:
+     * &lt;instantiation>
+     *   &lt;list> x y z </list>
+     *   &lt;values> 12 4 30 </values>
+     * </instantiation>
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the value for each variable
+     */
+    fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {}
 
     /// <group> ... </group>  (groupe de contraintes)
     fn on_constraint_group(&mut self, _c: &XGroup) {}

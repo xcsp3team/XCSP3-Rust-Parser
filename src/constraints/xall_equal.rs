@@ -51,8 +51,8 @@ pub mod xcsp3_core {
 
     // #[derive(Clone)]
     pub struct XAllEqual<'a> {
-        pub(crate) scope: Vec<XVarVal>,
-        pub(crate) set: &'a XVariableSet,
+        scope: Vec<XVarVal>,
+        set: &'a XVariableSet,
     }
 
     impl Display for XAllEqual<'_> {
@@ -76,6 +76,14 @@ pub mod xcsp3_core {
         }
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
             XAllEqual { scope, set }
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
     }
 }

@@ -486,36 +486,35 @@ pub mod xcsp3_utils {
     }
 }
 
-pub fn to_int_list(the_list: Vec<XVarVal>) -> Vec<i32> {
+pub fn to_int_list(the_list: &[XVarVal]) -> Vec<i32> {
     let mut tmp = vec![];
     for v in the_list {
         match v {
-            XVarVal::IntVal(value) => tmp.push(value),
+            XVarVal::IntVal(value) => tmp.push(*value),
             XVarVal::IntInterval(v1, v2) => {
-                for i in v1..v2 {
+                for i in *v1..*v2 {
                     tmp.push(i);
                 }
             }
-            _ => {
-                panic!("Only integers are allowed in this list")
-            }
+            _ => panic!("Only integers are allowed in this list"),
         }
     }
     tmp
 }
 
-pub fn to_var_list(the_list: &Vec<XVarVal>, set: &XVariableSet) -> Vec<String> {
-    let mut tmp = vec![];
-    for e in the_list {
-        if let XVarVal::IntVar(s) = e {
-            if let Ok(vec) = set.construct_scope(&[&s]) {
-                for (vs, vv) in vec.into_iter() {
-                    tmp.push(vs);
-                }
+pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
+    the_list
+        .iter()
+        .filter_map(|e| {
+            if let XVarVal::IntVar(s) = e {
+                set.construct_scope(&[&s]).ok()
+            } else {
+                None
             }
-        }
-    }
-    tmp
+        })
+        .flatten()
+        .map(|(vs, _vv)| vs)
+        .collect()
 }
 
 // #[allow(dead_code)]

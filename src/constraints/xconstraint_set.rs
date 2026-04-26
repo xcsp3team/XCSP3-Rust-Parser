@@ -62,6 +62,7 @@ pub mod xcsp3_core {
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::utils::utils_functions::xcsp3_utils::list_to_matrix_ids;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::slice::{Iter, IterMut};

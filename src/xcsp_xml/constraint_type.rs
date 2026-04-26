@@ -40,7 +40,7 @@
 
 pub mod xcsp3_xml {
     use crate::xcsp_xml::constraint::xcsp3_xml::{
-        ListWithClosed, ListWithOffset, ListWithStartIndex,
+        ListWithCase, ListWithClosed, ListWithOffset, ListWithStartIndex,
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
@@ -231,8 +231,12 @@ pub mod xcsp3_xml {
          */
         #[serde(rename = "ordered")]
         Ordered {
-            #[serde(rename = "list", default)]
+            #[serde(rename = "$value", default)]
             vars: String,
+            #[serde(rename = "@case", default)]
+            case: String,
+            #[serde(rename = "list", default)]
+            list: String,
             #[serde(rename = "operator", default)]
             operator: String,
             #[serde(rename = "lengths", default)]

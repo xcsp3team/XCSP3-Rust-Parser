@@ -55,14 +55,6 @@
         </intension>
         <intension>eq(add(treez[0][0][0],treez[0][0][4]),treez[0][2][0])</intension>
         <intension>ge(treez[1][1][1],v[2][2])</intension>
-        <instantiation>
-            <list>vv2 bar qux</list>
-            <values>12 4 30</values>
-        </instantiation>
-        <instantiation>
-            <list>v[1][] v[2][2</list>
-            <values>1 0 2 1 3 1</values>
-        </instantiation>
         <extension>
             <list>treez[4][4][4]</list>
             <conflicts>0..2 4 5..7 9</conflicts>
@@ -120,26 +112,8 @@
             <list>x[32] x[22] x[34] x[47]</list>
             <condition>(ne,w)</condition>
         </minimum>
-        <sum>
-            <list>x[1] x[2] x[3]</list>
-            <coeffs>1 2 3</coeffs>
-            <condition>(gt,y)</condition>
-        </sum>
-        <sum>
-            <list>x[10] x[22] x[30]</list>
-            <condition>(gt,y)</condition>
-        </sum>
 
 
-        <ordered>
-            <list>x[1..4]</list>
-            <operator>lt</operator>
-        </ordered>
-        <ordered>
-            <list>y[1..3]</list>
-            <lengths>5 3</lengths>
-            <operator>ge</operator>
-        </ordered>
         <allEqual>
             <list>treez[]</list>
             <list>v[][2]</list>
@@ -327,6 +301,42 @@
                 (n4,0,t)(n5,0,t)
             </transitions>
         </mdd>
+        <ordered>
+            <list>z[1..3]</list>
+            <operator>lt</operator>
+        </ordered>
+        <ordered>
+            <list>y[1..3]</list>
+            <lengths>5 3</lengths>
+            <operator>ge</operator>
+        </ordered>
+        <ordered id="c" case="strictly_increasing">y[1..3]</ordered>
+        <instantiation>
+            <list>vv2 bar qux</list>
+            <values>12 4 30</values>
+        </instantiation>
+        <instantiation>
+            <list>v[1][] v[2][2]</list>
+            <values>1 0 2 1 3 1</values>
+        </instantiation>
+        <sum>
+            <list>y[1] y[2] y[3]</list>
+            <coeffs>1 2 3</coeffs>
+            <condition>(gt,y)</condition>
+        </sum>
+        <sum>
+            <list>y[1] y[2] y[3]</list>
+            <condition>(gt,y)</condition>
+        </sum>
+        <sum>
+            <list>y[1] y[2] y[3]</list>
+            <condition>(gt,2)</condition>
+        </sum>
+        <sum>
+            <list>y[1] y[2] y[3]</list>
+            <coeffs>y[1] y[2] y[3]</coeffs>
+            <condition>(gt,2)</condition>
+        </sum>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>

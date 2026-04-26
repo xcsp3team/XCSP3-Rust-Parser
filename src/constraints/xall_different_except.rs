@@ -105,7 +105,7 @@ pub mod xcsp3_core {
         }
 
         pub fn except(&self) -> Vec<i32> {
-            to_int_list(self.except.clone())
+            to_int_list(&*self.except)
         }
     }
 }
