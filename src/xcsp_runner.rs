@@ -234,8 +234,46 @@ impl XcspRunner {
                     callback.on_constraint_instantiation(&*scope, inner.values())
                 }
                 XConstraintType::XGroup(inner) => callback.on_constraint_group(inner),
-                XConstraintType::XMaximum(inner) => callback.on_constraint_maximum(inner),
-                XConstraintType::XMinimum(inner) => callback.on_constraint_minimum(inner),
+                //---------------------------------------------------------------------------------------------------
+                // Extremum Constraint
+                //---------------------------------------------------------------------------------------------------
+                XConstraintType::XMaximum(inner) => {
+                    if (scope_contains_expressions(inner.scope())) {
+                        let scope: Vec<ExpressionTree> =
+                            to_expression_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_maximum_v2(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    } else {
+                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_maximum_v1(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                }
+                XConstraintType::XMinimum(inner) => {
+                    if (scope_contains_expressions(inner.scope())) {
+                        let scope: Vec<ExpressionTree> =
+                            to_expression_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_minimum_v2(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    } else {
+                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                        callback.on_constraint_minimum_v1(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                }
+
                 XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
                 XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
                 XConstraintType::XCount(inner) => callback.on_constraint_count(inner),

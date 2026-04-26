@@ -353,7 +353,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Sum Variant 4 not yet implemented");
+        println!("c Sum Variant 5s not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -493,14 +493,107 @@ pub trait XcspCallback {
      */
     fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {}
 
-    /// <group> ... </group>  (groupe de contraintes)
+    /**
+     * The callback function related to a maximum constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;maximum>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/maximum>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_v1(
+        &mut self,
+        _scope: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a maximum constraint with expressions in scope
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;maximum>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/maximum>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a maximum constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;minimum>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimum>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_v1(
+        &mut self,
+        _scope: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minimum constraint with expressions in scope
+     * See http://xcsp.org/specifications/minimum
+     *
+     * Example:
+     * &lt;minimum>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimum>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     fn on_constraint_group(&mut self, _c: &XGroup) {}
-
-    /// <maximum> ... <condition> (ge, 5) </condition> </maximum>
-    fn on_constraint_maximum(&mut self, _c: &XMaxMin) {}
-
-    /// <minimum> ... <condition> (le, 3) </condition> </minimum>
-    fn on_constraint_minimum(&mut self, _c: &XMaxMin) {}
 
     /// <element> ... </element>
     fn on_constraint_element(&mut self, _c: &XElement) {}

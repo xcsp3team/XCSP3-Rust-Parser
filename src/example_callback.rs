@@ -202,6 +202,32 @@ impl XcspCallback for PrintingSolver {
             scope, coeffs, operator, operand
         );
     }
+
+    fn on_constraint_maximum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_maximum_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_minimum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
+    }
+
+    fn on_constraint_minimum_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
