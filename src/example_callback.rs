@@ -330,6 +330,43 @@ impl XcspCallback for PrintingSolver {
             scope, lengths, zero_ignored
         );
     }
+
+    fn on_constraint_no_overlap_k_dim_v1(
+        &mut self,
+        origins: &Vec<Vec<String>>,
+        lengths: &Vec<Vec<i32>>,
+        zero: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            origins, lengths, zero
+        );
+    }
+
+    fn on_constraint_no_overlap_k_dim_v2(
+        &mut self,
+        origins: &Vec<Vec<String>>,
+        lengths: &Vec<Vec<String>>,
+        zero: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            origins, lengths, zero
+        );
+    }
+
+    fn on_constraint_no_overlap_k_dim_v3(
+        &mut self,
+        origins: &Vec<Vec<String>>,
+        lengths: &Vec<(String, i32)>,
+        zero: bool,
+    ) {
+        println!(
+            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
+            origins, lengths, zero
+        );
+    }
+
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
