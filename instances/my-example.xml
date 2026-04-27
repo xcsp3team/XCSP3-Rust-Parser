@@ -109,17 +109,6 @@
             <conflicts>(1,2,3,4)(3,1,3,4)</conflicts>
         </extension>
 
-        <channel>
-            <list>z1 z2 z3 z4 z5</list>
-            <value>v</value>
-        </channel>
-        <channel>
-            <list startIndex="32">x1 x2 x3 x4</list>
-            <list>y1 y2 y3 y4</list>
-        </channel>
-        <channel>
-            y7 y8 x3 y9
-        </channel>
         <slide id="c1">
             <list>x1 x2 x3 x4</list>
             <intension>eq(add(%0,%1),%2)</intension>
@@ -142,14 +131,6 @@
             <heights>h1 h2 h3 h4</heights>
             <condition>(le,4)</condition>
         </cumulative>
-        <noOverlap>
-            <origins>x1 x2 x3</origins>
-            <lengths>l1 l2 l3</lengths>
-        </noOverlap>
-        <noOverlap>
-            <origins>(x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4)</origins>
-            <lengths>(2,4,1)(4,2,3)(5,1,2)(3,3,2)</lengths>
-        </noOverlap>
         <stretch>
             <list>x1 x2 x3 x4 x5 x6 x7</list>
             <values>1 2 3 0</values>
@@ -365,7 +346,26 @@
             <origins>y[]</origins>
             <lengths>t[]</lengths>
         </noOverlap>
-
+        <noOverlap>
+            <origins>(y[0],y[1],y[4])(y[2],y[3],y[6])</origins>
+            <lengths>(1,2,5)(3,4,6)</lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins>(y[0],y[1],y[4])(y[2],y[3],y[6])</origins>
+            <lengths>(t[0],t[1],t[4])(t[2],t[3],t[6])</lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins>(y[0],y[1])(y[2],y[3])</origins>
+            <lengths>(1,2)(3,4)</lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins>(y[0],y[1])(y[2],y[3])</origins>
+            <lengths>(t[0],t[1])(t[2],t[3])</lengths>
+        </noOverlap>
+        <noOverlap>
+            <origins>(y[0],y[1])(y[2],y[3])</origins>
+            <lengths>(t[1],2)(t[2],4)</lengths>
+        </noOverlap>
     </constraints>
     <objectives>
         <minimize type="sum">x[]</minimize>

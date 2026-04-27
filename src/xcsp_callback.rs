@@ -804,8 +804,77 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    /// <noOverlap> ... </noOverlap>  (k dimensions)
-    fn on_constraint_no_overlap_k_dim(&mut self, _c: &XNoOverlapKDim) {}
+    /**
+     * The callback function related to a no overlap constraint with k dimensional variable origins and  int  lenghts
+     * See http://xcsp.org/specifications/noOverlap
+     *
+     * Example:
+     * &lt;noOverlap>
+     *    &lt;origins> (x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4) </origins>
+     *    &lt;lengths> (2,4,1)(4,2,3)(5,1,2)(3,3,2) </lengths>
+     * &lt;/noOverlap>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here vector of int)
+     * @param zeroIgnored are zero ignored?
+     */
+    fn on_constraint_no_overlap_k_dim_v1(
+        &mut self,
+        _origins: &Vec<Vec<String>>,
+        _lengths: &Vec<Vec<i32>>,
+        _zero: bool,
+    ) {
+        println!("c No Overlap K Dim Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a no overlap constraint with k dimensional variable origins and  var  lenghts
+     * See http://xcsp.org/specifications/noOverlap
+     *
+     * Example:
+     * &lt;noOverlap>
+     *    &lt;origins> (x1,y1,z1)(x2,y2,z2)(x3,y3,z3)(x4,y4,z4) </origins>
+     *    &lt;lengths> (2,4,1)(4,2,3)(5,1,2)(3,3,2) </lengths>
+     * &lt;/noOverlap>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here vector of Variables)
+     * @param zeroIgnored are zero ignored?
+     */
+    fn on_constraint_no_overlap_k_dim_v2(
+        &mut self,
+        _origins: &Vec<Vec<String>>,
+        _lengths: &Vec<Vec<String>>,
+        _zero: bool,
+    ) {
+        println!("c No Overlap K Dim Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a no overlap constraint with variable origins and 2 dimensional mixed var/int lenghts
+     * See http://xcsp.org/specifications/noOverlap
+     *
+     * Example:
+     * <noOverlap>
+     *    <origins> (x1,y1)(x2,y2)(x3,y3)(x4,y4) </origins>
+     *    <lengths> (z1,3)(z2,2)(z3,5)(z4,1) </lengths>
+     * </noOverlap>
+     *
+     * @param origins the vector of origins
+     * @param _lengths the vector of var lengths
+     * @param zeroIgnored are zero ignored?
+     */
+    fn on_constraint_no_overlap_k_dim_v3(
+        &mut self,
+        _origins: &Vec<Vec<String>>,
+        _lengths: &Vec<(String, i32)>,
+        _zero: bool,
+    ) {
+        println!("c No Overlap K Dim Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <stretch> ... </stretch>
     fn on_constraint_stretch(&mut self, _c: &XStretch) {}

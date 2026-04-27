@@ -20,6 +20,7 @@ use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::XcspXmlModel;
+use std::env::var;
 
 pub struct XcspRunner;
 
@@ -391,7 +392,50 @@ impl XcspRunner {
                     }
                 }
                 XConstraintType::XNoOverlapKDim(inner) => {
-                    callback.on_constraint_no_overlap_k_dim(inner)
+                    let mut scope: Vec<Vec<String>> = Vec::new();
+                    for sc in inner.scope() {
+                        scope.push(to_var_list(sc, inner.set()));
+                    }
+
+                    if inner.first_length_is_var_val() {
+                        let special_lengths: Vec<_> = inner
+                            .lengths()
+                            .iter()
+                            .map(|length| match length.as_slice() {
+                                [XVarVal::IntVar(var), XVarVal::IntVal(value)] => {
+                                    (var.clone(), *value)
+                                }
+                                _ => panic!("Expected each length to be [IntVar, IntVal]"),
+                            })
+                            .collect();
+                        callback.on_constraint_no_overlap_k_dim_v3(
+                            &scope,
+                            &special_lengths,
+                            inner.zero_ignored(),
+                        )
+                    } else {
+                        if inner.is_lengths_int() {
+                            let mut intlengths: Vec<Vec<i32>> = Vec::new();
+                            for sc in inner.lengths() {
+                                intlengths.push(to_int_list(sc));
+                            }
+                            callback.on_constraint_no_overlap_k_dim_v1(
+                                &scope,
+                                &intlengths,
+                                inner.zero_ignored(),
+                            )
+                        } else {
+                            let mut varlengths: Vec<Vec<String>> = Vec::new();
+                            for sc in inner.lengths() {
+                                varlengths.push(to_var_list(sc, inner.set()));
+                            }
+                            callback.on_constraint_no_overlap_k_dim_v2(
+                                &scope,
+                                &varlengths,
+                                inner.zero_ignored(),
+                            )
+                        }
+                    }
                 }
                 XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
                 XConstraintType::XConstraintNone(_) => {}

@@ -49,7 +49,6 @@ pub mod xcsp3_core {
     pub struct XNoOverlapKDim<'a> {
         scope: Vec<Vec<XVarVal>>,
         lengths: Vec<Vec<XVarVal>>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         zero_ignored: Option<bool>,
     }
@@ -112,45 +111,42 @@ pub mod xcsp3_core {
             Self {
                 scope,
                 lengths,
-                map: Default::default(),
                 set,
                 zero_ignored,
             }
         }
+
+        pub fn scope(&self) -> &Vec<Vec<XVarVal>> {
+            &self.scope
+        }
+
         pub fn lengths(&self) -> &Vec<Vec<XVarVal>> {
             &self.lengths
         }
 
-        pub fn zero_ignored(&self) -> Option<bool> {
-            self.zero_ignored
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
 
-        pub fn get_scope_string(&self) -> &Vec<Vec<XVarVal>> {
-            &self.scope
+        pub fn zero_ignored(&self) -> bool {
+            self.zero_ignored.unwrap_or(true)
         }
-
-        pub fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for vc in &self.scope {
-                for e in vc.iter() {
-                    if let XVarVal::IntVar(s) = e {
-                        if !self.map.contains_key(s) {
-                            if let Ok(vec) = self.set.construct_scope(&[s]) {
-                                for (vs, vv) in vec.into_iter() {
-                                    self.map.insert(vs, vv);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
+        pub fn first_length_is_var_val(&self) -> bool {
+            matches!(
+            self.lengths.first(),
+            Some(first)
+                if first.len() == 2
+                    && matches!(first[0], XVarVal::IntVar(_))
+                    && matches!(first[1], XVarVal::IntVal(_))
+            )
+        }
+        pub fn is_lengths_int(&self) -> bool {
+            matches!(
+                self.lengths.first().and_then(|first| first.first()),
+                Some(XVarVal::IntVal(_))
+            )
         }
     }
-
     impl Display for XNoOverlapKDim<'_> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let mut ret = String::default();
