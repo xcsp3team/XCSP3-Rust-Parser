@@ -38,7 +38,6 @@
  * </p>
  */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
@@ -47,6 +46,7 @@ pub mod xcsp3_core {
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XNoOverlap<'a> {
         scope: Vec<XVarVal>,
         lengths: Vec<XVarVal>,
@@ -114,26 +114,6 @@ pub mod xcsp3_core {
 
         pub fn zero_ignored(&self) -> bool {
             self.zero_ignored.unwrap_or(true)
-        }
-    }
-    impl Display for XNoOverlap<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("  lengths = ");
-            for e in self.lengths.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(n) = &self.zero_ignored {
-                ret.push_str(&format!(" zeroIgnored = {}, ", n))
-            }
-            write!(f, "XNoOverlap: origins =  {}, ", ret,)
         }
     }
 }

@@ -118,8 +118,7 @@ impl XcspCallback for PrintingSolver {
         );
     }
     fn on_constraint_extension(&mut self, c: &XExtension) {
-        self.nb_constraints += 1;
-        println!("  [Ext]      {}", c);
+        println!("Extension in progress");
     }
     fn on_constraint_intention(&mut self, _scope: &[String], tree: &ExpressionTree) {
         self.nb_constraints += 1;

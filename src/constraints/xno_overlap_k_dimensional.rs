@@ -46,6 +46,7 @@ pub mod xcsp3_core {
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XNoOverlapKDim<'a> {
         scope: Vec<Vec<XVarVal>>,
         lengths: Vec<Vec<XVarVal>>,

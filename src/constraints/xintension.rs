@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -49,28 +48,11 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XIntention<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         tree: ExpressionTree,
-    }
-
-    impl Display for XIntention<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-
-            write!(
-                f,
-                "XIntention: scope =  {}, function = {:?}",
-                ret,
-                self.tree.to_string()
-            )
-        }
     }
 
     impl<'a> XIntention<'a> {

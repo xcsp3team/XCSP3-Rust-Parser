@@ -48,6 +48,7 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XGroup<'a> {
         args: Vec<Vec<XVarVal>>,
         map: Vec<Vec<(String, &'a XDomainInteger)>>,
@@ -55,50 +56,7 @@ pub mod xcsp3_core {
         template: Box<XConstraintType<'a>>,
     }
 
-    impl Display for XGroup<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for a in self.args.iter() {
-                ret.push('[');
-                for e in a.iter() {
-                    // ret.push('(');
-                    ret.push_str(e.to_string().as_str());
-                    ret.push_str(", ")
-                }
-                ret.push(']');
-            }
-            // ret.push(']');
-            write!(
-                f,
-                "XGroup: [constraint = {} [ args =  {}]]",
-                &self.template.to_string(),
-                ret
-            )
-        }
-    }
-
     impl<'a> XGroup<'a> {
-        pub fn get_scope(&mut self) -> &Vec<Vec<(String, &XDomainInteger)>> {
-            if self.map.is_empty() {
-                self.map.reserve(self.args.len());
-                for arg in self.args.iter() {
-                    for v in arg.iter() {
-                        if let XVarVal::IntVar(s) = v {
-                            let mut ar: Vec<(String, &XDomainInteger)> = vec![];
-                            if let Ok(vec) = self.set.construct_scope(&[s]) {
-                                for (vs, vv) in vec.into_iter() {
-                                    ar.push((vs, vv))
-                                }
-                            }
-                            self.map.push(ar);
-                        }
-                    }
-                }
-            }
-
-            &self.map
-        }
-
         pub fn get_args(&self) -> &Vec<Vec<XVarVal>> {
             &self.args
         }

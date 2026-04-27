@@ -39,7 +39,7 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -50,20 +50,35 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XAllDifferent<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
     }
 
-    impl Display for XAllDifferent<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
+    impl XConstraintUnfold for XAllDifferent<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let mut unfolded_scope = Vec::new();
+
+            for value in self.scope.iter() {
+                match value {
+                    XVarVal::IntArgument(index) => {
+                        let index = *index as usize;
+                        if let Some(argument) = arg.get(index) {
+                            unfolded_scope.push(argument.clone());
+                        } else {
+                            panic!("Invalid argument index %{} in allDifferent", index);
+                        }
+                    }
+                    XVarVal::IntStart => {
+                        unfolded_scope.extend_from_slice(arg);
+                    }
+                    _ => {
+                        unfolded_scope.push(value.clone());
+                    }
+                }
             }
-            write!(f, "XAllDifferent: list =  {}", ret)
+            self.scope = unfolded_scope;
         }
     }
 

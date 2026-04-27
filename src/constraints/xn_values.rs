@@ -38,7 +38,6 @@
  * </p>
  */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -49,36 +48,13 @@ pub mod xcsp3_core {
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XNValues<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         operator: Operator,
         operand: Operand,
         except: Option<Vec<XVarVal>>,
-    }
-    impl Display for XNValues<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(except) = &self.except {
-                ret.push_str("except = (");
-                for e in except.iter() {
-                    ret.push_str(&e.to_string());
-                    ret.push_str(", ")
-                }
-                ret.push_str(") ");
-            }
-
-            write!(
-                f,
-                "XNValues: scope =  {}, condition = ({:?}, {:?})",
-                ret, self.operator, self.operand
-            )
-        }
     }
 
     impl<'a> XNValues<'a> {

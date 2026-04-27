@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use std::collections::HashMap;
@@ -50,28 +49,13 @@ pub mod xcsp3_core {
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XRegular<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         start: String,
         r#final: Vec<String>,
         transitions: Vec<(String, i32, String)>,
-    }
-
-    impl Display for XRegular<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            write!(
-                f,
-                "XRegular: list =  {}, transitions = {:?}, start = {}, final = {:?}",
-                ret, self.transitions, self.start, self.r#final
-            )
-        }
     }
 
     impl<'a> XRegular<'a> {

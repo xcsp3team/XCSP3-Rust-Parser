@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -51,37 +50,12 @@ pub mod xcsp3_core {
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XOrdered<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         lengths: Option<Vec<XVarVal>>,
         operator: Operator,
-    }
-
-    impl Display for XOrdered<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(vc) = &self.lengths {
-                ret.push_str("lengths = (");
-                for (i, e) in vc.iter().enumerate() {
-                    ret.push_str(&e.to_string());
-                    if i != vc.len() - 1 {
-                        ret.push_str(", ")
-                    }
-                }
-                ret.push_str("), ")
-            }
-            write!(
-                f,
-                "XOrdered: scope =  {} operator = {:?}",
-                ret, self.operator
-            )
-        }
     }
 
     impl<'a> XOrdered<'a> {

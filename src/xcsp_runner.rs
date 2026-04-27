@@ -7,7 +7,7 @@
  * Usage :
  *   XcspRunner::run("mon_fichier.xml", &mut mon_callback)?;
  */
-use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
@@ -76,7 +76,18 @@ impl XcspRunner {
         callback.begin_constraints();
         let mut constraints = model.build_constraints(&variables);
         for c in constraints.iter_mut() {
-            Self::build_constraint(callback, c)?;
+            match c {
+                XConstraintType::XGroup(inner) => {
+                    for arg in inner.get_args() {
+                        let mut c = inner.get_template().clone();
+                        c.extract_parameters(arg);
+                        Self::build_constraint(callback, &mut c)?;
+                    }
+                }
+                _ => {
+                    Self::build_constraint(callback, c)?;
+                }
+            }
         }
         callback.end_constraints();
 
@@ -261,12 +272,6 @@ impl XcspRunner {
                     panic!("In instantiation constraint: list and values must have same size");
                 }
                 callback.on_constraint_instantiation(&*scope, inner.values())
-            }
-            XConstraintType::XGroup(inner) => {
-                println!("Group");
-                println!("template: {}", inner.get_template());
-                println!("args: {:?}", inner.get_args());
-                println!("{}", inner.to_string());
             }
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
@@ -462,6 +467,9 @@ impl XcspRunner {
             }
             XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
             XConstraintType::XConstraintNone(_) => {}
+            _ => {
+                panic!("Unknown constraint");
+            }
         }
         Ok(())
     }

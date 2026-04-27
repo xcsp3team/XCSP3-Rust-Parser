@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_transitions, list_to_vec_var_val};
@@ -49,23 +48,11 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XMdd<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         transitions: Vec<(String, i32, String)>,
-    }
-
-    impl Display for XMdd<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str(&format!("transitions = {:?}", self.transitions));
-            write!(f, "XMdd: list =  {}", ret)
-        }
     }
 
     impl<'a> XMdd<'a> {

@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, tuple_to_vector};
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use std::collections::HashMap;
@@ -51,6 +50,7 @@ pub mod xcsp3_core {
     use std::slice::Iter;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XExtension<'a> {
         scope: Vec<XVarVal>,
         map: HashMap<String, &'a XDomainInteger>,
@@ -58,52 +58,6 @@ pub mod xcsp3_core {
         ///if the  value in tuples is i32::MAX, then it is the star
         tuples: Vec<Vec<i32>>,
         is_support: bool,
-    }
-
-    impl Display for XExtension<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if self.is_support {
-                ret.push_str("supports = ")
-            } else {
-                ret.push_str("conflicts = ")
-            }
-            // ret.push_str(&format!(
-            //     "tuples = {:?}, is_support = {}",
-            //     self.tuples, self.is_support
-            // ));
-            write!(f, "XExtension: list = {}{:?}", ret, self.tuples)
-        }
-    }
-
-    impl XConstraintTrait for XExtension<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
     }
 
     impl<'a> XExtension<'a> {
