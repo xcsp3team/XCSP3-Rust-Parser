@@ -50,7 +50,6 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     pub struct XGroup<'a> {
         args: Vec<Vec<XVarVal>>,
-        // map: Vec<HashMap<String, &'a XDomainInteger>>,
         map: Vec<Vec<(String, &'a XDomainInteger)>>,
         set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
@@ -77,40 +76,6 @@ pub mod xcsp3_core {
             )
         }
     }
-
-    // impl XConstraintTrait for XGroup<'_> {
-    //
-    //
-    //     fn get_scope_string(&self) -> &Vec<XVarVal>
-    //     {
-    //         &self.scope
-    //     }
-    //
-    //     fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-    //         for e in self.scope
-    //         {
-    //             if let XVarVal::IntVar(s) = e
-    //             {
-    //                 if !self.map.contains_key(&s)
-    //                 {
-    //                     if let Ok(vec) = self.set.construct_scope(&vec![s])
-    //                     {
-    //                         for (vs,vv) in vec.into_iter()
-    //                         {
-    //                             self.map.insert(vs, vv);
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         let mut scope_vec_var: Vec<(&String, & XDomainInteger)>= vec![];
-    //         for e in self.map.iter()
-    //         {
-    //             scope_vec_var.push((e.0,e.1))
-    //         }
-    //         scope_vec_var
-    //     }
-    // }
 
     impl<'a> XGroup<'a> {
         pub fn get_scope(&mut self) -> &Vec<Vec<(String, &XDomainInteger)>> {

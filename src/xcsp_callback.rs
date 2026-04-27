@@ -593,8 +593,6 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_group(&mut self, _c: &XGroup) {}
-
     /// <element> ... </element>
     fn on_constraint_element(&mut self, _c: &XElement) {}
 

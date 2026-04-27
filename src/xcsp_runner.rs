@@ -21,6 +21,7 @@ use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::XcspXmlModel;
 use std::env::var;
+use std::error::Error;
 
 pub struct XcspRunner;
 
@@ -75,52 +76,78 @@ impl XcspRunner {
         callback.begin_constraints();
         let mut constraints = model.build_constraints(&variables);
         for c in constraints.iter_mut() {
-            match c {
-                //---------------------------------------------------------------------------------------------------
-                // All Diff constraints
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XAllDifferent(inner) => {
-                    if (scope_contains_expressions(inner.scope())) {
-                        let scope: Vec<ExpressionTree> =
-                            to_expression_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_all_different_v2(&*scope);
-                    } else {
-                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_all_different_v1(&*scope);
-                    }
-                }
-                XConstraintType::XAllDifferentExcept(inner) => {
+            Self::build_constraint(callback, c)?;
+        }
+        callback.end_constraints();
+
+        // ── Objectifs ────────────────────────────────────────────────────────
+        callback.begin_objectives();
+        let objectives = model.build_objectives(&variables);
+        for o in objectives.iter() {
+            match o {
+                XObjectivesType::Minimize(inner) => callback.on_objective_minimize(inner),
+                XObjectivesType::Maximize(inner) => callback.on_objective_maximize(inner),
+                XObjectivesType::XObjectiveNone(_) => {}
+            }
+        }
+        callback.end_objectives();
+
+        callback.end_instance();
+
+        Ok(())
+    }
+
+    fn build_constraint<C: XcspCallback>(
+        callback: &mut C,
+        c: &mut XConstraintType,
+    ) -> Result<(), Box<dyn Error>> {
+        match c {
+            //---------------------------------------------------------------------------------------------------
+            // All Diff constraints
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XAllDifferent(inner) => {
+                if (scope_contains_expressions(inner.scope())) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_all_different_v2(&*scope);
+                } else {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_all_different_except(&*scope, &*inner.except());
+                    callback.on_constraint_all_different_v1(&*scope);
                 }
+            }
+            XConstraintType::XAllDifferentExcept(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                callback.on_constraint_all_different_except(&*scope, &*inner.except());
+            }
 
-                //---------------------------------------------------------------------------------------------------
-                // All Equal constraints
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XAllEqual(inner) => {
-                    if (scope_contains_expressions(inner.scope())) {
-                        let scope: Vec<ExpressionTree> =
-                            to_expression_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_all_equal_v2(&*scope);
-                    } else {
-                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_all_equal_v1(&*scope);
-                    }
-                }
-                XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
-
-                //---------------------------------------------------------------------------------------------------
-                // Intension constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XIntention(inner) => {
+            //---------------------------------------------------------------------------------------------------
+            // All Equal constraints
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XAllEqual(inner) => {
+                if (scope_contains_expressions(inner.scope())) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_all_equal_v2(&*scope);
+                } else {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_intention(&*scope, inner.tree());
+                    callback.on_constraint_all_equal_v1(&*scope);
                 }
+            }
+            XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
 
-                //---------------------------------------------------------------------------------------------------
-                // Sum constraints
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XSum(inner) => match inner.coeffs() {
+            //---------------------------------------------------------------------------------------------------
+            // Intension constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XIntention(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                callback.on_constraint_intention(&*scope, inner.tree());
+            }
+
+            //---------------------------------------------------------------------------------------------------
+            // Sum constraints
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XSum(inner) => {
+                match inner.coeffs() {
                     None => {
                         if (scope_contains_expressions(inner.scope())) {
                             let scope: Vec<ExpressionTree> =
@@ -185,278 +212,257 @@ impl XcspRunner {
                         Some(_) => panic!("Unexpected variant in coeffs"),
                         None => panic!("coeffs is empty"),
                     },
-                },
+                }
+            }
 
-                //---------------------------------------------------------------------------------------------------
-                // Ordered constraints
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XOrdered(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    match inner.lengths() {
-                        Some(val) => {
-                            let tmp = to_int_list(val);
-                            callback.on_constraint_ordered_v2(&*scope, &*tmp, *inner.operator());
-                        }
-                        None => {
-                            callback.on_constraint_ordered_v1(&*scope, *inner.operator());
-                        }
+            //---------------------------------------------------------------------------------------------------
+            // Ordered constraints
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XOrdered(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                match inner.lengths() {
+                    Some(val) => {
+                        let tmp = to_int_list(val);
+                        callback.on_constraint_ordered_v2(&*scope, &*tmp, *inner.operator());
+                    }
+                    None => {
+                        callback.on_constraint_ordered_v1(&*scope, *inner.operator());
                     }
                 }
+            }
 
-                //---------------------------------------------------------------------------------------------------
-                // Regular Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XRegular(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_regular(
+            //---------------------------------------------------------------------------------------------------
+            // Regular Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XRegular(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                callback.on_constraint_regular(
+                    &*scope,
+                    inner.start().parse()?,
+                    inner.finals(),
+                    inner.transitions(),
+                );
+            }
+
+            //---------------------------------------------------------------------------------------------------
+            // MDD Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XMdd(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                callback.on_constraint_mdd(&*scope, inner.transitions());
+            }
+
+            //---------------------------------------------------------------------------------------------------
+            // Instantiation constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XInstantiation(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                if scope.len() != inner.values().len() {
+                    panic!("In instantiation constraint: list and values must have same size");
+                }
+                callback.on_constraint_instantiation(&*scope, inner.values())
+            }
+            XConstraintType::XGroup(inner) => {
+                println!("Group");
+                println!("template: {}", inner.get_template());
+                println!("args: {:?}", inner.get_args());
+                println!("{}", inner.to_string());
+            }
+            //---------------------------------------------------------------------------------------------------
+            // Extremum Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XMaximum(inner) => {
+                if (scope_contains_expressions(inner.scope())) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_v2(
                         &*scope,
-                        inner.start().parse()?,
-                        inner.finals(),
-                        inner.transitions(),
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_v1(
+                        &*scope,
+                        inner.operator(),
+                        inner.operand().clone(),
                     );
                 }
-
-                //---------------------------------------------------------------------------------------------------
-                // MDD Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XMdd(inner) => {
+            }
+            XConstraintType::XMinimum(inner) => {
+                if (scope_contains_expressions(inner.scope())) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_minimum_v2(
+                        &*scope,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    callback.on_constraint_mdd(&*scope, inner.transitions());
+                    callback.on_constraint_minimum_v1(
+                        &*scope,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
                 }
+            }
 
-                //---------------------------------------------------------------------------------------------------
-                // Instantiation constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XInstantiation(inner) => {
-                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    if scope.len() != inner.values().len() {
-                        panic!("In instantiation constraint: list and values must have same size");
-                    }
-                    callback.on_constraint_instantiation(&*scope, inner.values())
-                }
-                XConstraintType::XGroup(inner) => callback.on_constraint_group(inner),
-                //---------------------------------------------------------------------------------------------------
-                // Extremum Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XMaximum(inner) => {
+            XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
+            XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
+            //---------------------------------------------------------------------------------------------------
+            // Extremum Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XCount(inner) => match inner.values().first() {
+                Some(XVarVal::IntVal(_)) => {
+                    // Values are integers
+                    let values = to_int_list(inner.values());
                     if (scope_contains_expressions(inner.scope())) {
+                        // scope is expressions
                         let scope: Vec<ExpressionTree> =
                             to_expression_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_maximum_v2(
+                        callback.on_constraint_count_v1(
                             &*scope,
+                            &*values,
                             inner.operator(),
                             inner.operand().clone(),
                         );
                     } else {
                         let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_maximum_v1(
+                        callback.on_constraint_count_v2(
                             &*scope,
+                            &*values,
                             inner.operator(),
                             inner.operand().clone(),
                         );
                     }
                 }
-                XConstraintType::XMinimum(inner) => {
+                Some(XVarVal::IntVar(_)) => {
+                    let values: Vec<String> = to_var_list(inner.values(), &inner.set());
                     if (scope_contains_expressions(inner.scope())) {
+                        // scope is expressions
                         let scope: Vec<ExpressionTree> =
                             to_expression_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_minimum_v2(
+                        callback.on_constraint_count_v3(
                             &*scope,
+                            &*values,
                             inner.operator(),
                             inner.operand().clone(),
                         );
                     } else {
                         let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_minimum_v1(
+                        callback.on_constraint_count_v4(
                             &*scope,
+                            &*values,
                             inner.operator(),
                             inner.operand().clone(),
                         );
                     }
                 }
+                Some(_) => panic!("Unexpected variant in coeffs"),
+                None => panic!("coeffs is empty"),
+            },
 
-                XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
-                XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
-                //---------------------------------------------------------------------------------------------------
-                // Extremum Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XCount(inner) => match inner.values().first() {
-                    Some(XVarVal::IntVal(_)) => {
-                        // Values are integers
-                        let values = to_int_list(inner.values());
-                        if (scope_contains_expressions(inner.scope())) {
-                            // scope is expressions
-                            let scope: Vec<ExpressionTree> =
-                                to_expression_list(&inner.scope(), &inner.set());
-                            callback.on_constraint_count_v1(
-                                &*scope,
-                                &*values,
-                                inner.operator(),
-                                inner.operand().clone(),
-                            );
-                        } else {
-                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                            callback.on_constraint_count_v2(
-                                &*scope,
-                                &*values,
-                                inner.operator(),
-                                inner.operand().clone(),
-                            );
-                        }
-                    }
-                    Some(XVarVal::IntVar(_)) => {
-                        let values: Vec<String> = to_var_list(inner.values(), &inner.set());
-                        if (scope_contains_expressions(inner.scope())) {
-                            // scope is expressions
-                            let scope: Vec<ExpressionTree> =
-                                to_expression_list(&inner.scope(), &inner.set());
-                            callback.on_constraint_count_v3(
-                                &*scope,
-                                &*values,
-                                inner.operator(),
-                                inner.operand().clone(),
-                            );
-                        } else {
-                            let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                            callback.on_constraint_count_v4(
-                                &*scope,
-                                &*values,
-                                inner.operator(),
-                                inner.operand().clone(),
-                            );
-                        }
-                    }
-                    Some(_) => panic!("Unexpected variant in coeffs"),
-                    None => panic!("coeffs is empty"),
-                },
-
-                //---------------------------------------------------------------------------------------------------
-                // NVALUES Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XNValues(inner) => {
-                    if (scope_contains_expressions(inner.scope())) {
-                        let scope: Vec<ExpressionTree> =
-                            to_expression_list(&inner.scope(), &inner.set());
-                        callback.on_constraint_nvalues_v3(
-                            &*scope,
-                            inner.operator(),
-                            inner.operand().clone(),
-                        )
-                    } else {
-                        let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                        match inner.except() {
-                            None => callback.on_constraint_nvalues_v1(
-                                &*scope,
-                                inner.operator(),
-                                inner.operand().clone(),
-                            ),
-                            Some(vals) => {
-                                let tmp = to_int_list(vals);
-                                callback.on_constraint_nvalues_v2(
-                                    &*scope,
-                                    &*tmp,
-                                    inner.operator(),
-                                    inner.operand().clone(),
-                                )
-                            }
-                            _ => {}
-                        }
-                    }
-                }
-                XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
-                XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
-                XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
-                //---------------------------------------------------------------------------------------------------
-                // NoOverlap Constraint
-                //---------------------------------------------------------------------------------------------------
-                XConstraintType::XNoOverlap(inner) => {
+            //---------------------------------------------------------------------------------------------------
+            // NVALUES Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XNValues(inner) => {
+                if (scope_contains_expressions(inner.scope())) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_nvalues_v3(
+                        &*scope,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    )
+                } else {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                    match inner.lengths().first() {
-                        Some(XVarVal::IntVal(_)) => {
-                            let tmp = to_int_list(inner.lengths());
-                            callback.on_constraint_no_overlap_v1(
+                    match inner.except() {
+                        None => callback.on_constraint_nvalues_v1(
+                            &*scope,
+                            inner.operator(),
+                            inner.operand().clone(),
+                        ),
+                        Some(vals) => {
+                            let tmp = to_int_list(vals);
+                            callback.on_constraint_nvalues_v2(
                                 &*scope,
                                 &*tmp,
-                                inner.zero_ignored(),
-                            )
-                        }
-                        Some(XVarVal::IntVar(_)) => {
-                            let tmp = to_var_list(&inner.lengths(), inner.set());
-                            callback.on_constraint_no_overlap_v2(
-                                &*scope,
-                                &*tmp,
-                                inner.zero_ignored(),
+                                inner.operator(),
+                                inner.operand().clone(),
                             )
                         }
                         _ => {}
                     }
                 }
-                XConstraintType::XNoOverlapKDim(inner) => {
-                    let mut scope: Vec<Vec<String>> = Vec::new();
-                    for sc in inner.scope() {
-                        scope.push(to_var_list(sc, inner.set()));
+            }
+            XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
+            XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
+            XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
+            //---------------------------------------------------------------------------------------------------
+            // NoOverlap Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XNoOverlap(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                match inner.lengths().first() {
+                    Some(XVarVal::IntVal(_)) => {
+                        let tmp = to_int_list(inner.lengths());
+                        callback.on_constraint_no_overlap_v1(&*scope, &*tmp, inner.zero_ignored())
                     }
+                    Some(XVarVal::IntVar(_)) => {
+                        let tmp = to_var_list(&inner.lengths(), inner.set());
+                        callback.on_constraint_no_overlap_v2(&*scope, &*tmp, inner.zero_ignored())
+                    }
+                    _ => {}
+                }
+            }
+            XConstraintType::XNoOverlapKDim(inner) => {
+                let mut scope: Vec<Vec<String>> = Vec::new();
+                for sc in inner.scope() {
+                    scope.push(to_var_list(sc, inner.set()));
+                }
 
-                    if inner.first_length_is_var_val() {
-                        let special_lengths: Vec<_> = inner
-                            .lengths()
-                            .iter()
-                            .map(|length| match length.as_slice() {
-                                [XVarVal::IntVar(var), XVarVal::IntVal(value)] => {
-                                    (var.clone(), *value)
-                                }
-                                _ => panic!("Expected each length to be [IntVar, IntVal]"),
-                            })
-                            .collect();
-                        callback.on_constraint_no_overlap_k_dim_v3(
+                if inner.first_length_is_var_val() {
+                    let special_lengths: Vec<_> = inner
+                        .lengths()
+                        .iter()
+                        .map(|length| match length.as_slice() {
+                            [XVarVal::IntVar(var), XVarVal::IntVal(value)] => (var.clone(), *value),
+                            _ => panic!("Expected each length to be [IntVar, IntVal]"),
+                        })
+                        .collect();
+                    callback.on_constraint_no_overlap_k_dim_v3(
+                        &scope,
+                        &special_lengths,
+                        inner.zero_ignored(),
+                    )
+                } else {
+                    if inner.is_lengths_int() {
+                        let mut intlengths: Vec<Vec<i32>> = Vec::new();
+                        for sc in inner.lengths() {
+                            intlengths.push(to_int_list(sc));
+                        }
+                        callback.on_constraint_no_overlap_k_dim_v1(
                             &scope,
-                            &special_lengths,
+                            &intlengths,
                             inner.zero_ignored(),
                         )
                     } else {
-                        if inner.is_lengths_int() {
-                            let mut intlengths: Vec<Vec<i32>> = Vec::new();
-                            for sc in inner.lengths() {
-                                intlengths.push(to_int_list(sc));
-                            }
-                            callback.on_constraint_no_overlap_k_dim_v1(
-                                &scope,
-                                &intlengths,
-                                inner.zero_ignored(),
-                            )
-                        } else {
-                            let mut varlengths: Vec<Vec<String>> = Vec::new();
-                            for sc in inner.lengths() {
-                                varlengths.push(to_var_list(sc, inner.set()));
-                            }
-                            callback.on_constraint_no_overlap_k_dim_v2(
-                                &scope,
-                                &varlengths,
-                                inner.zero_ignored(),
-                            )
+                        let mut varlengths: Vec<Vec<String>> = Vec::new();
+                        for sc in inner.lengths() {
+                            varlengths.push(to_var_list(sc, inner.set()));
                         }
+                        callback.on_constraint_no_overlap_k_dim_v2(
+                            &scope,
+                            &varlengths,
+                            inner.zero_ignored(),
+                        )
                     }
                 }
-                XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
-                XConstraintType::XConstraintNone(_) => {}
             }
+            XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
+            XConstraintType::XConstraintNone(_) => {}
         }
-        callback.end_constraints();
-
-        // ── Objectifs ────────────────────────────────────────────────────────
-        callback.begin_objectives();
-        let objectives = model.build_objectives(&variables);
-        for o in objectives.iter() {
-            match o {
-                XObjectivesType::Minimize(inner) => callback.on_objective_minimize(inner),
-                XObjectivesType::Maximize(inner) => callback.on_objective_maximize(inner),
-                XObjectivesType::XObjectiveNone(_) => {}
-            }
-        }
-        callback.end_objectives();
-
-        callback.end_instance();
-
         Ok(())
     }
 }
