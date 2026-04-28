@@ -41,8 +41,28 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
-    pub fn extract_vector(list: &[XVarVal], arg: &[XVarVal]) {
-        todo!()
+    pub fn extract_parameters(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
+        let mut unfolded_scope = Vec::new();
+
+        for value in list.iter() {
+            match value {
+                XVarVal::IntArgument(index) => {
+                    let index = *index as usize;
+                    if let Some(argument) = arg.get(index) {
+                        unfolded_scope.push(argument.clone());
+                    } else {
+                        panic!("Invalid argument index %{} in allDifferent", index);
+                    }
+                }
+                XVarVal::IntStart => {
+                    unfolded_scope.extend_from_slice(arg);
+                }
+                _ => {
+                    unfolded_scope.push(value.clone());
+                }
+            }
+        }
+        unfolded_scope
     }
 
     pub trait XConstraintUnfold {

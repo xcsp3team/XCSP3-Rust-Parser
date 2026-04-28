@@ -39,6 +39,10 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        extract_parameters, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::to_int_list;
@@ -58,22 +62,10 @@ pub mod xcsp3_core {
         except: Vec<XVarVal>,
     }
 
-    impl Display for XAllDifferentExcept<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("except = (");
-            for (i, e) in self.except.iter().enumerate() {
-                ret.push_str(&e.to_string());
-                if i != self.except.len() - 1 {
-                    ret.push_str(", ");
-                }
-            }
-            write!(f, "XAllDifferentExcept: list =  {})", ret)
+    impl XConstraintUnfold for XAllDifferentExcept<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = extract_parameters(&*self.scope, arg);
+            self.except = extract_parameters(&*self.except, arg);
         }
     }
 

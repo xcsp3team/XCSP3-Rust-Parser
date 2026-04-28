@@ -100,6 +100,9 @@ pub mod xcsp3_core {
                 XConstraintType::XAllDifferent(inner) => {
                     inner.extract_parameters(arg);
                 }
+                XConstraintType::XAllDifferentExcept(inner) => {
+                    inner.extract_parameters(arg);
+                }
 
                 _ => {
                     todo!()

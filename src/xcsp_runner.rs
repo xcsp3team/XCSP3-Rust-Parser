@@ -79,6 +79,7 @@ impl XcspRunner {
             match c {
                 XConstraintType::XGroup(inner) => {
                     for arg in inner.get_args() {
+                        println!("{:?}", arg);
                         let mut c = inner.get_template().clone();
                         c.extract_parameters(arg);
                         Self::build_constraint(callback, &mut c)?;
