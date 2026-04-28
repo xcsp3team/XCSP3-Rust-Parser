@@ -39,14 +39,15 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
-
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::collections::HashMap;
+    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
     #[derive(Clone)]
@@ -55,6 +56,11 @@ pub mod xcsp3_core {
         set: &'a XVariableSet,
     }
 
+    impl XConstraintUnfold for XAllEqual<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters(&*self.scope, arg);
+        }
+    }
     impl Display for XAllEqual<'_> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let mut ret = String::default();

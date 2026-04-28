@@ -320,15 +320,34 @@
             <origins>(y[0],y[1])(y[2],y[3])</origins>
             <lengths>(t[1],2)(t[2],4)</lengths>
         </noOverlap>
+
+
+        <allDifferent>
+            <list>y[]</list>
+            <except>3 4</except>
+        </allDifferent>
+
         <group>
-            <allDifferent>
+            <sum>
+                <list>%0 %1 %2</list>
+                <coeffs>1 -1 -1</coeffs>
+                <condition>(eq,%3)</condition>
+            </sum>
+            <args>y[1] y[2] y[3] 0</args>
+            <args>y[1] y[2] y[3] t[0]</args>
+        </group>
+
+        
+        <group>
+            <allEqual>
                 %...
-            </allDifferent>
+            </allEqual>
             <args>y[]</args>
             <args>t[]</args>
             <args>x[1][]</args>
             <args>x[][]</args>
         </group>
+
         <group>
             <allDifferent>
                 <list>%1 %2 %3</list>
@@ -337,6 +356,25 @@
             <args>0 y[1] y[2] y[3]</args>
             <args>1 y[1] y[2] y[3]</args>
         </group>
+        <group>
+            <intension>
+                <function>eq(add(%0,%1),%2)</function>
+            </intension>
+            <args>x[15] x[42] x[14]</args>
+            <args>x[16] x[41] x[15]</args>
+            <args>x[17] x[40] x[16]</args>
+            <args>x[18] x[39] x[17]</args>
+            <args>x[19] x[38] x[18]</args>
+            <args>x[20] x[37] x[19]</args>
+            <args>x[21] x[36] x[20]</args>
+            <args>x[22] x[35] x[21]</args>
+            <args>x[23] x[34] x[22]</args>
+            <args>x[24] x[33] x[23]</args>
+            <args>x[25] x[32] x[24]</args>
+            <args>x[26] x[31] x[25]</args>
+            <args>x[27] x[30] x[26]</args>
+        </group>
+
         <group>
             <intension>
                 <function>eq(add(%0,%1),%2)</function>

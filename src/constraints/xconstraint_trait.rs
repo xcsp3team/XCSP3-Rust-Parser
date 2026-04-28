@@ -41,7 +41,7 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
-    pub fn extract_parameters(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
+    pub fn inject_parameters(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
         let mut unfolded_scope = Vec::new();
 
         for value in list.iter() {

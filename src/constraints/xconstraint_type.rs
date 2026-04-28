@@ -96,18 +96,19 @@ pub mod xcsp3_core {
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            match self {
-                XConstraintType::XAllDifferent(inner) => {
-                    inner.extract_parameters(arg);
+            macro_rules! dispatch {
+            ($($variant:ident),* $(,)?) => {
+                match self {
+                    $(XConstraintType::$variant(inner) => inner.extract_parameters(arg),)*
+                    XConstraintType::XConstraintNone(_) => {
+                        // Nothing to extract from an error state
+                    },
+                    _ => todo!()
                 }
-                XConstraintType::XAllDifferentExcept(inner) => {
-                    inner.extract_parameters(arg);
-                }
+            };
+        }
 
-                _ => {
-                    todo!()
-                }
-            }
+            dispatch!(XAllDifferent, XAllEqual, XAllDifferentExcept, XSum);
         }
     }
 }
