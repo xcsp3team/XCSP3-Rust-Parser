@@ -108,7 +108,7 @@ pub mod xcsp3_core {
             };
         }
 
-            dispatch!(XAllDifferent, XAllEqual, XAllDifferentExcept, XSum);
+            dispatch!(XAllDifferent, XAllEqual, XAllDifferentExcept, XCount, XSum);
         }
     }
 }

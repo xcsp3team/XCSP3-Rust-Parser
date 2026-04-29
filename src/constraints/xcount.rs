@@ -38,6 +38,10 @@
  * </p>
  */
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
+    };
+    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -57,25 +61,11 @@ pub mod xcsp3_core {
         values: Vec<XVarVal>,
     }
 
-    impl Display for XCount<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("values = (");
-            for e in self.values.iter() {
-                ret.push_str(&e.to_string());
-                ret.push_str(", ")
-            }
-            ret.push_str("), ");
-            write!(
-                f,
-                "XCount: list =  {}, condition = ({:?},{:?})",
-                ret, self.operator, self.operand
-            )
+    impl XConstraintUnfold for XCount<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&self.scope, arg);
+            self.values = inject_parameters_in_list(&self.values, arg);
+            self.operand = inject_parameters_in_operand(&self.operand, arg)
         }
     }
 
