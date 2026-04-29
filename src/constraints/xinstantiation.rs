@@ -39,23 +39,29 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
-
     use crate::utils::utils_functions::xcsp3_utils::{list_to_values, list_to_vec_var_val};
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XInstantiation<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
-        values: Vec<i32>,
+        values: Vec<XVarVal>,
     }
 
+    impl XConstraintUnfold for XInstantiation<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&self.scope, arg);
+            self.values = inject_parameters_in_list(&self.values, arg);
+        }
+    }
     impl Display for XInstantiation<'_> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             let mut ret = String::default();
@@ -76,7 +82,7 @@ pub mod xcsp3_core {
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match list_to_values(values_str) {
+                Ok(scope_vec_str) => match list_to_vec_var_val(values_str) {
                     Ok(values) => Ok(XInstantiation::new(scope_vec_str, set, values)),
                     Err(e) => Err(e),
                 },
@@ -84,7 +90,7 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, values: Vec<i32>) -> Self {
+        pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, values: Vec<XVarVal>) -> Self {
             XInstantiation { scope, set, values }
         }
 
@@ -96,7 +102,7 @@ pub mod xcsp3_core {
             self.set
         }
 
-        pub fn values(&self) -> &Vec<i32> {
+        pub fn values(&self) -> &Vec<XVarVal> {
             &self.values
         }
     }

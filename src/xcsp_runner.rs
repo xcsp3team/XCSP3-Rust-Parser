@@ -272,7 +272,8 @@ impl XcspRunner {
                 if scope.len() != inner.values().len() {
                     panic!("In instantiation constraint: list and values must have same size");
                 }
-                callback.on_constraint_instantiation(&*scope, inner.values())
+                let values = to_int_list(inner.values());
+                callback.on_constraint_instantiation(&*scope, &*values)
             }
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
