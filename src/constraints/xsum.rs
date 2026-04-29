@@ -40,7 +40,9 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
-    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters, XConstraintUnfold};
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -63,10 +65,11 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XSum<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters(&self.scope, arg);
+            self.scope = inject_parameters_in_list(&self.scope, arg);
             if let Some(vals) = &mut self.coeffs {
-                *vals = inject_parameters(vals, arg);
+                *vals = inject_parameters_in_list(vals, arg);
             }
+            self.operand = inject_parameters_in_operand(&self.operand, arg)
         }
     }
 

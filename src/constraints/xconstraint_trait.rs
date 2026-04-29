@@ -40,8 +40,9 @@
 
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 
-    pub fn inject_parameters(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
+    pub fn inject_parameters_in_list(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
         let mut unfolded_scope = Vec::new();
 
         for value in list.iter() {
@@ -63,6 +64,18 @@ pub mod xcsp3_core {
             }
         }
         unfolded_scope
+    }
+
+    pub fn inject_parameters_in_operand(operand: &Operand, arg: &[XVarVal]) -> Operand {
+        match operand {
+            Operand::IntArgument(index) => match arg.get(*index as usize) {
+                Some(XVarVal::IntVal(val)) => Operand::Integer(*val),
+                Some(XVarVal::IntVar(var)) => Operand::Variable(var.clone()),
+                Some(XVarVal::IntInterval(a, b)) => Operand::Interval(*a, *b),
+                _ => operand.clone(),
+            },
+            _ => operand.clone(),
+        }
     }
 
     pub trait XConstraintUnfold {
