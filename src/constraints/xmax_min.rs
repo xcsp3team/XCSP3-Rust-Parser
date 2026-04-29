@@ -39,6 +39,10 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
+    };
+    use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -57,6 +61,13 @@ pub mod xcsp3_core {
         operator: Operator,
         operand: Operand,
         is_maximum_or_minimum: bool, // true if maximum, false if minimum
+    }
+
+    impl XConstraintUnfold for XMaxMin<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&self.scope, arg);
+            self.operand = inject_parameters_in_operand(&self.operand, arg);
+        }
     }
 
     impl<'a> XMaxMin<'a> {

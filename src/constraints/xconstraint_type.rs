@@ -114,6 +114,8 @@ pub mod xcsp3_core {
                 XAllDifferentExcept,
                 XCount,
                 XInstantiation,
+                XMaximum,
+                XMinimum,
                 XSum
             );
         }
