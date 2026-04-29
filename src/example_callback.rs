@@ -4,15 +4,11 @@
  * Exemple concret d'implémentation du trait XcspCallback.
  * Définit PrintingSolver, un solveur qui affiche et compte chaque élément parsé.
  */
-use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
 use crate::constraints::xextension::xcsp3_core::XExtension;
-use crate::constraints::xintension::xcsp3_core::XIntention;
-use crate::constraints::xsum::xcsp3_core::XSum;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjective;
-use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 // ---------------------------------------------------------------------------
@@ -117,7 +113,7 @@ impl XcspCallback for PrintingSolver {
             scope, lengths, operator
         );
     }
-    fn on_constraint_extension(&mut self, c: &XExtension) {
+    fn on_constraint_extension(&mut self, _c: &XExtension) {
         println!("Extension in progress");
     }
     fn on_constraint_intention(&mut self, _scope: &[String], tree: &ExpressionTree) {

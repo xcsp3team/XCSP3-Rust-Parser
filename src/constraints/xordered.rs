@@ -40,9 +40,8 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
-    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;

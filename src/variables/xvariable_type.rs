@@ -43,9 +43,9 @@ pub mod xcsp3_core {
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_array::xcsp3_core::XVariableArray;
     use crate::variables::xvariable_int::xcsp3_core::XVariableInt;
-    use std::fmt::{Display, Formatter};
     // use crate::variables::xvariable_trait::xcsp3_core::XVariableTrait;
     use crate::variables::xvariable_tree::xcsp3_core::XVariableTree;
+    use std::fmt::{Display, Formatter};
 
     #[derive(Clone)]
     pub enum XVariableType {

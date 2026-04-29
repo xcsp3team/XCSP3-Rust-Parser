@@ -35,11 +35,8 @@
  * <p>@this_file_name:xcsp3domain
  * </p>
  */
-use crate::constraints::xconstraint_trait::xcsp3_core::inject_parameters_in_list;
-use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {

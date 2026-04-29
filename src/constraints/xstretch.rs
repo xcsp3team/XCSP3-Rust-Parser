@@ -44,7 +44,6 @@ pub mod xcsp3_core {
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
     #[derive(Clone)]
     pub struct XStretch<'a> {
         scope: Vec<XVarVal>,

@@ -12,7 +12,6 @@ use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
-use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
     is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
     to_int_list, to_interval_list, to_var_list,
@@ -36,7 +35,7 @@ impl XcspRunner {
         callback: &mut C,
     ) -> Result<(), Box<dyn std::error::Error>> {
         pub fn call_var(id: String, domain: &XDomainInteger, callback: &mut dyn XcspCallback) {
-            if (domain.is_interval()) {
+            if domain.is_interval() {
                 callback.on_variable_interval(id, domain.minimum(), domain.maximum());
             } else {
                 let mut result = vec![];
@@ -125,7 +124,7 @@ impl XcspRunner {
             // All Diff constraints
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XAllDifferent(inner) => {
-                if (scope_contains_expressions(inner.scope())) {
+                if scope_contains_expressions(inner.scope()) {
                     let scope: Vec<ExpressionTree> =
                         to_expression_list(&inner.scope(), &inner.set());
                     callback.on_constraint_all_different_v2(&*scope);
@@ -143,7 +142,7 @@ impl XcspRunner {
             // All Equal constraints
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XAllEqual(inner) => {
-                if (scope_contains_expressions(inner.scope())) {
+                if scope_contains_expressions(inner.scope()) {
                     let scope: Vec<ExpressionTree> =
                         to_expression_list(&inner.scope(), &inner.set());
                     callback.on_constraint_all_equal_v2(&*scope);
@@ -168,7 +167,7 @@ impl XcspRunner {
             XConstraintType::XSum(inner) => {
                 match inner.coeffs() {
                     None => {
-                        if (scope_contains_expressions(inner.scope())) {
+                        if scope_contains_expressions(inner.scope()) {
                             let scope: Vec<ExpressionTree> =
                                 to_expression_list(&inner.scope(), &inner.set());
                             callback.on_constraint_sum_v4(
@@ -188,7 +187,7 @@ impl XcspRunner {
                     Some(vals) => match vals.first() {
                         Some(XVarVal::IntVal(_)) => {
                             let tmp = to_int_list(vals);
-                            if (scope_contains_expressions(inner.scope())) {
+                            if scope_contains_expressions(inner.scope()) {
                                 let scope: Vec<ExpressionTree> =
                                     to_expression_list(&inner.scope(), &inner.set());
                                 if tmp.len() != scope.len() {
@@ -286,7 +285,7 @@ impl XcspRunner {
             // Extremum Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XMaximum(inner) => {
-                if (scope_contains_expressions(inner.scope())) {
+                if scope_contains_expressions(inner.scope()) {
                     let scope: Vec<ExpressionTree> =
                         to_expression_list(&inner.scope(), &inner.set());
                     callback.on_constraint_maximum_v2(
@@ -304,7 +303,7 @@ impl XcspRunner {
                 }
             }
             XConstraintType::XMinimum(inner) => {
-                if (scope_contains_expressions(inner.scope())) {
+                if scope_contains_expressions(inner.scope()) {
                     let scope: Vec<ExpressionTree> =
                         to_expression_list(&inner.scope(), &inner.set());
                     callback.on_constraint_minimum_v2(
@@ -331,7 +330,7 @@ impl XcspRunner {
                 Some(XVarVal::IntVal(_)) => {
                     // Values are integers
                     let values = to_int_list(inner.values());
-                    if (scope_contains_expressions(inner.scope())) {
+                    if scope_contains_expressions(inner.scope()) {
                         // scope is expressions
                         let scope: Vec<ExpressionTree> =
                             to_expression_list(&inner.scope(), &inner.set());
@@ -353,7 +352,7 @@ impl XcspRunner {
                 }
                 Some(XVarVal::IntVar(_)) => {
                     let values: Vec<String> = to_var_list(inner.values(), &inner.set());
-                    if (scope_contains_expressions(inner.scope())) {
+                    if scope_contains_expressions(inner.scope()) {
                         // scope is expressions
                         let scope: Vec<ExpressionTree> =
                             to_expression_list(&inner.scope(), &inner.set());
@@ -381,7 +380,7 @@ impl XcspRunner {
             // NVALUES Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XNValues(inner) => {
-                if (scope_contains_expressions(inner.scope())) {
+                if scope_contains_expressions(inner.scope()) {
                     let scope: Vec<ExpressionTree> =
                         to_expression_list(&inner.scope(), &inner.set());
                     callback.on_constraint_nvalues_v3(
@@ -406,13 +405,12 @@ impl XcspRunner {
                                 inner.operand().clone(),
                             )
                         }
-                        _ => {}
                     }
                 }
             }
             XConstraintType::XCardinality(inner) => {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                if (is_int_list(inner.values()) && is_int_list(inner.occurs())) {
+                if is_int_list(inner.values()) && is_int_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
                     let occurs = to_int_list(inner.occurs());
                     callback.on_constraint_cardinality_v1(
@@ -422,7 +420,7 @@ impl XcspRunner {
                         inner.closed(),
                     );
                 }
-                if (is_int_list(inner.values()) && is_var_list(inner.occurs())) {
+                if is_int_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
                     let occurs = to_var_list(inner.occurs(), inner.set());
                     callback.on_constraint_cardinality_v2(
@@ -432,7 +430,7 @@ impl XcspRunner {
                         inner.closed(),
                     );
                 }
-                if (is_int_list(inner.values()) && is_interval_list(inner.occurs())) {
+                if is_int_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
                     let occurs = to_interval_list(inner.occurs());
                     callback.on_constraint_cardinality_v3(
@@ -442,7 +440,7 @@ impl XcspRunner {
                         inner.closed(),
                     );
                 }
-                if (is_var_list(inner.values()) && is_int_list(inner.occurs())) {
+                if is_var_list(inner.values()) && is_int_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_int_list(inner.occurs());
                     callback.on_constraint_cardinality_v4(
@@ -452,7 +450,7 @@ impl XcspRunner {
                         inner.closed(),
                     );
                 }
-                if (is_var_list(inner.values()) && is_var_list(inner.occurs())) {
+                if is_var_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_var_list(inner.occurs(), inner.set());
                     callback.on_constraint_cardinality_v5(
@@ -462,7 +460,7 @@ impl XcspRunner {
                         inner.closed(),
                     );
                 }
-                if (is_var_list(inner.values()) && is_interval_list(inner.occurs())) {
+                if is_var_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_interval_list(inner.occurs());
                     callback.on_constraint_cardinality_v6(

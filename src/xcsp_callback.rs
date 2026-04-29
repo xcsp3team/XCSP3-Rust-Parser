@@ -13,34 +13,16 @@
  *   }
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
-use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
-use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
-use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
-use crate::constraints::xcardinality::xcsp3_core::XCardinality;
 use crate::constraints::xchannel::xcsp3_core::XChannel;
-use crate::constraints::xcount::xcsp3_core::XCount;
 use crate::constraints::xcumulative::xcsp3_core::XCumulative;
 use crate::constraints::xelement::xcsp3_core::XElement;
 use crate::constraints::xextension::xcsp3_core::XExtension;
-use crate::constraints::xgroup::xcsp3_core::XGroup;
-use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
-use crate::constraints::xintension::xcsp3_core::XIntention;
-use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
-use crate::constraints::xmdd::xcsp3_core::XMdd;
-use crate::constraints::xn_values::xcsp3_core::XNValues;
-use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
-use crate::constraints::xno_overlap_k_dimensional::xcsp3_core::XNoOverlapKDim;
-use crate::constraints::xordered::xcsp3_core::XOrdered;
-use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
-use crate::constraints::xsum::xcsp3_core::XSum;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
-use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
-use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
 pub trait XcspCallback {
@@ -136,7 +118,7 @@ pub trait XcspCallback {
      * @param minimum the minimum value in the range
      * @param maximum the maxnimum value in the range
      */
-    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) {
+    fn on_variable_interval(&mut self, _id: String, _minimum: i32, _maximum: i32) {
         panic!("You must implement callbacks for variables");
     }
 
@@ -149,7 +131,7 @@ pub trait XcspCallback {
      * @param id the id (name) of the group
      * @param values the set of values in the domain
      */
-    fn on_variable_values(&mut self, id: String, values: &[i32]) {
+    fn on_variable_values(&mut self, _id: String, _values: &[i32]) {
         panic!("You must implement callbacks for variables");
     }
     /**
@@ -160,7 +142,7 @@ pub trait XcspCallback {
      *
      * @param id the id (name) of the array variable
      */
-    fn begin_variable_array(&mut self, name: String) {}
+    fn begin_variable_array(&mut self, _name: String) {}
 
     /**
      * End of parsing an array of variables

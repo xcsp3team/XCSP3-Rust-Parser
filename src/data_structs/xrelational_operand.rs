@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use regex::Regex;
     use std::collections::HashSet;
