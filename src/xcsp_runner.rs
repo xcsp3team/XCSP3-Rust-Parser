@@ -82,13 +82,16 @@ impl XcspRunner {
         for c in constraints.iter_mut() {
             match c {
                 XConstraintType::XGroup(inner) => {
+                    callback.begin_group();
                     for arg in inner.get_args() {
                         println!("{:?}", arg);
                         let mut c = inner.get_template().clone();
                         c.extract_parameters(arg);
                         Self::build_constraint(callback, &mut c)?;
                     }
+                    callback.begin_group();
                 }
+
                 _ => {
                     Self::build_constraint(callback, c)?;
                 }

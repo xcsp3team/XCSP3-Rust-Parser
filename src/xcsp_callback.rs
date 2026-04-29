@@ -92,10 +92,27 @@ pub trait XcspCallback {
     fn end_constraints(&mut self) {}
 
     /**
+     * Start to parse a group of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn begin_group(&mut self) {}
+
+    /**
+     * The end to parse a group of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn end_group(&mut self) {}
+
+    /**
      * Start to parse objectives
      * Related to tag <objectives>
      * See http://xcsp.org/specifications/objectives
      */
+
     fn begin_objectives(&mut self) {}
 
     /**
