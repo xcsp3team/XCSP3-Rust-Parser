@@ -119,6 +119,7 @@ pub mod xcsp3_core {
                 XMdd,
                 XNValues,
                 XNoOverlap,
+                XOrdered,
                 XSum
             );
         }
