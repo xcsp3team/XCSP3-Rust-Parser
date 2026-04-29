@@ -40,7 +40,7 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -49,6 +49,7 @@ pub mod xcsp3_core {
         list_to_vec_var_val, list_with_bracket_comma_to_values,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
@@ -60,8 +61,15 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XAllDifferentExcept<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters_in_list(&*self.scope, arg);
-            self.except = inject_parameters_in_list(&*self.except, arg);
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
+            self.except = inject_parameters_in_list(&*self.except, arg, tmp);
+        }
+        fn max_args_used(&mut self) -> i32 {
+            max(
+                max_arg_in_list(&*self.except),
+                max_arg_in_list(&*self.scope),
+            )
         }
     }
 

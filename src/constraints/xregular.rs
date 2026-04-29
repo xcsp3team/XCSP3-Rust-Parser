@@ -63,7 +63,11 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XRegular<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters_in_list(&*self.scope, arg);
+            self.scope = inject_parameters_in_list(&*self.scope, arg, -1);
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            -1
         }
     }
 

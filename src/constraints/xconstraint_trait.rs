@@ -42,9 +42,13 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 
-    pub fn inject_parameters_in_list(list: &[XVarVal], arg: &[XVarVal]) -> Vec<XVarVal> {
+    pub fn inject_parameters_in_list(
+        list: &[XVarVal],
+        arg: &[XVarVal],
+        start: i32,
+    ) -> Vec<XVarVal> {
         let mut unfolded_scope = Vec::new();
-
+        let all_params = &arg[(start + 1) as usize..];
         for value in list.iter() {
             match value {
                 XVarVal::IntArgument(index) => {
@@ -56,7 +60,7 @@ pub mod xcsp3_core {
                     }
                 }
                 XVarVal::IntStart => {
-                    unfolded_scope.extend_from_slice(arg);
+                    unfolded_scope.extend_from_slice(all_params);
                 }
                 _ => {
                     unfolded_scope.push(value.clone());
@@ -78,7 +82,30 @@ pub mod xcsp3_core {
         }
     }
 
+    pub fn max_arg_in_list(list: &[XVarVal]) -> i32 {
+        let mut max = -1;
+        for value in list.iter() {
+            match value {
+                XVarVal::IntArgument(index) => {
+                    if *index as i32 > max {
+                        max = *index as i32;
+                    }
+                }
+                _ => (),
+            }
+        }
+        max
+    }
+
+    pub fn arg_in_operand(operand: &Operand) -> i32 {
+        match operand {
+            Operand::IntArgument(index) => *index as i32,
+            _ => -1,
+        }
+    }
+
     pub trait XConstraintUnfold {
         fn extract_parameters(&mut self, arg: &[XVarVal]);
+        fn max_args_used(&mut self) -> i32;
     }
 }

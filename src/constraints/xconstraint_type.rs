@@ -125,5 +125,36 @@ pub mod xcsp3_core {
                 XSum
             );
         }
+
+        fn max_args_used(&mut self) -> i32 {
+            macro_rules! dispatch {
+            ($($variant:ident),* $(,)?) => {
+                match self {
+                    $(XConstraintType::$variant(inner) => inner.max_args_used(),)*
+                    XConstraintType::XConstraintNone(_) => {
+                        -1
+                    },
+                    _ => todo!()
+                }
+            }
+        }
+
+            dispatch!(
+                XAllDifferent,
+                XAllEqual,
+                XAllDifferentExcept,
+                XCardinality,
+                XCount,
+                XInstantiation,
+                XMaximum,
+                XMinimum,
+                XMdd,
+                XNValues,
+                XNoOverlap,
+                XOrdered,
+                XRegular,
+                XSum
+            )
+        }
     }
 }

@@ -39,7 +39,8 @@
  */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
+        XConstraintUnfold,
     };
     use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
@@ -49,6 +50,7 @@ pub mod xcsp3_core {
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
 
@@ -63,11 +65,20 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XNValues<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters_in_list(&self.scope, arg);
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
             if let Some(vals) = &mut self.except {
-                *vals = inject_parameters_in_list(vals, arg);
+                *vals = inject_parameters_in_list(vals, arg, tmp);
             }
             self.operand = inject_parameters_in_operand(&self.operand, arg)
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            let tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
+            match self.except.as_deref() {
+                Some(v) => max(tmp, max_arg_in_list(v)),
+                None => tmp,
+            }
         }
     }
 

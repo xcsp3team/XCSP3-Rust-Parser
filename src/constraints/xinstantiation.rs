@@ -40,12 +40,13 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_values, list_to_vec_var_val};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
     use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
@@ -58,8 +59,15 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XInstantiation<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters_in_list(&self.scope, arg);
-            self.values = inject_parameters_in_list(&self.values, arg);
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            self.values = inject_parameters_in_list(&self.values, arg, tmp);
+        }
+        fn max_args_used(&mut self) -> i32 {
+            max(
+                max_arg_in_list(&*self.scope),
+                max_arg_in_list(&*self.values),
+            )
         }
     }
     impl Display for XInstantiation<'_> {
