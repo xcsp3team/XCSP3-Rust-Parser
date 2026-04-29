@@ -39,6 +39,10 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_transitions, list_to_vec_var_val};
@@ -53,6 +57,12 @@ pub mod xcsp3_core {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         transitions: Vec<(String, i32, String)>,
+    }
+
+    impl XConstraintUnfold for XMdd<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&*self.scope, arg);
+        }
     }
 
     impl<'a> XMdd<'a> {
