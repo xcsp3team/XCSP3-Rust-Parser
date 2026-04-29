@@ -14,13 +14,13 @@ use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
-    scope_contains_expressions, to_expression_list, to_int_list, to_var_list,
+    is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
+    to_int_list, to_interval_list, to_var_list,
 };
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::XcspXmlModel;
-use std::env::var;
 use std::error::Error;
 
 pub struct XcspRunner;
@@ -53,6 +53,7 @@ impl XcspRunner {
         // ── Variables ────────────────────────────────────────────────────────
         callback.begin_variables();
         let variables = model.build_variables();
+        println!("variables: {}", variables);
         for v in variables.iter() {
             match v {
                 XVariableType::XVariableInt(var) => {
@@ -66,7 +67,10 @@ impl XcspRunner {
 
                     callback.end_variable_array();
                 }
-                XVariableType::XVariableTree(_) => callback.on_variable_tree(v),
+                XVariableType::XVariableTree(_) => {
+                    callback.begin_variable_array(v.get_id());
+                    callback.end_variable_array();
+                }
                 XVariableType::XVariableNone(_) => {}
             }
         }
@@ -403,7 +407,69 @@ impl XcspRunner {
                     }
                 }
             }
-            XConstraintType::XCardinality(inner) => callback.on_constraint_cardinality(inner),
+            XConstraintType::XCardinality(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                if (is_int_list(inner.values()) && is_int_list(inner.occurs())) {
+                    let values = to_int_list(inner.values());
+                    let occurs = to_int_list(inner.occurs());
+                    callback.on_constraint_cardinality_v1(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+                if (is_int_list(inner.values()) && is_var_list(inner.occurs())) {
+                    let values = to_int_list(inner.values());
+                    let occurs = to_var_list(inner.occurs(), inner.set());
+                    callback.on_constraint_cardinality_v2(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+                if (is_int_list(inner.values()) && is_interval_list(inner.occurs())) {
+                    let values = to_int_list(inner.values());
+                    let occurs = to_interval_list(inner.occurs());
+                    callback.on_constraint_cardinality_v3(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+                if (is_var_list(inner.values()) && is_int_list(inner.occurs())) {
+                    let values = to_var_list(inner.values(), inner.set());
+                    let occurs = to_int_list(inner.occurs());
+                    callback.on_constraint_cardinality_v4(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+                if (is_var_list(inner.values()) && is_var_list(inner.occurs())) {
+                    let values = to_var_list(inner.values(), inner.set());
+                    let occurs = to_var_list(inner.occurs(), inner.set());
+                    callback.on_constraint_cardinality_v5(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+                if (is_var_list(inner.values()) && is_interval_list(inner.occurs())) {
+                    let values = to_var_list(inner.values(), inner.set());
+                    let occurs = to_interval_list(inner.occurs());
+                    callback.on_constraint_cardinality_v6(
+                        &*scope,
+                        &*values,
+                        &*occurs,
+                        inner.closed(),
+                    );
+                }
+            }
             XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
             XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
             //---------------------------------------------------------------------------------------------------

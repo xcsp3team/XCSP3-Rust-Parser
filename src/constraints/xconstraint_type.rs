@@ -112,6 +112,7 @@ pub mod xcsp3_core {
                 XAllDifferent,
                 XAllEqual,
                 XAllDifferentExcept,
+                XCardinality,
                 XCount,
                 XInstantiation,
                 XMaximum,

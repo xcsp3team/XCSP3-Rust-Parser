@@ -38,48 +38,28 @@
  * </p>
  */
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
 
     #[derive(Clone)]
     pub struct XCardinality<'a> {
         scope: Vec<XVarVal>,
         values: Vec<XVarVal>,
         occurs: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         closed: Option<bool>,
     }
-    impl Display for XCardinality<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("  values = ");
-            for e in self.values.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(c) = self.closed {
-                ret.push_str(&format!("  closed = {}", c));
-            }
-            ret.push_str("  occurs = ");
-            for e in self.occurs.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
 
-            write!(f, "XCardinality: list =  {},  ", ret,)
+    impl XConstraintUnfold for XCardinality<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&*self.scope, arg);
+            self.values = inject_parameters_in_list(&*self.values, arg);
+            self.occurs = inject_parameters_in_list(&*self.occurs, arg);
         }
     }
 
@@ -129,22 +109,29 @@ pub mod xcsp3_core {
                 scope,
                 values,
                 occurs,
-                map: Default::default(),
                 set,
                 closed,
             }
         }
 
-        pub fn get_occurs(&self) -> &Vec<XVarVal> {
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn values(&self) -> &Vec<XVarVal> {
+            &self.values
+        }
+
+        pub fn occurs(&self) -> &Vec<XVarVal> {
             &self.occurs
         }
 
-        pub fn get_closed(&self) -> &Option<bool> {
-            &self.closed
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
 
-        pub fn get_values(&self) -> &Vec<XVarVal> {
-            &self.values
+        pub fn closed(&self) -> bool {
+            self.closed.unwrap_or(true)
         }
     }
 }

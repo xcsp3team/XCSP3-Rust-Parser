@@ -51,7 +51,6 @@ pub mod xcsp3_core {
     #[derive(Clone)]
     pub struct XGroup<'a> {
         args: Vec<Vec<XVarVal>>,
-        map: Vec<Vec<(String, &'a XDomainInteger)>>,
         set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
     }
@@ -93,7 +92,6 @@ pub mod xcsp3_core {
         ) -> Self {
             Self {
                 args,
-                map: vec![],
                 set,
                 template,
             }

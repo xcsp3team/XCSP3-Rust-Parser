@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xconstraint_trait::xcsp3_core::{
         inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
     };
@@ -48,10 +47,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
     #[derive(Clone)]

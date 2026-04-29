@@ -36,6 +36,7 @@ use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::constraints::xsum::xcsp3_core::XSum;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
+use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
@@ -150,9 +151,6 @@ pub trait XcspCallback {
      * See http://xcsp.org/specifications/arrays
      */
     fn end_variable_array(&mut self) {}
-
-    /// Variable arbre (domaines complexes)
-    fn on_variable_tree(&mut self, _var: &XVariableType) {}
 
     // -------------------------------------------------------------------------
     // Contraintes
@@ -772,9 +770,168 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    /// <cardinality> ... </cardinality>
-    fn on_constraint_cardinality(&mut self, _c: &XCardinality) {}
+    /**
+     * The callback function related to a cardinality constraint with int values and int occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 2 5 10 </values>
+     *   <occurs> 1 2 3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here int)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v1(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[i32],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
+    /**
+     * The callback function related to a cardinality constraint with int values and variable occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 0 1 2 3 </values>
+     *   <occurs> z0 z1 z2 z3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here variables)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v2(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[String],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with int values and interval occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 2 5 10 </values>
+     *   <occurs> 0..1 1..3 2..3 </occurs>
+     * </cardinality>
+     *
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here interval)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v3(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[(i32, i32)],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with variable values and int occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> 1 2 3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the list of the constraint (not the scope...)
+     * @param _values the set of values (here variable)
+     * @param _occurs the number of occurences (here int)
+     * @param closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v4(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[i32],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a cardinality constraint with variable values and variable occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> y1 y2 y3 </occurs>
+     * </cardinality>
+     *
+     * @param scope the list of the constraint (not the scope)
+     * @param values the set of values (here variables)
+     * @param occurs the number of occurences (here variables)
+     * @param closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v5(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[String],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with variable values and interval occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> 1..2 3..5 2..4 </occurs>
+     * </cardinality>
+     *
+     * @param scope the list of the constraint (not the scope)
+     * @param values the set of values (here variables)
+     * @param occurs the number of occurences (here intervals)
+     * @param closed is the constraint is closed
+     */
+
+    fn on_constraint_cardinality_v6(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[(i32, i32)],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     /// <channel> ... </channel>
     fn on_constraint_channel(&mut self, _c: &XChannel) {}
 

@@ -366,6 +366,84 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_cardinality_v1(
+        &mut self,
+        scope: &[String],
+        values: &[i32],
+        occurs: &[i32],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
+    fn on_constraint_cardinality_v2(
+        &mut self,
+        scope: &[String],
+        values: &[i32],
+        occurs: &[String],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
+    fn on_constraint_cardinality_v3(
+        &mut self,
+        scope: &[String],
+        values: &[i32],
+        occurs: &[(i32, i32)],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
+    fn on_constraint_cardinality_v4(
+        &mut self,
+        scope: &[String],
+        values: &[String],
+        occurs: &[i32],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
+    fn on_constraint_cardinality_v5(
+        &mut self,
+        scope: &[String],
+        values: &[String],
+        occurs: &[String],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
+    fn on_constraint_cardinality_v6(
+        &mut self,
+        scope: &[String],
+        values: &[String],
+        occurs: &[(i32, i32)],
+        closed: bool,
+    ) {
+        println!(
+            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
+            scope, occurs, values, closed
+        );
+    }
+
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);
