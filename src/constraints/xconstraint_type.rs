@@ -117,6 +117,7 @@ pub mod xcsp3_core {
                 XMaximum,
                 XMinimum,
                 XMdd,
+                XNValues,
                 XSum
             );
         }
