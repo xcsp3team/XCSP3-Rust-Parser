@@ -42,6 +42,20 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 
+    pub fn inject_parameters_in_var_val(value: XVarVal, arg: &[XVarVal]) -> XVarVal {
+        match value {
+            XVarVal::IntArgument(index) => {
+                let index = index as usize;
+                if let Some(argument) = arg.get(index) {
+                    argument.clone()
+                } else {
+                    panic!("Invalid argument index %{}", index);
+                }
+            }
+            _ => value.clone(),
+        }
+    }
+
     pub fn inject_parameters_in_list(
         list: &[XVarVal],
         arg: &[XVarVal],
@@ -56,7 +70,7 @@ pub mod xcsp3_core {
                     if let Some(argument) = arg.get(index) {
                         unfolded_scope.push(argument.clone());
                     } else {
-                        panic!("Invalid argument index %{} in allDifferent", index);
+                        panic!("Invalid argument index %{}", index);
                     }
                 }
                 XVarVal::IntStart => {

@@ -1030,6 +1030,61 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    /**
+     * The callback function related to circuit constraint
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     */
+
+    fn on_constraint_circuit_v1(&mut self, _scope: &Vec<String>) {
+        println!("c Circuit Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to circuit constraint with defined int size
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     *   <size> 4 </size>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     * @param startIndex the start index for the list
+     * @param size the size of the circuit (here an int)
+     */
+    fn on_constraint_circuit_v2(&mut self, _scope: &Vec<String>, _size: i32) {
+        println!("c Circuit Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to circuit constraint with defined int size
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     *   <size> 4 </size>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     * @param startIndex the start index for the list
+     * @param size the size of the circuit (here an int)
+     */
+    fn on_constraint_circuit_v3(&mut self, _scope: &Vec<String>, _ssize: String) {
+        println!("c Circuit Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     /// <stretch> ... </stretch>
     fn on_constraint_stretch(&mut self, _c: &XStretch) {}
 

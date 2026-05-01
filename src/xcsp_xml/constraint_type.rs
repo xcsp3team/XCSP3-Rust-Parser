@@ -202,8 +202,12 @@ pub mod xcsp3_xml {
          */
         #[serde(rename = "circuit")]
         Circuit {
-            #[serde(rename = "$value")]
+            #[serde(rename = "$value", default)]
             vars: String,
+            #[serde(rename = "list", default)]
+            list: Box<[String]>,
+            #[serde(rename = "size", default)]
+            size: String,
         },
 
         /**

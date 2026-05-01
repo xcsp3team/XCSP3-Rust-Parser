@@ -534,6 +534,20 @@ impl XcspRunner {
                     }
                 }
             }
+            XConstraintType::XCircuit(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+
+                match inner.size() {
+                    None => {
+                        callback.on_constraint_circuit_v1(&scope);
+                    }
+                    Some(size) => match size {
+                        XVarVal::IntVar(v) => callback.on_constraint_circuit_v3(&scope, v.clone()),
+                        XVarVal::IntVal(v) => callback.on_constraint_circuit_v2(&scope, *v),
+                        _ => panic!("Expected size to be var or integer"),
+                    },
+                }
+            }
             XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
             XConstraintType::XConstraintNone(_) => {}
             _ => {

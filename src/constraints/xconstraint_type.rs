@@ -44,6 +44,7 @@ pub mod xcsp3_core {
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
+    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
     use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
@@ -91,6 +92,7 @@ pub mod xcsp3_core {
         XNoOverlap(XNoOverlap<'a>),
         XStretch(XStretch<'a>),
         XNoOverlapKDim(XNoOverlapKDim<'a>),
+        XCircuit(XCircuit<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -121,7 +123,8 @@ pub mod xcsp3_core {
                 XNoOverlap,
                 XOrdered,
                 XRegular,
-                XSum
+                XSum,
+                XCircuit
             );
         }
 
@@ -152,7 +155,8 @@ pub mod xcsp3_core {
                 XNoOverlap,
                 XOrdered,
                 XRegular,
-                XSum
+                XSum,
+                XCircuit
             )
         }
     }

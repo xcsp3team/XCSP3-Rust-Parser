@@ -440,6 +440,17 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_circuit_v1(&mut self, scope: &Vec<String>) {
+        println!("  [Circuit]  {:?}", scope);
+    }
+
+    fn on_constraint_circuit_v2(&mut self, scope: &Vec<String>, size: i32) {
+        println!("  [Circuit]  {:?} size={}", scope, size);
+    }
+
+    fn on_constraint_circuit_v3(&mut self, scope: &Vec<String>, size: String) {
+        println!("  [Circuit]  {:?} size={}", scope, size);
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {
         println!("=== Objectif : Minimiser {} ===", obj);

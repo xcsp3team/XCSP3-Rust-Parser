@@ -243,7 +243,16 @@ pub mod xcsp3_xml {
                         }
                     }
                 }
-                ConstraintType::Circuit { .. } => {}
+                ConstraintType::Circuit { vars, list, size } => {
+                    if !vars.is_empty() {
+                        set.build_circuit(vars, size);
+                    } else {
+                        for e in list.iter() {
+                            set.build_circuit(e, size);
+                        }
+                    }
+                }
+
                 ConstraintType::Ordered {
                     vars,
                     operator,

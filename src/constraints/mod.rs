@@ -60,6 +60,7 @@ pub mod xsum;
 
 pub mod xcardinality;
 pub mod xchannel;
+mod xcircuit;
 pub mod xcount;
 pub mod xcumulative;
 pub mod xn_values;
