@@ -12,6 +12,7 @@ use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
+use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
     is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
     to_int_list, to_interval_list, to_var_list,
@@ -66,8 +67,27 @@ impl XcspRunner {
 
                     callback.end_variable_array();
                 }
-                XVariableType::XVariableTree(_) => {
+                XVariableType::XVariableTree(av) => {
                     callback.begin_variable_array(v.get_id());
+                    let lower = vec![0; av.sizes().len()];
+                    let upper: Vec<usize> = av.sizes().iter().map(|size| size - 1).collect();
+                    let all = get_all_variables_between_lower_and_upper(lower, upper);
+                    for sz in all.iter() {
+                        let brackets: String = sz.iter().map(|n| format!("[{}]", n)).collect();
+                        let var_id = format!("{}{}", av.id, brackets);
+                        let tmp = av.find_variable(&*brackets);
+                        if let Ok(vec) = tmp {
+                            for (s, domain) in &vec {
+                                if XDomainInteger::default().equals(domain)
+                                    && av.has_others() == false
+                                {
+                                } else {
+                                    call_var(var_id.clone(), domain, callback);
+                                }
+                            }
+                        }
+                    }
+                    // get_all_variables_between_lower_and_upper
                     callback.end_variable_array();
                 }
                 XVariableType::XVariableNone(_) => {}
