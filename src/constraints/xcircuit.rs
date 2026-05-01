@@ -28,7 +28,7 @@
 * </p>
 * <p>@author: luhan zhen
 * </p>
-* <p>@date:  2023/7/15 15:13
+* <p>@date:  2023/7/14 22:50
 * </p>
 * <p>@email: zhenlh20@mails.jlu.edu.cn
 * </p>
@@ -40,89 +40,59 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
+        inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_transitions, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
-    pub struct XRegular<'a> {
+    pub struct XCircuit<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
-        start: String,
-        r#final: Vec<String>,
-        transitions: Vec<(String, i32, String)>,
+        size: Option<XVarVal>,
     }
 
-    impl XConstraintUnfold for XRegular<'_> {
+    impl XConstraintUnfold for XCircuit<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            self.scope = inject_parameters_in_list(&*self.scope, arg, -1);
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
+            if let Some(size) = &mut self.size {
+                self.size = Option::from(inject_parameters_in_var_val(size.clone(), arg));
+            }
         }
-
         fn max_args_used(&mut self) -> i32 {
-            -1
+            if let Some(size) = &mut self.size {
+                let mut s = Vec::new();
+                s.push(size.clone());
+                max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+            } else {
+                -1
+            }
         }
     }
 
-    impl<'a> XRegular<'a> {
-        pub fn from_str(
-            list: &str,
-            transitions_str: &str,
-            start_str: &str,
-            final_str: &str,
+    impl<'a> XCircuit<'a> {
+        pub fn from_str_vec(
+            scope_vec_str: Vec<XVarVal>,
+            size: Option<XVarVal>,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let mut finals: Vec<String> = vec![];
-                    let t_final: Vec<&str> = final_str.split_whitespace().collect();
-                    for s in t_final.iter() {
-                        finals.push(s.to_string());
-                    }
-                    match list_to_transitions(transitions_str) {
-                        Ok(transitions) => Ok(XRegular::new(
-                            scope_vec_str,
-                            set,
-                            start_str.to_string(),
-                            finals,
-                            transitions,
-                        )),
-                        Err(e) => Err(e),
-                    }
-                }
-                Err(e) => Err(e),
-            }
-        }
-
-        pub fn new(
-            scope: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            start: String,
-            r#final: Vec<String>,
-            transitions: Vec<(String, i32, String)>,
         ) -> Self {
-            XRegular {
-                scope,
-                set,
-                start,
-                r#final,
-                transitions,
-            }
+            XCircuit::new(scope_vec_str, size, set)
         }
 
-        pub fn start(&self) -> &str {
-            &self.start
+        pub fn from_str(list: &str, size: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+            let scope_vec_str = list_to_vec_var_val(list)?;
+            let sz = XVarVal::from_string(size);
+            Ok(Self::new(scope_vec_str, sz, set))
         }
-
-        pub fn finals(&self) -> &Vec<String> {
-            &self.r#final
-        }
-
-        pub fn transitions(&self) -> &Vec<(String, i32, String)> {
-            &self.transitions
+        pub fn new(scope: Vec<XVarVal>, size: Option<XVarVal>, set: &'a XVariableSet) -> Self {
+            XCircuit { scope, size, set }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {
@@ -131,6 +101,10 @@ pub mod xcsp3_core {
 
         pub fn set(&self) -> &'a XVariableSet {
             self.set
+        }
+
+        pub fn size(&self) -> &Option<XVarVal> {
+            &self.size
         }
     }
 }

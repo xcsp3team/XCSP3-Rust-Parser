@@ -39,41 +39,37 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::to_int_list;
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, list_with_bracket_comma_to_values,
     };
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
+    use std::cmp::max;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XAllDifferentExcept<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         except: Vec<XVarVal>,
     }
 
-    impl Display for XAllDifferentExcept<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("except = (");
-            for (i, e) in self.except.iter().enumerate() {
-                ret.push_str(&e.to_string());
-                if i != self.except.len() - 1 {
-                    ret.push_str(", ");
-                }
-            }
-            write!(f, "XAllDifferentExcept: list =  {})", ret)
+    impl XConstraintUnfold for XAllDifferentExcept<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
+            self.except = inject_parameters_in_list(&*self.except, arg, tmp);
+        }
+        fn max_args_used(&mut self) -> i32 {
+            max(
+                max_arg_in_list(&*self.except),
+                max_arg_in_list(&*self.scope),
+            )
         }
     }
 

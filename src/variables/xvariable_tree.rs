@@ -56,11 +56,12 @@ pub mod xcsp3_core {
         others: XVariableTreeNode,
         pub(crate) id: String,
         sizes: Vec<usize>,
+        has_others: bool,
     }
 
     impl XVariableTree {
         /// return which node the variable belongs to
-        fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
+        pub(crate) fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
             for e in self.nodes.iter() {
                 if e.belongs_to_this_node(v) {
                     return e;
@@ -111,6 +112,7 @@ pub mod xcsp3_core {
         ) -> Result<Self, Xcsp3Error> {
             match sizes_to_vec(sizes) {
                 Ok((size_vec, _)) => {
+                    let mut has_others = false;
                     let mut nodes: Vec<XVariableTreeNode> = Vec::new();
                     // for dom in domain_vec.iter() {
                     let mut others_domain = Default::default();
@@ -118,6 +120,7 @@ pub mod xcsp3_core {
                         match XDomainInteger::from_string(domain_value[i]) {
                             Ok(domain) => {
                                 if domain_for[i].eq("others") {
+                                    has_others = true;
                                     others_domain = domain;
                                 } else {
                                     let for_strs: Vec<&str> =
@@ -149,11 +152,20 @@ pub mod xcsp3_core {
                         id: id.to_string(),
                         sizes: size_vec,
                         others: XVariableTreeNode::new_other(others_domain),
+                        has_others,
                         nodes,
                     })
                 }
                 Err(e) => Err(e),
             }
+        }
+
+        pub fn sizes(&self) -> &Vec<usize> {
+            &self.sizes
+        }
+
+        pub fn has_others(&self) -> bool {
+            self.has_others
         }
     }
 

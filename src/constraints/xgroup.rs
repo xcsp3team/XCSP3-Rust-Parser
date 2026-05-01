@@ -43,97 +43,17 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XGroup<'a> {
         args: Vec<Vec<XVarVal>>,
-        // map: Vec<HashMap<String, &'a XDomainInteger>>,
-        map: Vec<Vec<(String, &'a XDomainInteger)>>,
         set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
     }
 
-    impl Display for XGroup<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for a in self.args.iter() {
-                ret.push('[');
-                for e in a.iter() {
-                    // ret.push('(');
-                    ret.push_str(e.to_string().as_str());
-                    ret.push_str(", ")
-                }
-                ret.push(']');
-            }
-            // ret.push(']');
-            write!(
-                f,
-                "XGroup: [constraint = {} [ args =  {}]]",
-                &self.template.to_string(),
-                ret
-            )
-        }
-    }
-
-    // impl XConstraintTrait for XGroup<'_> {
-    //
-    //
-    //     fn get_scope_string(&self) -> &Vec<XVarVal>
-    //     {
-    //         &self.scope
-    //     }
-    //
-    //     fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-    //         for e in self.scope
-    //         {
-    //             if let XVarVal::IntVar(s) = e
-    //             {
-    //                 if !self.map.contains_key(&s)
-    //                 {
-    //                     if let Ok(vec) = self.set.construct_scope(&vec![s])
-    //                     {
-    //                         for (vs,vv) in vec.into_iter()
-    //                         {
-    //                             self.map.insert(vs, vv);
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         let mut scope_vec_var: Vec<(&String, & XDomainInteger)>= vec![];
-    //         for e in self.map.iter()
-    //         {
-    //             scope_vec_var.push((e.0,e.1))
-    //         }
-    //         scope_vec_var
-    //     }
-    // }
-
     impl<'a> XGroup<'a> {
-        pub fn get_scope(&mut self) -> &Vec<Vec<(String, &XDomainInteger)>> {
-            if self.map.is_empty() {
-                self.map.reserve(self.args.len());
-                for arg in self.args.iter() {
-                    for v in arg.iter() {
-                        if let XVarVal::IntVar(s) = v {
-                            let mut ar: Vec<(String, &XDomainInteger)> = vec![];
-                            if let Ok(vec) = self.set.construct_scope(&[s]) {
-                                for (vs, vv) in vec.into_iter() {
-                                    ar.push((vs, vv))
-                                }
-                            }
-                            self.map.push(ar);
-                        }
-                    }
-                }
-            }
-
-            &self.map
-        }
-
         pub fn get_args(&self) -> &Vec<Vec<XVarVal>> {
             &self.args
         }
@@ -170,7 +90,6 @@ pub mod xcsp3_core {
         ) -> Self {
             Self {
                 args,
-                map: vec![],
                 set,
                 template,
             }

@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-
     use crate::objectives::xobjective_element::xcsp3_core::XObjectiveElement;
     use crate::objectives::xobjective_expression::xcsp3_core::XObjectiveExpression;
     pub(crate) use crate::objectives::xobjectives_type::xcsp3_core::{XObjective, XObjectivesType};

@@ -46,8 +46,8 @@ pub mod xcsp3_core {
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XSlide<'a> {
         args: Vec<XVarVal>,
         map: HashMap<String, &'a XDomainInteger>,
@@ -172,22 +172,6 @@ pub mod xcsp3_core {
                 circular,
                 offset,
             }
-        }
-    }
-
-    impl Display for XSlide<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for a in self.args.iter() {
-                ret.push_str(a.to_string().as_str());
-                ret.push_str(", ")
-            }
-            write!(
-                f,
-                "XSlide: [constraint = {} [ list =  {}]]",
-                &self.template.to_string(),
-                ret
-            )
         }
     }
 }

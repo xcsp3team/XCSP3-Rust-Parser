@@ -39,18 +39,20 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
+        XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
+    use std::cmp::max;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XMaxMin<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
@@ -59,24 +61,14 @@ pub mod xcsp3_core {
         is_maximum_or_minimum: bool, // true if maximum, false if minimum
     }
 
-    impl Display for XMaxMin<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret: String;
-            if self.is_maximum() {
-                ret = "XMaximum: list =  ".to_string();
-            } else {
-                ret = "XMinimum: list =  ".to_string();
-            }
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str(&format!(
-                " condition = ({:?}, {:?})",
-                self.operator, self.operand
-            ));
-            write!(f, "{}", ret)
+    impl XConstraintUnfold for XMaxMin<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            self.operand = inject_parameters_in_operand(&self.operand, arg);
+        }
+        fn max_args_used(&mut self) -> i32 {
+            max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope))
         }
     }
 

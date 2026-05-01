@@ -40,9 +40,11 @@ pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
+    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::constraints::xelement::xcsp3_core::XElement;
     use crate::constraints::xextension::xcsp3_core::XExtension;
+
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
 
@@ -62,7 +64,6 @@ pub mod xcsp3_core {
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::utils::utils_functions::xcsp3_utils::list_to_matrix_ids;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::slice::{Iter, IterMut};
@@ -387,6 +388,15 @@ pub mod xcsp3_core {
                     .push(XConstraintType::XAllDifferent(XAllDifferent::from_str_vec(
                         scope, self.set,
                     )))
+            }
+        }
+
+        pub fn build_circuit(&mut self, list: &str, size: &str) {
+            match XCircuit::from_str(list, size, self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XCircuit(c));
+                }
             }
         }
     }

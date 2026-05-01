@@ -14,7 +14,6 @@
  */
 
 pub mod xcsp3_core {
-
     use regex::Regex;
     use std::fmt::{Display, Formatter};
     use std::str::FromStr;

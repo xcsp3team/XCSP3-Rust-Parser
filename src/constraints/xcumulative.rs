@@ -38,7 +38,6 @@
  * </p>
  */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -47,8 +46,8 @@ pub mod xcsp3_core {
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XCumulative<'a> {
         scope: Vec<XVarVal>,
         map: HashMap<String, &'a XDomainInteger>,
@@ -61,54 +60,6 @@ pub mod xcsp3_core {
         operator: Operator,
         operand: Operand,
         star_index: Option<i32>,
-    }
-
-    impl Display for XCumulative<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("  lengths = ");
-            for e in self.lengths.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("  heights = ");
-            for e in self.heights.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(machines) = &self.machines {
-                ret.push_str("  machines = ");
-                for e in machines.iter() {
-                    ret.push('(');
-                    ret.push_str(&e.to_string());
-                    ret.push_str("), ")
-                }
-            }
-            if let Some(ends) = &self.ends {
-                ret.push_str("  ends = ");
-                for e in ends.iter() {
-                    ret.push('(');
-                    ret.push_str(&e.to_string());
-                    ret.push_str("), ")
-                }
-            }
-            if let Some(n) = &self.star_index {
-                ret.push_str(&format!("  star_index = {}", n));
-            }
-
-            write!(
-                f,
-                "XCumulative: origins =  {},  condition = ({:?},{:?}),",
-                ret, self.operator, self.operand,
-            )
-        }
     }
 
     impl<'a> XCumulative<'a> {
@@ -250,30 +201,6 @@ pub mod xcsp3_core {
         }
         pub fn star_index(&self) -> Option<i32> {
             self.star_index
-        }
-    }
-    impl XConstraintTrait for XCumulative<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
     }
 }

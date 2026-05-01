@@ -35,10 +35,8 @@
  * <p>@this_file_name:xcsp3domain
  * </p>
  */
-use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {
@@ -518,6 +516,19 @@ pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
         .collect()
 }
 
+pub fn to_interval_list(the_list: &[XVarVal]) -> Vec<(i32, i32)> {
+    let mut tmp = vec![];
+    for v in the_list {
+        match v {
+            XVarVal::IntInterval(v1, v2) => {
+                tmp.push((*v1, *v2));
+            }
+            _ => panic!("Only intervals are allowed in this list"),
+        }
+    }
+    tmp
+}
+
 pub fn to_expression_list(the_list: &[XVarVal], _set: &XVariableSet) -> Vec<ExpressionTree> {
     let mut trees = vec![];
 
@@ -534,6 +545,27 @@ pub fn to_expression_list(the_list: &[XVarVal], _set: &XVariableSet) -> Vec<Expr
 }
 pub fn scope_contains_expressions(scope: &[XVarVal]) -> bool {
     scope.iter().any(|s| s.to_string().contains('('))
+}
+
+pub fn is_int_list(scope: &[XVarVal]) -> bool {
+    match scope.first() {
+        Some(XVarVal::IntVal(_)) => true,
+        _ => false,
+    }
+}
+
+pub fn is_var_list(scope: &[XVarVal]) -> bool {
+    match scope.first() {
+        Some(XVarVal::IntVar(_)) => true,
+        _ => false,
+    }
+}
+
+pub fn is_interval_list(scope: &[XVarVal]) -> bool {
+    match scope.first() {
+        Some(XVarVal::IntInterval(_, ..)) => true,
+        _ => false,
+    }
 }
 
 // #[allow(dead_code)]

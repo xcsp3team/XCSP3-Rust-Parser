@@ -65,8 +65,6 @@ the SYNTAX of xcsp3 is as follows:
  */
 pub mod xcsp3_xml {
     use crate::constraints::xconstraint_set::xcsp3_core::XConstraintSet;
-    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::data_structs::xrelational_operator::xcsp3_core::Operator::{Ge, Gt, Le, Lt};
     use crate::objectives::xobjectives_set::xcsp3_core::XObjectivesSet;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use crate::xcsp_xml::constraint::xcsp3_xml::Constraint;
@@ -245,7 +243,16 @@ pub mod xcsp3_xml {
                         }
                     }
                 }
-                ConstraintType::Circuit { .. } => {}
+                ConstraintType::Circuit { vars, list, size } => {
+                    if !vars.is_empty() {
+                        set.build_circuit(vars, size);
+                    } else {
+                        for e in list.iter() {
+                            set.build_circuit(e, size);
+                        }
+                    }
+                }
+
                 ConstraintType::Ordered {
                     vars,
                     operator,
@@ -253,7 +260,7 @@ pub mod xcsp3_xml {
                     lengths,
                     list,
                 } => {
-                    if (list.is_empty()) {
+                    if list.is_empty() {
                         let op: String = match case.as_str() {
                             "increasing" => String::from("ge"),
                             "strictly_increasing" => String::from("gt"),

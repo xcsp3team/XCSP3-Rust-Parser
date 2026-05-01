@@ -40,6 +40,7 @@
 
 pub mod xcsp3_core {
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
+    use regex::Regex;
     use std::collections::HashSet;
     use std::str::FromStr;
 
@@ -49,6 +50,7 @@ pub mod xcsp3_core {
         Variable(String),
         Interval(i32, i32),
         SetInteger(HashSet<i32>),
+        IntArgument(i32),
     }
 
     impl Operand {
@@ -92,6 +94,11 @@ pub mod xcsp3_core {
                     }
                 } else {
                     None
+                }
+            } else if Regex::new(r"%(0|[1-9][0-9]*)").unwrap().is_match(s[0]) {
+                match i32::from_str(&s[0][1..]) {
+                    Ok(e) => Some(Operand::IntArgument(e)),
+                    Err(_) => None,
                 }
             } else {
                 match i32::from_str(s[0]) {

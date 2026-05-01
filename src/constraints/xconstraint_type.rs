@@ -44,6 +44,8 @@ pub mod xcsp3_core {
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
+    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
+    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
     use crate::constraints::xelement::xcsp3_core::XElement;
@@ -61,10 +63,10 @@ pub mod xcsp3_core {
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
+    use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use std::fmt::{Display, Formatter};
 
-    // #[derive(Clone)]
+    #[derive(Clone)]
     pub enum XConstraintType<'a> {
         XConstraintNone(Xcsp3Error),
         XExtension(XExtension<'a>),
@@ -90,64 +92,72 @@ pub mod xcsp3_core {
         XNoOverlap(XNoOverlap<'a>),
         XStretch(XStretch<'a>),
         XNoOverlapKDim(XNoOverlapKDim<'a>),
+        XCircuit(XCircuit<'a>),
     }
 
-    impl Display for XConstraintType<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f,"{}",
-                    match self {
-                        XConstraintType::XConstraintNone(e) => format!(
-                            "XConstraintNone: there must be an error when parse this constraint. Error is {}",e
-                        ),
-                        XConstraintType::XStretch(c) => c.to_string(),
-                        XConstraintType::XChannel(c) => c.to_string(),
-                        XConstraintType::XCumulative(c) => c.to_string(),
-                        XConstraintType::XNoOverlap(c) => c.to_string(),
-                        XConstraintType::XExtension(c) => c.to_string(),
-                        XConstraintType::XAllEqual(c) => c.to_string(),
-                        XConstraintType::XAllDifferent(c) => c.to_string(),
-                        XConstraintType::XAllDifferentExcept(c) => c.to_string(),
-                        XConstraintType::XInstantiation(c) => c.to_string(),
-                        XConstraintType::XOrdered(c) => c.to_string(),
-                        XConstraintType::XRegular(c) => c.to_string(),
-                        XConstraintType::XMdd(c) => c.to_string(),
-                        XConstraintType::XIntention(c) => c.to_string(),
-                        XConstraintType::XGroup(c) => c.to_string(),
-                        XConstraintType::XSum(c) => c.to_string(),
-                        XConstraintType::XMinimum(c) => c.to_string(),
-                        XConstraintType::XMaximum(c) => c.to_string(),
-                        XConstraintType::XElement(c) => c.to_string(),
-                        XConstraintType::XSlide(c) => c.to_string(),
-                        XConstraintType::XCount(c) => c.to_string(),
-                        XConstraintType::XNValues(c) => c.to_string(),
-                        XConstraintType::XCardinality(c) => c.to_string(),
-                        XConstraintType::XNoOverlapKDim(c) => c.to_string(),
-                    }
-             )
+    impl<'a> XConstraintUnfold for XConstraintType<'a> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            macro_rules! dispatch {
+            ($($variant:ident),* $(,)?) => {
+                match self {
+                    $(XConstraintType::$variant(inner) => inner.extract_parameters(arg),)*
+                    XConstraintType::XConstraintNone(_) => {
+                        // Nothing to extract from an error state
+                    },
+                    _ => todo!()
+                }
+            };
+        }
+
+            dispatch!(
+                XAllDifferent,
+                XAllEqual,
+                XAllDifferentExcept,
+                XCardinality,
+                XCount,
+                XInstantiation,
+                XMaximum,
+                XMinimum,
+                XMdd,
+                XNValues,
+                XNoOverlap,
+                XOrdered,
+                XRegular,
+                XSum,
+                XCircuit
+            );
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            macro_rules! dispatch {
+            ($($variant:ident),* $(,)?) => {
+                match self {
+                    $(XConstraintType::$variant(inner) => inner.max_args_used(),)*
+                    XConstraintType::XConstraintNone(_) => {
+                        -1
+                    },
+                    _ => todo!()
+                }
+            }
+        }
+
+            dispatch!(
+                XAllDifferent,
+                XAllEqual,
+                XAllDifferentExcept,
+                XCardinality,
+                XCount,
+                XInstantiation,
+                XMaximum,
+                XMinimum,
+                XMdd,
+                XNValues,
+                XNoOverlap,
+                XOrdered,
+                XRegular,
+                XSum,
+                XCircuit
+            )
         }
     }
-
-    // impl XConstraintType<'_> {
-    //     pub fn to_string(&self) -> String {
-    //         match self {
-    //             XConstraintType::XConstraintNone(e) => format!(
-    //                 "XConstraintNone: there must be an error when parse this constraint. Error is {}",e.to_string()
-    //             ),
-    //             XConstraintType::XExtension(c) => c.to_string(),
-    //             XConstraintType::XAllEqual(c) => c.to_string(),
-    //             XConstraintType::XAllDifferent(c) => c.to_string(),
-    //             XConstraintType::XAllDifferentExcept(c) => c.to_string(),
-    //             XConstraintType::XInstantiation(c) => c.to_string(),
-    //             XConstraintType::XOrdered(c) => c.to_string(),
-    //             XConstraintType::XRegular(c) => c.to_string(),
-    //             XConstraintType::XMdd(c) => c.to_string(),
-    //             XConstraintType::XIntention(c) => c.to_string(),
-    //             XConstraintType::XGroup(c) => c.to_string(),
-    //             XConstraintType::XSum(c) => c.to_string(),
-    //             XConstraintType::XMinimum(c) => c.to_string(),
-    //             XConstraintType::XMaximum(c) => c.to_string(),
-    //
-    //         }
-    //     }
-    // }
 }

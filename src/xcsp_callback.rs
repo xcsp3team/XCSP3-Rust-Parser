@@ -13,33 +13,16 @@
  *   }
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
-use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
-use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
-use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
-use crate::constraints::xcardinality::xcsp3_core::XCardinality;
 use crate::constraints::xchannel::xcsp3_core::XChannel;
-use crate::constraints::xcount::xcsp3_core::XCount;
 use crate::constraints::xcumulative::xcsp3_core::XCumulative;
 use crate::constraints::xelement::xcsp3_core::XElement;
 use crate::constraints::xextension::xcsp3_core::XExtension;
-use crate::constraints::xgroup::xcsp3_core::XGroup;
-use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
-use crate::constraints::xintension::xcsp3_core::XIntention;
-use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
-use crate::constraints::xmdd::xcsp3_core::XMdd;
-use crate::constraints::xn_values::xcsp3_core::XNValues;
-use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
-use crate::constraints::xno_overlap_k_dimensional::xcsp3_core::XNoOverlapKDim;
-use crate::constraints::xordered::xcsp3_core::XOrdered;
-use crate::constraints::xregular::xcsp3_core::XRegular;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
-use crate::constraints::xsum::xcsp3_core::XSum;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
-use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
 pub trait XcspCallback {
@@ -91,10 +74,27 @@ pub trait XcspCallback {
     fn end_constraints(&mut self) {}
 
     /**
+     * Start to parse a group of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn begin_group(&mut self) {}
+
+    /**
+     * The end to parse a group of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn end_group(&mut self) {}
+
+    /**
      * Start to parse objectives
      * Related to tag <objectives>
      * See http://xcsp.org/specifications/objectives
      */
+
     fn begin_objectives(&mut self) {}
 
     /**
@@ -118,7 +118,7 @@ pub trait XcspCallback {
      * @param minimum the minimum value in the range
      * @param maximum the maxnimum value in the range
      */
-    fn on_variable_interval(&mut self, id: String, minimum: i32, maximum: i32) {
+    fn on_variable_interval(&mut self, _id: String, _minimum: i32, _maximum: i32) {
         panic!("You must implement callbacks for variables");
     }
 
@@ -131,7 +131,7 @@ pub trait XcspCallback {
      * @param id the id (name) of the group
      * @param values the set of values in the domain
      */
-    fn on_variable_values(&mut self, id: String, values: &[i32]) {
+    fn on_variable_values(&mut self, _id: String, _values: &[i32]) {
         panic!("You must implement callbacks for variables");
     }
     /**
@@ -142,7 +142,7 @@ pub trait XcspCallback {
      *
      * @param id the id (name) of the array variable
      */
-    fn begin_variable_array(&mut self, name: String) {}
+    fn begin_variable_array(&mut self, _name: String) {}
 
     /**
      * End of parsing an array of variables
@@ -150,9 +150,6 @@ pub trait XcspCallback {
      * See http://xcsp.org/specifications/arrays
      */
     fn end_variable_array(&mut self) {}
-
-    /// Variable arbre (domaines complexes)
-    fn on_variable_tree(&mut self, _var: &XVariableType) {}
 
     // -------------------------------------------------------------------------
     // Contraintes
@@ -593,8 +590,6 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_group(&mut self, _c: &XGroup) {}
-
     /// <element> ... </element>
     fn on_constraint_element(&mut self, _c: &XElement) {}
 
@@ -774,9 +769,168 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    /// <cardinality> ... </cardinality>
-    fn on_constraint_cardinality(&mut self, _c: &XCardinality) {}
+    /**
+     * The callback function related to a cardinality constraint with int values and int occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 2 5 10 </values>
+     *   <occurs> 1 2 3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here int)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v1(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[i32],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
+    /**
+     * The callback function related to a cardinality constraint with int values and variable occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 0 1 2 3 </values>
+     *   <occurs> z0 z1 z2 z3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here variables)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v2(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[String],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with int values and interval occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> 2 5 10 </values>
+     *   <occurs> 0..1 1..3 2..3 </occurs>
+     * </cardinality>
+     *
+     *
+     * @param _scope the scope of the constraint
+     * @param _values the set of values (here int)
+     * @param _occurs the number of occurrences (here interval)
+     * @param _closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v3(
+        &mut self,
+        _scope: &[String],
+        _values: &[i32],
+        _occurs: &[(i32, i32)],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with variable values and int occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> 1 2 3 </occurs>
+     * </cardinality>
+     *
+     * @param _scope the list of the constraint (not the scope...)
+     * @param _values the set of values (here variable)
+     * @param _occurs the number of occurences (here int)
+     * @param closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v4(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[i32],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a cardinality constraint with variable values and variable occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> y1 y2 y3 </occurs>
+     * </cardinality>
+     *
+     * @param scope the list of the constraint (not the scope)
+     * @param values the set of values (here variables)
+     * @param occurs the number of occurences (here variables)
+     * @param closed is the constraint is closed
+     */
+    fn on_constraint_cardinality_v5(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[String],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cardinality constraint with variable values and interval occurs
+     * See http://xcsp.org/specifications/cardinality
+     *
+     * Example:
+     * <cardinality>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <values> z1 z2 z3 </values>
+     *   <occurs> 1..2 3..5 2..4 </occurs>
+     * </cardinality>
+     *
+     * @param scope the list of the constraint (not the scope)
+     * @param values the set of values (here variables)
+     * @param occurs the number of occurences (here intervals)
+     * @param closed is the constraint is closed
+     */
+
+    fn on_constraint_cardinality_v6(
+        &mut self,
+        _scope: &[String],
+        _values: &[String],
+        _occurs: &[(i32, i32)],
+        _closed: bool,
+    ) {
+        println!("c Cardinality Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     /// <channel> ... </channel>
     fn on_constraint_channel(&mut self, _c: &XChannel) {}
 
@@ -873,6 +1027,61 @@ pub trait XcspCallback {
         _zero: bool,
     ) {
         println!("c No Overlap K Dim Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to circuit constraint
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     */
+
+    fn on_constraint_circuit_v1(&mut self, _scope: &Vec<String>) {
+        println!("c Circuit Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to circuit constraint with defined int size
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     *   <size> 4 </size>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     * @param startIndex the start index for the list
+     * @param size the size of the circuit (here an int)
+     */
+    fn on_constraint_circuit_v2(&mut self, _scope: &Vec<String>, _size: i32) {
+        println!("c Circuit Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to circuit constraint with defined int size
+     * See http://xcsp.org/specifications/circuit
+     *
+     * Example:
+     * <circuit>
+     *   <list> x y z </list>
+     *   <size> 4 </size>
+     * </circuit>
+     *
+     * @param _scope the scope of the constraint
+     * @param startIndex the start index for the list
+     * @param size the size of the circuit (here an int)
+     */
+    fn on_constraint_circuit_v3(&mut self, _scope: &Vec<String>, _ssize: String) {
+        println!("c Circuit Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 

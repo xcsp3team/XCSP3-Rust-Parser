@@ -39,7 +39,6 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
@@ -48,37 +47,13 @@ pub mod xcsp3_core {
     use std::collections::HashMap;
     use std::fmt::{Display, Formatter};
 
+    #[derive(Clone)]
     pub struct XChannel<'a> {
         scope: Vec<XVarVal>,
         map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         start_index: Option<i32>,
         value: Option<XVarVal>,
-    }
-
-    impl XConstraintTrait for XChannel<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
     }
 
     impl<'a> XChannel<'a> {

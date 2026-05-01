@@ -38,17 +38,19 @@
  * </p>
  */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
+        XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
+    use std::cmp::max;
 
+    #[derive(Clone)]
     pub struct XNValues<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
@@ -56,28 +58,23 @@ pub mod xcsp3_core {
         operand: Operand,
         except: Option<Vec<XVarVal>>,
     }
-    impl Display for XNValues<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(except) = &self.except {
-                ret.push_str("except = (");
-                for e in except.iter() {
-                    ret.push_str(&e.to_string());
-                    ret.push_str(", ")
-                }
-                ret.push_str(") ");
-            }
 
-            write!(
-                f,
-                "XNValues: scope =  {}, condition = ({:?}, {:?})",
-                ret, self.operator, self.operand
-            )
+    impl XConstraintUnfold for XNValues<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            if let Some(vals) = &mut self.except {
+                *vals = inject_parameters_in_list(vals, arg, tmp);
+            }
+            self.operand = inject_parameters_in_operand(&self.operand, arg)
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            let tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
+            match self.except.as_deref() {
+                Some(v) => max(tmp, max_arg_in_list(v)),
+                None => tmp,
+            }
         }
     }
 

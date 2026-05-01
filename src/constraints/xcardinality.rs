@@ -38,48 +38,40 @@
  * </p>
  */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
+    use std::cmp::max;
 
+    #[derive(Clone)]
     pub struct XCardinality<'a> {
         scope: Vec<XVarVal>,
         values: Vec<XVarVal>,
         occurs: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         closed: Option<bool>,
     }
-    impl Display for XCardinality<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str("  values = ");
-            for e in self.values.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(c) = self.closed {
-                ret.push_str(&format!("  closed = {}", c));
-            }
-            ret.push_str("  occurs = ");
-            for e in self.occurs.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
 
-            write!(f, "XCardinality: list =  {},  ", ret,)
+    impl XConstraintUnfold for XCardinality<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
+            self.values = inject_parameters_in_list(&*self.values, arg, tmp);
+            self.occurs = inject_parameters_in_list(&*self.occurs, arg, tmp);
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            max(
+                max(
+                    max_arg_in_list(&*self.values),
+                    max_arg_in_list(&*self.scope),
+                ),
+                max_arg_in_list(&*self.occurs),
+            )
         }
     }
 
@@ -129,47 +121,29 @@ pub mod xcsp3_core {
                 scope,
                 values,
                 occurs,
-                map: Default::default(),
                 set,
                 closed,
             }
         }
 
-        pub fn get_occurs(&self) -> &Vec<XVarVal> {
-            &self.occurs
-        }
-
-        pub fn get_closed(&self) -> &Option<bool> {
-            &self.closed
-        }
-
-        pub fn get_values(&self) -> &Vec<XVarVal> {
-            &self.values
-        }
-    }
-
-    impl XConstraintTrait for XCardinality<'_> {
-        fn get_scope_string(&self) -> &Vec<XVarVal> {
+        pub fn scope(&self) -> &Vec<XVarVal> {
             &self.scope
         }
 
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
+        pub fn values(&self) -> &Vec<XVarVal> {
+            &self.values
+        }
+
+        pub fn occurs(&self) -> &Vec<XVarVal> {
+            &self.occurs
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn closed(&self) -> bool {
+            self.closed.unwrap_or(true)
         }
     }
 }

@@ -39,18 +39,18 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintTrait;
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
-
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
 
     // #[derive(Clone)]
+    #[derive(Clone)]
     pub struct XOrdered<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
@@ -58,32 +58,22 @@ pub mod xcsp3_core {
         operator: Operator,
     }
 
-    impl Display for XOrdered<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
+    impl XConstraintUnfold for XOrdered<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            if let Some(vals) = &mut self.lengths {
+                *vals = inject_parameters_in_list(vals, arg, tmp);
             }
-            if let Some(vc) = &self.lengths {
-                ret.push_str("lengths = (");
-                for (i, e) in vc.iter().enumerate() {
-                    ret.push_str(&e.to_string());
-                    if i != vc.len() - 1 {
-                        ret.push_str(", ")
-                    }
-                }
-                ret.push_str("), ")
+        }
+        fn max_args_used(&mut self) -> i32 {
+            let tmp = max_arg_in_list(&*self.scope);
+            match self.lengths.as_deref() {
+                Some(v) => max(tmp, max_arg_in_list(v)),
+                None => tmp,
             }
-            write!(
-                f,
-                "XOrdered: scope =  {} operator = {:?}",
-                ret, self.operator
-            )
         }
     }
-
     impl<'a> XOrdered<'a> {
         pub fn from_str(
             list: &str,

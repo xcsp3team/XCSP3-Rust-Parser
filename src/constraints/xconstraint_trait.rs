@@ -39,18 +39,87 @@
  */
 
 pub mod xcsp3_core {
-
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
-    use std::fmt::Display;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 
-    pub trait XConstraintTrait: Display {
-        // fn to_string(&self) -> String;
+    pub fn inject_parameters_in_var_val(value: XVarVal, arg: &[XVarVal]) -> XVarVal {
+        match value {
+            XVarVal::IntArgument(index) => {
+                let index = index as usize;
+                if let Some(argument) = arg.get(index) {
+                    argument.clone()
+                } else {
+                    panic!("Invalid argument index %{}", index);
+                }
+            }
+            _ => value.clone(),
+        }
+    }
 
-        ///get the scope string of constraint
-        fn get_scope_string(&self) -> &Vec<XVarVal>;
+    pub fn inject_parameters_in_list(
+        list: &[XVarVal],
+        arg: &[XVarVal],
+        start: i32,
+    ) -> Vec<XVarVal> {
+        let mut unfolded_scope = Vec::new();
+        let all_params = &arg[(start + 1) as usize..];
+        for value in list.iter() {
+            match value {
+                XVarVal::IntArgument(index) => {
+                    let index = *index as usize;
+                    if let Some(argument) = arg.get(index) {
+                        unfolded_scope.push(argument.clone());
+                    } else {
+                        panic!("Invalid argument index %{}", index);
+                    }
+                }
+                XVarVal::IntStart => {
+                    unfolded_scope.extend_from_slice(all_params);
+                }
+                _ => {
+                    unfolded_scope.push(value.clone());
+                }
+            }
+        }
+        unfolded_scope
+    }
 
-        ///get the scope string of constraint
-        fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)>;
+    pub fn inject_parameters_in_operand(operand: &Operand, arg: &[XVarVal]) -> Operand {
+        match operand {
+            Operand::IntArgument(index) => match arg.get(*index as usize) {
+                Some(XVarVal::IntVal(val)) => Operand::Integer(*val),
+                Some(XVarVal::IntVar(var)) => Operand::Variable(var.clone()),
+                Some(XVarVal::IntInterval(a, b)) => Operand::Interval(*a, *b),
+                _ => operand.clone(),
+            },
+            _ => operand.clone(),
+        }
+    }
+
+    pub fn max_arg_in_list(list: &[XVarVal]) -> i32 {
+        let mut max = -1;
+        for value in list.iter() {
+            match value {
+                XVarVal::IntArgument(index) => {
+                    if *index as i32 > max {
+                        max = *index as i32;
+                    }
+                }
+                _ => (),
+            }
+        }
+        max
+    }
+
+    pub fn arg_in_operand(operand: &Operand) -> i32 {
+        match operand {
+            Operand::IntArgument(index) => *index as i32,
+            _ => -1,
+        }
+    }
+
+    pub trait XConstraintUnfold {
+        fn extract_parameters(&mut self, arg: &[XVarVal]);
+        fn max_args_used(&mut self) -> i32;
     }
 }

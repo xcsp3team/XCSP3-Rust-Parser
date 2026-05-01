@@ -40,7 +40,7 @@
 
 pub mod xcsp3_xml {
     use crate::xcsp_xml::constraint::xcsp3_xml::{
-        ListWithCase, ListWithClosed, ListWithOffset, ListWithStartIndex,
+        ListWithClosed, ListWithOffset, ListWithStartIndex,
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
@@ -202,8 +202,12 @@ pub mod xcsp3_xml {
          */
         #[serde(rename = "circuit")]
         Circuit {
-            #[serde(rename = "$value")]
+            #[serde(rename = "$value", default)]
             vars: String,
+            #[serde(rename = "list", default)]
+            list: Box<[String]>,
+            #[serde(rename = "size", default)]
+            size: String,
         },
 
         /**
