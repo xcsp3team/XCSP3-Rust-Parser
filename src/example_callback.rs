@@ -230,6 +230,62 @@ impl XcspCallback for PrintingSolver {
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_maximum_arg_v1(
+        &mut self,
+        scope: &[String],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Maximum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_maximum_arg_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Maxnimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_minimum_arg_v1(
+        &mut self,
+        scope: &[String],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_minimum_arg_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
     fn on_constraint_count_v1(
         &mut self,
         scope: &[ExpressionTree],

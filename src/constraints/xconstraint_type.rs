@@ -55,6 +55,7 @@ pub mod xcsp3_core {
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
+    use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
     use crate::constraints::xn_values::xcsp3_core::XNValues;
     use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
@@ -85,6 +86,8 @@ pub mod xcsp3_core {
         XSum(XSum<'a>),
         XMaximum(XMaxMin<'a>),
         XMinimum(XMaxMin<'a>),
+        XMaximumArg(XMaxMinArg<'a>),
+        XMinimumArg(XMaxMinArg<'a>),
         XElement(XElement<'a>),
         XSlide(XSlide<'a>),
         XCount(XCount<'a>),
@@ -129,7 +132,10 @@ pub mod xcsp3_core {
                 XRegular,
                 XSum,
                 XCircuit,
-                XPrecedence
+                XPrecedence,
+                XAllDifferentList,
+                XMaximumArg,
+                XMinimumArg
             );
         }
 
@@ -162,7 +168,10 @@ pub mod xcsp3_core {
                 XRegular,
                 XSum,
                 XCircuit,
-                XPrecedence
+                XPrecedence,
+                XAllDifferentList,
+                XMaximumArg,
+                XMinimumArg
             )
         }
     }

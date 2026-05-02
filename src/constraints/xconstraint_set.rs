@@ -55,6 +55,7 @@ pub mod xcsp3_core {
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
     use crate::constraints::xintension::xcsp3_core::XIntention;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
+    use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
     use crate::constraints::xn_values::xcsp3_core::XNValues;
     use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
@@ -241,6 +242,35 @@ pub mod xcsp3_core {
             match XMaxMin::from_str(vars, condition, false, self.set) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XMaximum(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+        pub fn build_maximum_arg(
+            &mut self,
+            vars: &str,
+            rank: &str,
+            start_index: i32,
+            condition: &str,
+        ) {
+            match XMaxMinArg::from_str(vars, condition, rank, start_index, true, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XMaximumArg(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+
+        pub fn build_minimum_arg(
+            &mut self,
+            vars: &str,
+            rank: &str,
+            start_index: i32,
+            condition: &str,
+        ) {
+            match XMaxMinArg::from_str(vars, condition, rank, start_index, false, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XMinimumArg(c));
                 }
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }

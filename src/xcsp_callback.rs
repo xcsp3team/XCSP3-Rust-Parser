@@ -587,6 +587,60 @@ pub trait XcspCallback {
      * See http://xcsp.org/specifications/minimum
      *
      * Example:
+     * &lt;minimumArg>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_arg_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minim arg constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_arg_v1(
+        &mut self,
+        _scope: &[String],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minimum constraint with expressions in scope
+     * See http://xcsp.org/specifications/minimum
+     *
+     * Example:
      * &lt;minimum>
      *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
      *    &lt;condition> (ge,2) &lt;/condition>
@@ -604,6 +658,60 @@ pub trait XcspCallback {
         _operand: Operand,
     ) {
         println!("c Minimum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minimum constraint with expressions in scope
+     * See http://xcsp.org/specifications/minimum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_arg_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minim arg constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_arg_v1(
+        &mut self,
+        _scope: &[String],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Arg Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 

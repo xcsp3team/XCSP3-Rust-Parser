@@ -252,7 +252,6 @@ pub mod xcsp3_xml {
                     }
                 }
                 ConstraintType::Precedence { vars, list, values } => {
-                    println!("ici {}", values.covered);
                     if !vars.is_empty() {
                         set.build_precedence(vars, &*values.value, false);
                     } else {
@@ -339,6 +338,39 @@ pub mod xcsp3_xml {
                 } => set.build_cardinality(list, &values.vars, occurs, &values.closed),
                 ConstraintType::Minimum { list, condition } => set.build_minimum(list, condition),
                 ConstraintType::Maximum { list, condition } => set.build_maximum(list, condition),
+                ConstraintType::MinimumArg {
+                    list,
+                    rank,
+                    condition,
+                } => {
+                    set.build_minimum_arg(
+                        &*list.value,
+                        if rank.is_empty() { "any" } else { rank },
+                        if list.start_index.is_empty() {
+                            0
+                        } else {
+                            list.start_index.parse().unwrap()
+                        },
+                        condition,
+                    );
+                }
+                ConstraintType::MaximumArg {
+                    list,
+                    rank,
+                    condition,
+                } => {
+                    set.build_maximum_arg(
+                        &*list.value,
+                        if rank.is_empty() { "any" } else { rank },
+                        if list.start_index.is_empty() {
+                            0
+                        } else {
+                            list.start_index.parse().unwrap()
+                        },
+                        condition,
+                    );
+                }
+
                 ConstraintType::Element { vars, value, index } => {
                     set.build_element(&vars.value, value, index, &vars.start_index)
                 }

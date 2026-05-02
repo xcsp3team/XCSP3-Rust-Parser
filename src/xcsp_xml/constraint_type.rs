@@ -553,6 +553,16 @@ pub mod xcsp3_xml {
             condition: String,
         },
 
+        #[serde(rename = "minimumArg")]
+        MinimumArg {
+            #[serde(rename = "list", default)]
+            list: ListWithStartIndex,
+            #[serde(rename = "@rank", default)]
+            rank: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+        },
+
         /**
         syntax.
         ```xml
@@ -578,6 +588,16 @@ pub mod xcsp3_xml {
         Maximum {
             #[serde(rename = "list", default)]
             list: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+        },
+
+        #[serde(rename = "maximumArg")]
+        MaximumArg {
+            #[serde(rename = "list", default)]
+            list: ListWithStartIndex,
+            #[serde(rename = "@rank", default)]
+            rank: String,
             #[serde(rename = "condition", default)]
             condition: String,
         },

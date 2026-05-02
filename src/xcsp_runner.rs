@@ -108,7 +108,7 @@ impl XcspRunner {
                         c.extract_parameters(arg);
                         Self::build_constraint(callback, &mut c)?;
                     }
-                    callback.begin_group();
+                    callback.end_group();
                 }
 
                 _ => {
@@ -344,6 +344,52 @@ impl XcspRunner {
                     let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                     callback.on_constraint_minimum_v1(
                         &*scope,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                }
+            }
+
+            XConstraintType::XMinimumArg(inner) => {
+                if scope_contains_expressions(inner.scope()) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_minimum_arg_v2(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_minimum_arg_v1(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                }
+            }
+
+            XConstraintType::XMaximumArg(inner) => {
+                if scope_contains_expressions(inner.scope()) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_arg_v2(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_arg_v1(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
                         inner.operator(),
                         inner.operand().clone(),
                     );
