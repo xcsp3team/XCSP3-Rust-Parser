@@ -1086,10 +1086,33 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    /**
+     * The callback function related to precedence  constraint with defined variable size
+     *
+     * Example:
+     * <precedence class="symmetry-breaking">
+     * <list> x[][] </list>
+     * </precedence>
+     *
+     * @param  the list of variables (not necessary the scope)
+     */
     fn on_constraint_precedence_v1(&mut self, _scope: &[String], _covered: bool) {
         println!("c Precedence Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
+
+    /**
+     * The callback function related to precedence constraint with defined variable size
+     *
+     * Example:
+     * <precedence class="symmetry-breaking">
+     * <list> x[][] </list>
+     * <values> 1 2 </values>
+     * </precedence>
+     *
+     * @param list the list of variables (not necessary the scope)
+     * @param values the different vaules
+     */
     fn on_constraint_precedence_v2(&mut self, _scope: &[String], _values: &[i32], _covered: bool) {
         println!("c Precedence Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
