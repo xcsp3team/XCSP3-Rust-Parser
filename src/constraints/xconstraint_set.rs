@@ -400,8 +400,8 @@ pub mod xcsp3_core {
                 }
             }
         }
-        pub fn build_precedence(&mut self, list: &str, values: &str) {
-            match XPrecedence::from_str(list, values, self.set) {
+        pub fn build_precedence(&mut self, list: &str, values: &str, covered: bool) {
+            match XPrecedence::from_str(list, values, Option::from(covered), self.set) {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XPrecedence(c));

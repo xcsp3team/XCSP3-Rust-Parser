@@ -452,12 +452,15 @@ impl XcspCallback for PrintingSolver {
         println!("  [Circuit]  {:?} size={}", scope, size);
     }
 
-    fn on_constraint_precedence_v1(&mut self, scope: &[String]) {
-        println!("  [Precedence]  {:?}", scope);
+    fn on_constraint_precedence_v1(&mut self, scope: &[String], covered: bool) {
+        println!("  [Precedence]  {:?} covered={}", scope, covered);
     }
 
-    fn on_constraint_precedence_v2(&mut self, scope: &[String], values: &[i32]) {
-        println!("  [Precedence]  {:?} values={:?}", scope, values);
+    fn on_constraint_precedence_v2(&mut self, scope: &[String], values: &[i32], covered: bool) {
+        println!(
+            "  [Precedence]  {:?} covered={} values={:?}",
+            scope, covered, values
+        );
     }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {

@@ -845,7 +845,7 @@ pub mod xcsp3_xml {
             #[serde(rename = "list", default)]
             list: Box<[String]>,
             #[serde(rename = "values", default)]
-            values: String,
+            values: Box<ListWithCovered>,
         },
 
         // #[serde(rename = "balance")]

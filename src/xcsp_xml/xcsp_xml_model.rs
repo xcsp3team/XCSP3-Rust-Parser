@@ -253,11 +253,18 @@ pub mod xcsp3_xml {
                     }
                 }
                 ConstraintType::Precedence { vars, list, values } => {
+                    println!("ici {}", values.covered);
                     if !vars.is_empty() {
-                        set.build_precedence(vars, values);
+                        set.build_precedence(vars, &*values.value, false);
                     } else {
+                        let mut tmp = false;
+                        if values.covered.is_empty() == false {
+                            if values.covered == "true" {
+                                tmp = true;
+                            }
+                        }
                         for e in list.iter() {
-                            set.build_precedence(e, values);
+                            set.build_precedence(e, &*values.value, tmp);
                         }
                     }
                 }

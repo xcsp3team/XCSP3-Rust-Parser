@@ -54,6 +54,7 @@ pub mod xcsp3_core {
         scope: Vec<XVarVal>,
         values: Option<Vec<XVarVal>>,
         set: &'a XVariableSet,
+        covered: Option<bool>,
     }
 
     impl XConstraintUnfold for XPrecedence<'_> {
@@ -77,14 +78,16 @@ pub mod xcsp3_core {
         pub fn from_str_vec(
             scope_vec_str: Vec<XVarVal>,
             values: Option<Vec<XVarVal>>,
+            covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Self {
-            XPrecedence::new(scope_vec_str, values, set)
+            XPrecedence::new(scope_vec_str, values, covered, set)
         }
 
         pub fn from_str(
             list: &str,
             values: &str,
+            covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
@@ -97,7 +100,7 @@ pub mod xcsp3_core {
                             Err(e) => return Err(e),
                         }
                     };
-                    Ok(XPrecedence::new(scope_vec_str, vals, set)) // virgule supprimée
+                    Ok(XPrecedence::new(scope_vec_str, vals, covered, set)) // virgule supprimée
                 }
                 Err(_) => panic!("parse precedence constraint error, list is not valid"), // doublon supprimé
             }
@@ -105,9 +108,15 @@ pub mod xcsp3_core {
         pub fn new(
             scope: Vec<XVarVal>,
             values: Option<Vec<XVarVal>>,
+            covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Self {
-            XPrecedence { scope, values, set }
+            XPrecedence {
+                scope,
+                values,
+                covered,
+                set,
+            }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {
@@ -120,6 +129,10 @@ pub mod xcsp3_core {
 
         pub fn set(&self) -> &'a XVariableSet {
             self.set
+        }
+
+        pub fn covered(&self) -> bool {
+            self.covered.unwrap_or(false)
         }
     }
 }

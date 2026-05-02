@@ -499,11 +499,11 @@ impl XcspRunner {
 
                 match inner.values() {
                     None => {
-                        callback.on_constraint_precedence_v1(&*scope);
+                        callback.on_constraint_precedence_v1(&*scope, inner.covered());
                     }
                     Some(vals) => {
                         let values = to_int_list(vals);
-                        callback.on_constraint_precedence_v2(&*scope, &*values);
+                        callback.on_constraint_precedence_v2(&*scope, &*values, inner.covered());
                     }
                 }
             }
