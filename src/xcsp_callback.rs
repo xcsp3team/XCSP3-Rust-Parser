@@ -20,6 +20,7 @@ use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
+use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
@@ -1085,6 +1086,14 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    fn on_constraint_precedence_v1(&mut self, _scope: &[String]) {
+        println!("c Precedence Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    fn on_constraint_precedence_v2(&mut self, _scope: &[String], _values: &[i32]) {
+        println!("c Precedence Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     /// <stretch> ... </stretch>
     fn on_constraint_stretch(&mut self, _c: &XStretch) {}
 

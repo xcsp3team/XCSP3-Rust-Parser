@@ -252,6 +252,15 @@ pub mod xcsp3_xml {
                         }
                     }
                 }
+                ConstraintType::Precedence { vars, list, values } => {
+                    if !vars.is_empty() {
+                        set.build_precedence(vars, values);
+                    } else {
+                        for e in list.iter() {
+                            set.build_precedence(e, values);
+                        }
+                    }
+                }
 
                 ConstraintType::Ordered {
                     vars,

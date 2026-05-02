@@ -59,6 +59,7 @@ pub mod xcsp3_core {
     use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
     use crate::constraints::xno_overlap_k_dimensional::xcsp3_core::XNoOverlapKDim;
     use crate::constraints::xordered::xcsp3_core::XOrdered;
+    use crate::constraints::xprecedence::xcsp3_core::XPrecedence;
     use crate::constraints::xregular::xcsp3_core::XRegular;
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
@@ -93,6 +94,7 @@ pub mod xcsp3_core {
         XStretch(XStretch<'a>),
         XNoOverlapKDim(XNoOverlapKDim<'a>),
         XCircuit(XCircuit<'a>),
+        XPrecedence(XPrecedence<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -124,7 +126,8 @@ pub mod xcsp3_core {
                 XOrdered,
                 XRegular,
                 XSum,
-                XCircuit
+                XCircuit,
+                XPrecedence
             );
         }
 
@@ -156,7 +159,8 @@ pub mod xcsp3_core {
                 XOrdered,
                 XRegular,
                 XSum,
-                XCircuit
+                XCircuit,
+                XPrecedence
             )
         }
     }

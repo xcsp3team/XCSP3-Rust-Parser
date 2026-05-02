@@ -491,6 +491,23 @@ impl XcspRunner {
                     );
                 }
             }
+            //---------------------------------------------------------------------------------------------------
+            // Precedence Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XPrecedence(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+
+                match inner.values() {
+                    None => {
+                        callback.on_constraint_precedence_v1(&*scope);
+                    }
+                    Some(vals) => {
+                        let values = to_int_list(vals);
+                        callback.on_constraint_precedence_v2(&*scope, &*values);
+                    }
+                }
+            }
+
             XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
             XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
             //---------------------------------------------------------------------------------------------------

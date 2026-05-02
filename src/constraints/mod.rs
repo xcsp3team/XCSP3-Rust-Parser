@@ -66,5 +66,6 @@ pub mod xcumulative;
 pub mod xn_values;
 pub mod xno_overlap;
 pub mod xno_overlap_k_dimensional;
+pub mod xprecedence;
 pub mod xslide;
 pub mod xstretch;

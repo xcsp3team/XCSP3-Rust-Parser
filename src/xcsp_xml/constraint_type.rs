@@ -40,7 +40,7 @@
 
 pub mod xcsp3_xml {
     use crate::xcsp_xml::constraint::xcsp3_xml::{
-        ListWithClosed, ListWithOffset, ListWithStartIndex,
+        ListWithClosed, ListWithCovered, ListWithOffset, ListWithStartIndex,
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
@@ -838,14 +838,15 @@ pub mod xcsp3_xml {
         //     #[serde(rename = "condition", default)]
         //     condition: String,
         // },
-
-        // #[serde(rename = "precedence")]
-        // Precedence {
-        //     #[serde(rename = "list", default)]
-        //     vars: String,
-        //     #[serde(rename = "values", default)]
-        //     values: String,
-        // },
+        #[serde(rename = "precedence")]
+        Precedence {
+            #[serde(rename = "$value", default)]
+            vars: String,
+            #[serde(rename = "list", default)]
+            list: Box<[String]>,
+            #[serde(rename = "values", default)]
+            values: String,
+        },
 
         // #[serde(rename = "balance")]
         // Balance {
