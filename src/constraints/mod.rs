@@ -58,6 +58,7 @@ pub mod xintension;
 pub mod xmax_min;
 pub mod xsum;
 
+pub mod xall_different_list;
 pub mod xcardinality;
 pub mod xchannel;
 mod xcircuit;

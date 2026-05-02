@@ -20,7 +20,6 @@ use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
-use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
@@ -203,6 +202,23 @@ pub trait XcspCallback {
      */
     fn on_constraint_all_different_except(&mut self, _scope: &[String], _except: &[i32]) {
         println!("c Alldifferent not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a alldifferent  list constraint
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * <allDifferent id="c1">
+     *    <list> x1 x2 x3 x4 </list>
+     *    <list> y1 y2 y3 y4 </list>
+     * </allDifferent>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     */
+    fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
+        println!("c Alldifferent lists not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -932,8 +948,54 @@ pub trait XcspCallback {
         println!("c Cardinality Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-    /// <channel> ... </channel>
-    fn on_constraint_channel(&mut self, _c: &XChannel) {}
+
+    /**
+     * The callback function related to a channel constraint
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     *    <list> z1 z2 z3 z4 z5 </list>
+     * </channel>
+     *
+     * @param _scope the scope of the constraint
+     */
+    fn on_constraint_channel_v1(&mut self, _scope: &[String], _start_index: i32) {
+        println!("c Channel Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a channel constraint
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     *     <list> x1 x2 x3 x4 </list>
+     *     <list> y1 y2 y3 y4 </list>
+     * </channel>
+     *
+     * The size of the array {@code list1} must be less than or equal to the size of {@code list2}.
+     *
+     * If list1.size() == list2.size() then list1[i] = j <=> list2[j] = i
+     * If list1.size() <  list2.size() then list1[i] = j  => list2[j] = i
+     *
+     * @param id the id (name) of the constraint
+     * @param list1 the first list
+     * @param startIndex1 the starting index for list1
+     * @param list2 the second list
+     * @param startIndex2 the starting index for list2
+     *
+     */
+    fn on_constraint_channel_v2(
+        &mut self,
+        _list1: &[String],
+        _list2: &[String],
+        _start_index: i32,
+    ) {
+        println!("c Channel Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /// <cumulative> ... </cumulative>
     fn on_constraint_cumulative(&mut self, _c: &XCumulative) {}

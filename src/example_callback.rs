@@ -94,6 +94,12 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
+        println!("  [AllDiff List]");
+        for v in _lists {
+            println!("       {:?} ", v);
+        }
+    }
     fn on_constraint_all_equal_v1(&mut self, scope: &[String]) {
         self.nb_constraints += 1;
         println!("  [AllEqual]  {:?}", scope);
@@ -461,6 +467,10 @@ impl XcspCallback for PrintingSolver {
             "  [Precedence]  {:?} covered={} values={:?}",
             scope, covered, values
         );
+    }
+
+    fn on_constraint_channel_v1(&mut self, scope: &[String], start_index: i32) {
+        println!("  [Channel]  {:?} start_index={}", scope, start_index);
     }
     // -- Objectifs -----------------------------------------------------------
     fn on_objective_minimize(&mut self, obj: &XObjective) {

@@ -226,9 +226,8 @@ pub mod xcsp3_xml {
                                 set.build_all_different_except(e, except);
                             }
                         } else {
-                            for e in list.iter() {
-                                set.build_all_different(e);
-                            }
+                            let tmp: Vec<_> = list.iter().map(|e| e.clone()).collect();
+                            set.build_all_different_list(&*tmp);
                         }
                     } else {
                         set.build_all_different_matrix(matrix);
@@ -404,9 +403,12 @@ pub mod xcsp3_xml {
                     if !simplified_list.is_empty() {
                         set.build_channel(simplified_list, "", "");
                     } else if with_value.is_empty() {
-                        for e in lists.iter() {
-                            set.build_channel(&e.value, &e.start_index, "");
-                        }
+                        /*                        let tmp: Vec<_> = lists
+                                                  .iter()
+                                                  .map(|e| (e.value.clone(), e.start_index))
+                                                  .collect();
+                                              set.build_channel(tmp, "");
+                        */
                     } else {
                         set.build_channel(&lists[0].value, &lists[0].start_index, with_value);
                     }

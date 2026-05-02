@@ -48,6 +48,7 @@ pub mod xcsp3_core {
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
 
+    use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
     use crate::constraints::xcount::xcsp3_core::XCount;
@@ -365,6 +366,14 @@ pub mod xcsp3_core {
                 Ok(c) => {
                     self.constraints
                         .push(XConstraintType::XAllDifferentExcept(c));
+                }
+            }
+        }
+        pub fn build_all_different_list(&mut self, lists: &[String]) {
+            match XAllDifferentList::from_str(lists, self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XAllDifferentList(c));
                 }
             }
         }

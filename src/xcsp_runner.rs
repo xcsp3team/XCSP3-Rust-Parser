@@ -158,6 +158,15 @@ impl XcspRunner {
                 callback.on_constraint_all_different_except(&*scope, &*inner.except());
             }
 
+            XConstraintType::XAllDifferentList(inner) => {
+                let tmp: Vec<_> = inner
+                    .lists()
+                    .iter()
+                    .map(|e| to_var_list(e, inner.set()))
+                    .collect();
+                callback.on_constraint_all_different_list(&*tmp);
+            }
+
             //---------------------------------------------------------------------------------------------------
             // All Equal constraints
             //---------------------------------------------------------------------------------------------------
@@ -508,7 +517,10 @@ impl XcspRunner {
                 }
             }
 
-            XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
+            XConstraintType::XChannel(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                callback.on_constraint_channel_v1(&*scope, inner.start_index());
+            }
             XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint

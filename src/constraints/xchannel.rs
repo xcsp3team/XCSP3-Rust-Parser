@@ -57,14 +57,6 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XChannel<'a> {
-        pub fn get_start_index(&self) -> &Option<i32> {
-            &self.start_index
-        }
-
-        pub fn get_value(&self) -> &Option<XVarVal> {
-            &self.value
-        }
-
         pub fn from_str(
             list: &str,
             start_index_str: &str,
@@ -116,23 +108,25 @@ pub mod xcsp3_core {
                 value,
             }
         }
-    }
 
-    impl Display for XChannel<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            if let Some(XVarVal::IntVar(e)) = &self.value {
-                ret.push_str(&format!(" value = {}, ", e))
-            }
-            if let Some(n) = &self.start_index {
-                ret.push_str(&format!(" start_index = {}, ", n))
-            }
-            write!(f, "XChannel: list  =  {}", ret,)
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn map(&self) -> &HashMap<String, &'a XDomainInteger> {
+            &self.map
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn start_index(&self) -> i32 {
+            self.start_index.unwrap_or(0)
+        }
+
+        pub fn value(&self) -> &Option<XVarVal> {
+            &self.value
         }
     }
 }

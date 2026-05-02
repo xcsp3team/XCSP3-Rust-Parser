@@ -41,6 +41,7 @@
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
+    use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
@@ -72,6 +73,7 @@ pub mod xcsp3_core {
         XConstraintNone(Xcsp3Error),
         XExtension(XExtension<'a>),
         XAllDifferent(XAllDifferent<'a>),
+        XAllDifferentList(XAllDifferentList<'a>),
         XAllDifferentExcept(XAllDifferentExcept<'a>),
         XInstantiation(XInstantiation<'a>),
         XAllEqual(XAllEqual<'a>),
