@@ -136,7 +136,8 @@ pub mod xcsp3_core {
                 XPrecedence,
                 XAllDifferentList,
                 XMaximumArg,
-                XMinimumArg
+                XMinimumArg,
+                XElement
             );
         }
 
@@ -173,7 +174,8 @@ pub mod xcsp3_core {
                 XPrecedence,
                 XAllDifferentList,
                 XMaximumArg,
-                XMinimumArg
+                XMinimumArg,
+                XElement
             )
         }
     }

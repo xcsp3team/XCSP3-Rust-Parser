@@ -39,22 +39,36 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
+    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XElement<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         value: XVarVal,
-        index: XVarVal,
+        index: Option<XVarVal>,
         start_index: Option<i32>,
+    }
+
+    impl XConstraintUnfold for XElement<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            self.value = inject_parameters_in_var_val(self.value.clone(), arg);
+        }
+        fn max_args_used(&mut self) -> i32 {
+            let mut s = Vec::new();
+            s.push(self.value.clone());
+            max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+        }
     }
 
     impl<'a> XElement<'a> {
@@ -76,17 +90,17 @@ pub mod xcsp3_core {
                         }
                         Some(v) => v,
                     };
-                    let index = if !index_str.is_empty() {
+                    let index = if index_str.is_empty() {
+                        None
+                    } else {
                         match XVarVal::from_string(index_str) {
                             None => {
                                 return Err(Xcsp3Error::get_constraint_sum_error(
                                     "parse element constraint index error, ",
                                 ));
                             }
-                            Some(i) => i,
+                            Some(i) => Some(i),
                         }
-                    } else {
-                        XVarVal::IntNone
                     };
                     let start_index = if !start_index_str.is_empty() {
                         match start_index_str.parse::<i32>() {
@@ -112,20 +126,36 @@ pub mod xcsp3_core {
             scope: Vec<XVarVal>,
             set: &'a XVariableSet,
             value: XVarVal,
-            index: XVarVal,
+            index: Option<XVarVal>,
             start_index: Option<i32>,
         ) -> Self {
             Self {
                 scope,
-                map: Default::default(),
                 set,
                 value,
                 index,
                 start_index,
             }
         }
-        pub fn get_start_index(&self) -> &Option<i32> {
-            &self.start_index
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn value(&self) -> &XVarVal {
+            &self.value
+        }
+
+        pub fn index(&self) -> &Option<XVarVal> {
+            &self.index
+        }
+
+        pub fn start_index(&self) -> Option<i32> {
+            self.start_index
         }
     }
 }

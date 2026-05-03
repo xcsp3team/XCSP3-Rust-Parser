@@ -396,7 +396,6 @@ impl XcspRunner {
                 }
             }
 
-            XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
             XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
@@ -562,11 +561,16 @@ impl XcspRunner {
                     }
                 }
             }
-
+            //---------------------------------------------------------------------------------------------------
+            // Channel Constraint
+            //---------------------------------------------------------------------------------------------------
             XConstraintType::XChannel(inner) => {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                 callback.on_constraint_channel_v1(&*scope, inner.start_index());
             }
+            //---------------------------------------------------------------------------------------------------
+            // Cumulative Constraint
+            //---------------------------------------------------------------------------------------------------
             XConstraintType::XCumulative(inner) => match inner.ends() {
                 None => {
                     if is_int_list(inner.lengths()) && is_int_list(inner.heights()) {
@@ -689,6 +693,23 @@ impl XcspRunner {
                     }
                 }
             },
+            //---------------------------------------------------------------------------------------------------
+            // Element Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XElement(inner) => match inner.index() {
+                None => match inner.value() {
+                    XVarVal::IntVal(v) => {
+                        let scope = to_var_list(inner.scope(), inner.set());
+                        callback.on_constraint_element_v1(&*scope, *v);
+                    }
+
+                    _ => {
+                        panic!("Unexpected variant in value")
+                    }
+                },
+                Some(index) => {}
+            },
+
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint
             //---------------------------------------------------------------------------------------------------

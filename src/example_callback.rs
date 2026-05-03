@@ -454,6 +454,10 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("  [Element V1] {:?} value={}", scope, value);
+    }
+
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }

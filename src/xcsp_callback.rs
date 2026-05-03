@@ -1305,6 +1305,25 @@ pub trait XcspCallback {
     ) {
         println!("c Cumulative Variant 8 not yet implemented");
     }
+
+    /**
+     * The callback function related to a element constraint with int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[] </list>
+     *    <value> 2 </value>
+     * </element>
+     *
+     * @param scope the scope of the constraint
+     * @param value the value (here an int)
+     */
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("c Element Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     /**
      * The callback function related to a channel constraint
      * See http://xcsp.org/specifications/channel
