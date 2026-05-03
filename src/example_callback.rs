@@ -338,6 +338,122 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_cumulative_v1(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V1] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v2(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V2] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v3(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V3] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v4(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V4] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v5(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[i32],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V5] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v6(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[String],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V6] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v7(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[i32],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V7] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v8(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[String],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V8] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }

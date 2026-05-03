@@ -567,7 +567,128 @@ impl XcspRunner {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                 callback.on_constraint_channel_v1(&*scope, inner.start_index());
             }
-            XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
+            XConstraintType::XCumulative(inner) => match inner.ends() {
+                None => {
+                    if is_int_list(inner.lengths()) && is_int_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_int_list(inner.heights());
+                        callback.on_constraint_cumulative_v1(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        callback.on_constraint_cumulative_v2(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_int_list(inner.heights());
+                        callback.on_constraint_cumulative_v3(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        callback.on_constraint_cumulative_v4(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                }
+                Some(ends) => {
+                    if is_int_list(inner.lengths())
+                        && is_int_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_int_list(inner.heights());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v5(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_int_list(inner.lengths())
+                        && is_var_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v6(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths())
+                        && is_int_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_int_list(inner.heights());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v7(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        )
+                    }
+                    if is_var_list(inner.lengths())
+                        && is_var_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v8(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        )
+                    }
+                }
+            },
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint
             //---------------------------------------------------------------------------------------------------

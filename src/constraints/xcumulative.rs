@@ -38,6 +38,11 @@
  * </p>
  */
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
+        XConstraintUnfold,
+    };
+    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -45,6 +50,7 @@ pub mod xcsp3_core {
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::cmp::max;
     use std::collections::HashMap;
 
     #[derive(Clone)]
@@ -60,6 +66,29 @@ pub mod xcsp3_core {
         operator: Operator,
         operand: Operand,
         star_index: Option<i32>,
+    }
+
+    impl XConstraintUnfold for XCumulative<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
+            self.lengths = inject_parameters_in_list(&self.lengths, arg, tmp);
+            self.heights = inject_parameters_in_list(&self.heights, arg, tmp);
+            if let Some(vals) = &mut self.ends {
+                *vals = inject_parameters_in_list(vals, arg, tmp);
+            }
+            self.operand = inject_parameters_in_operand(&self.operand, arg)
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            let mut tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
+            tmp = max(tmp, max_arg_in_list(&*self.heights));
+            tmp = max(tmp, max_arg_in_list(&*self.heights));
+            match self.ends.as_deref() {
+                Some(v) => max(tmp, max_arg_in_list(v)),
+                None => tmp,
+            }
+        }
     }
 
     impl<'a> XCumulative<'a> {
@@ -201,6 +230,14 @@ pub mod xcsp3_core {
         }
         pub fn star_index(&self) -> Option<i32> {
             self.star_index
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
     }
 }

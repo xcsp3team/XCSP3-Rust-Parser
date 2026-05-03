@@ -1058,6 +1058,254 @@ pub trait XcspCallback {
     }
 
     /**
+     * The callback function related to a cumulative constraint with variable origins, int lengths and int heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> 3 4 5 6 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here ints)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v1(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and variable heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v2(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and int heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here ints)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v3(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and variable heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v4(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and int heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here ints)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v5(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[i32],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and variable heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here variables)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v6(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[String],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and int heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here ints)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v7(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[i32],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 7 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and variable heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here variables)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v8(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[String],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 8 not yet implemented");
+    }
+    /**
      * The callback function related to a channel constraint
      * See http://xcsp.org/specifications/channel
      *
@@ -1104,9 +1352,6 @@ pub trait XcspCallback {
         println!("c Channel Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-
-    /// <cumulative> ... </cumulative>
-    fn on_constraint_cumulative(&mut self, _c: &XCumulative) {}
 
     /// <noOverlap> ... </noOverlap>  (2D)
     fn on_constraint_no_overlap_v1(
