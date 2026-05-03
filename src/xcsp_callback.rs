@@ -1558,9 +1558,66 @@ pub trait XcspCallback {
     // Objectifs
     // -------------------------------------------------------------------------
 
-    /// <minimize> ... </minimize>
-    fn on_objective_minimize(&mut self, _obj: &XObjective) {}
+    /**
+     * The callback function related to an objective maximize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_maximize_var(&mut self, _var: String) {
+        println!("c Objective Maximize Var not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <maximize> ... </maximize>
-    fn on_objective_maximize(&mut self, _obj: &XObjective) {}
+    /**
+     * The callback function related to an objective minimize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;minimize> x &lt;/minimize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_minimize_var(&mut self, _var: String) {
+        println!("c Objective Minimiez Var not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective maximize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_maximize_expression(&mut self, _expr: &ExpressionTree) {
+        println!("c Objective Maximize expression not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_minimize_expression(&mut self, _expr: &ExpressionTree) {
+        println!("c Objective Minimize expression not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 }

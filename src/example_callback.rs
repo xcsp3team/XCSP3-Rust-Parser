@@ -649,10 +649,18 @@ impl XcspCallback for PrintingSolver {
         println!("  [Channel]  {:?} start_index={}", scope, start_index);
     }
     // -- Objectifs -----------------------------------------------------------
-    fn on_objective_minimize(&mut self, obj: &XObjective) {
-        println!("=== Objectif : Minimiser {} ===", obj);
+    fn on_minimize_var(&mut self, var: String) {
+        println!("Objectives: Minimize {:?}", var);
     }
-    fn on_objective_maximize(&mut self, obj: &XObjective) {
-        println!("=== Objectif : Maximiser {} ===", obj);
+    fn on_maximize_var(&mut self, var: String) {
+        println!("Objectives: Maximize {:?}", var);
+    }
+
+    fn on_minimize_expression(&mut self, expr: &ExpressionTree) {
+        println!("Objectives: Minimize {:?}", expr);
+    }
+
+    fn on_maximize_expression(&mut self, expr: &ExpressionTree) {
+        println!("Objectives: Maximize {:?}", expr);
     }
 }

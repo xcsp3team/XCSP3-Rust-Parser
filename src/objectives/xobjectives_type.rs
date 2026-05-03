@@ -45,52 +45,8 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     #[derive(Clone)]
-    pub enum XObjectivesType<'a> {
-        XObjectiveNone(Xcsp3Error),
-        Minimize(XObjective<'a>),
-        Maximize(XObjective<'a>),
-    }
-
-    impl Display for XObjectivesType<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "{}",
-                match self {
-                    XObjectivesType::Minimize(o) => {
-                        format!("Minimize: {}", o)
-                    }
-                    XObjectivesType::Maximize(o) => {
-                        format!("Maximize: {}", o)
-                    }
-                    XObjectivesType::XObjectiveNone(e) =>  format!(
-                        "XObjectiveNone: there must be an error when parse this objective. Error is {}",e
-                    ),
-                }
-            )
-        }
-    }
-
-    #[derive(Clone)]
     pub enum XObjective<'a> {
         XObjectiveElement(XObjectiveElement<'a>),
         XObjectiveExpression(XObjectiveExpression<'a>),
-    }
-
-    impl Display for XObjective<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "{}",
-                match self {
-                    XObjective::XObjectiveElement(e) => {
-                        e.to_string()
-                    }
-                    XObjective::XObjectiveExpression(e) => {
-                        e.to_string()
-                    }
-                }
-            )
-        }
     }
 }

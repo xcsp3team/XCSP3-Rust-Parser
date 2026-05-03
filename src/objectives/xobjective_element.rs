@@ -78,7 +78,7 @@ pub mod xcsp3_core {
         scope: Vec<XVarVal>,
         coeffs: Vec<XVarVal>,
         set: &'a XVariableSet,
-        map: HashMap<String, &'a XDomainInteger>,
+        is_maximize: bool,
     }
 
     impl<'a> XObjectiveElement<'a> {
@@ -86,37 +86,19 @@ pub mod xcsp3_core {
             &self.scope
         }
 
-        pub fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
-
         pub fn new(
             operator: XElementOperator,
             scope: Vec<XVarVal>,
             coeffs: Vec<XVarVal>,
+            is_maximize: bool,
             set: &'a XVariableSet,
         ) -> Self {
             Self {
                 operator,
                 scope,
                 coeffs,
+                is_maximize,
                 set,
-                map: Default::default(),
             }
         }
 
@@ -124,6 +106,7 @@ pub mod xcsp3_core {
             list_str: &str,
             coeffs_str: &str,
             ope_str: &str,
+            is_maximize: bool,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list_str) {
@@ -133,7 +116,9 @@ pub mod xcsp3_core {
                             None => Err(Xcsp3Error::get_objective_target_error(
                                 "parse objective type error, ",
                             )),
-                            Some(v) => Ok(Self::new(v, scope_vec_str, coef_vec_str, set)),
+                            Some(v) => {
+                                Ok(Self::new(v, scope_vec_str, coef_vec_str, is_maximize, set))
+                            }
                         }
                     }
                     Err(e) => Err(e),
@@ -143,11 +128,24 @@ pub mod xcsp3_core {
             // Err(Xcsp3Error::get_objective_target_error("e"))
         }
 
-        pub fn get_operator(&self) -> &XElementOperator {
+        pub fn operator(&self) -> &XElementOperator {
             &self.operator
         }
-        pub fn get_coeffs(&self) -> &Vec<XVarVal> {
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn coeffs(&self) -> &Vec<XVarVal> {
             &self.coeffs
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn is_maximize(&self) -> bool {
+            self.is_maximize
         }
     }
 

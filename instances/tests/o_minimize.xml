@@ -1,0 +1,15 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 2</array>
+        <array id="t" size="[6]">0 2</array>
+        <array id="a" size="[6]">0 2</array>
+
+    </variables>
+    <constraints>
+        <allDifferent>y[]</allDifferent>
+    </constraints>
+    <objectives>
+        <minimize>y[0]</minimize>
+        <maximize>add(y[0],5)</maximize>
+    </objectives>
+</instance>

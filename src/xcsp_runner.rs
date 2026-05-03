@@ -11,7 +11,7 @@ use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
+use crate::objectives::xobjectives_set::xcsp3_core::XObjective::XObjectiveExpression;
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
     is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
@@ -121,11 +121,25 @@ impl XcspRunner {
         // ── Objectifs ────────────────────────────────────────────────────────
         callback.begin_objectives();
         let objectives = model.build_objectives(&variables);
-        for o in objectives.iter() {
-            match o {
-                XObjectivesType::Minimize(inner) => callback.on_objective_minimize(inner),
-                XObjectivesType::Maximize(inner) => callback.on_objective_maximize(inner),
-                XObjectivesType::XObjectiveNone(_) => {}
+        for objective in objectives.objectives().iter() {
+            match objective {
+                XObjectiveExpression(o) => match o.expression().as_variable() {
+                    None => {
+                        if o.is_maximize() {
+                            callback.on_maximize_expression(o.expression());
+                        } else {
+                            callback.on_minimize_expression(o.expression());
+                        }
+                    }
+                    Some(v) => {
+                        if o.is_maximize() {
+                            callback.on_maximize_var(v.clone());
+                        } else {
+                            callback.on_minimize_var(v.clone());
+                        }
+                    }
+                },
+                _ => {}
             }
         }
         callback.end_objectives();

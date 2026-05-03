@@ -38,12 +38,12 @@
  * </p>
  */
 pub mod xcsp3_utils {
+    use crate::data_structs::expression_tree::xcsp3_utils::TreeNode::Variable;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use std::fmt::{Display, Formatter};
-    use std::str::FromStr;
-
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use std::fmt::{Display, Formatter};
+    use std::str::FromStr;
 
     #[derive(Debug, Clone)]
     pub enum Operator {
@@ -312,6 +312,17 @@ pub mod xcsp3_utils {
         // pub fn last_order_iter(&self) -> ExpressionLastOrderIter {
         //     ExpressionLastOrderIter { stack: vec![&self.root] }
         // }
+
+        pub fn is_variable(&self) -> bool {
+            matches!(self.root, TreeNode::Variable(_))
+        }
+
+        pub fn as_variable(&self) -> Option<&String> {
+            match &self.root {
+                TreeNode::Variable(name) => Some(name),
+                _ => None,
+            }
+        }
     }
 
     pub struct ExpressionFirstOrderIter<'a> {

@@ -51,25 +51,8 @@ pub mod xcsp3_core {
     pub struct XObjectiveExpression<'a> {
         expression: ExpressionTree,
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
+        is_maximize: bool,
         set: &'a XVariableSet,
-    }
-
-    impl Display for XObjectiveExpression<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            write!(
-                f,
-                "list =  {}, expression = {:?}",
-                ret,
-                self.expression.to_string()
-            )
-        }
     }
 
     impl<'a> XObjectiveExpression<'a> {
@@ -80,25 +63,11 @@ pub mod xcsp3_core {
             &self.expression
         }
 
-        pub fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.scope {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
-        }
-        pub fn from_expr(expr: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+        pub fn from_expr(
+            expr: &str,
+            is_maximize: bool,
+            set: &'a XVariableSet,
+        ) -> Result<Self, Xcsp3Error> {
             match ExpressionTree::from_string(expr) {
                 Ok(tree) => {
                     // let mut scope: Vec<XVarVal> = vec![];
@@ -115,19 +84,40 @@ pub mod xcsp3_core {
                     // }
                     // }
                     // Ok(Self::new(scope, set, tree))
-                    Ok(Self::new(tree, scope, set))
+                    Ok(Self::new(tree, scope, is_maximize, set))
                 }
 
                 Err(e) => Err(e),
             }
         }
-        pub fn new(expression: ExpressionTree, scope: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
+        pub fn new(
+            expression: ExpressionTree,
+            scope: Vec<XVarVal>,
+            is_maximize: bool,
+            set: &'a XVariableSet,
+        ) -> Self {
             Self {
                 expression,
                 scope,
-                map: Default::default(),
+                is_maximize,
                 set,
             }
+        }
+
+        pub fn expression(&self) -> &ExpressionTree {
+            &self.expression
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn is_maximize(&self) -> bool {
+            self.is_maximize
         }
     }
 }
