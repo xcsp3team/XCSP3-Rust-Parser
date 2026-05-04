@@ -13,8 +13,6 @@
  *   }
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
-use crate::constraints::xchannel::xcsp3_core::XChannel;
-use crate::constraints::xcumulative::xcsp3_core::XCumulative;
 use crate::constraints::xelement::xcsp3_core::XElement;
 use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xslide::xcsp3_core::XSlide;
@@ -23,7 +21,6 @@ use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjective_element::xcsp3_core::XElementOperator;
-use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
 pub trait XcspCallback {
@@ -1366,14 +1363,32 @@ pub trait XcspCallback {
     fn on_constraint_channel_v2(
         &mut self,
         _list1: &[String],
+        _start_index1: i32,
         _list2: &[String],
-        _start_index: i32,
+        _start_index2: i32,
     ) {
         println!("c Channel Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-
-    /// <noOverlap> ... </noOverlap>  (2D)
+    /**
+     * The callback function related to a channel constraint with a value
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     * <list> z1 z2 z3 z4 z5 </list>
+     * <value> v </value>
+     * </channel>
+     *
+     * @param id the id (name) of the constraint
+     * @param list the list of the constraint not necessary the scope)
+     * @param startIndex the starting index for list
+     * @param value the vaule
+     */
+    fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
+        println!("c Channel Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     fn on_constraint_no_overlap_v1(
         &mut self,
         _scope: &[String],
@@ -1552,9 +1567,50 @@ pub trait XcspCallback {
         println!("c Precedence Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-    /// <stretch> ... </stretch>
-    fn on_constraint_stretch(&mut self, _c: &XStretch) {}
-
+    /**
+     * The callback function related to a strectch constraint with values and widths
+     * See http://xcsp.org/specifications/stretch
+     *
+     * Example:
+     * <stretch>
+     *   <list> x1 x2 x3 x4 x5 x6 x7 </list>
+     *   <values> 1 2 3 0 </values>
+     *   <widths> 1..3 1..3 2..3 2..4 </widths>
+     * </stretch>
+     *
+     * @param list the scope of the constraint
+     * @param values thelist of values
+     * @param widths the list of intervals for widths
+     */
+    fn on_constraint_stretch_v1(
+        &mut self,
+        _scope: &[String],
+        _values: &[(i32, i32)],
+        _widths: &[i32],
+    ) {
+        println!("c Stretch Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a strectch constraint with values, widths and patterns
+     * See http://xcsp.org/specifications/stretch
+     *
+     * @param id the id (name) of the constraint
+     * @param list the scope of the constraint
+     * @param values thelist of values
+     * @param widths the list of intervals for widths
+     * @param patterns
+     *
+     */
+    fn on_constraint_stretch_v2(
+        &mut self,
+        _scope: &[String],
+        _values: &[(i32, i32)],
+        _widths: &[i32],
+    ) {
+        println!("c Stretch Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

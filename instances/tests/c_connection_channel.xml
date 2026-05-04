@@ -1,0 +1,23 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 2</array>
+        <array id="t" size="[6]">0 2</array>
+        <array id="a" size="[6]">0 2</array>
+
+    </variables>
+    <constraints>
+        <channel>y[]</channel>
+        <channel>
+            <list>y[]</list>
+            <list>t[]</list>
+        </channel>
+        <channel>
+            <list startIndex="1">y[]</list>
+            <value>a[0]</value>
+        </channel>
+        <channel>
+            <list startIndex="2">a[]</list>
+        </channel>
+    </constraints>
+</instance>
+

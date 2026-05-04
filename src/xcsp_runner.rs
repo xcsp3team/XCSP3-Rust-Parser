@@ -649,8 +649,32 @@ impl XcspRunner {
             // Channel Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XChannel(inner) => {
-                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                callback.on_constraint_channel_v1(&*scope, inner.start_index());
+                let list1: Vec<String> = to_var_list(&inner.list1(), &inner.set());
+                match inner.value() {
+                    None => {
+                        if inner.list2().len() == 0 {
+                            callback.on_constraint_channel_v1(&*list1, inner.start_index1())
+                        } else {
+                            let list2 = to_var_list(&inner.list2(), &inner.set());
+                            callback.on_constraint_channel_v2(
+                                &*list1,
+                                inner.start_index1(),
+                                &*list2,
+                                inner.start_index2(),
+                            );
+                        }
+                    }
+                    Some(value) => {
+                        match value {
+                            XVarVal::IntVar(v) => callback.on_constraint_channel_v3(
+                                &*list1,
+                                inner.start_index1(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Expected value in channel to be var"),
+                        };
+                    }
+                }
             }
             //---------------------------------------------------------------------------------------------------
             // Cumulative Constraint
@@ -855,6 +879,9 @@ impl XcspRunner {
                     }
                 }
             }
+            //---------------------------------------------------------------------------------------------------
+            // Element Circuit
+            //---------------------------------------------------------------------------------------------------
             XConstraintType::XCircuit(inner) => {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
 
@@ -869,7 +896,10 @@ impl XcspRunner {
                     },
                 }
             }
-            XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
+            //---------------------------------------------------------------------------------------------------
+            // Streteh Constraint
+            //---------------------------------------------------------------------------------------------------
+            //XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
             XConstraintType::XConstraintNone(_) => {}
             _ => {
                 panic!("Unknown constraint");

@@ -432,17 +432,39 @@ pub mod xcsp3_xml {
                     with_value,
                     simplified_list,
                 } => {
-                    if !simplified_list.is_empty() {
-                        set.build_channel(simplified_list, "", "");
-                    } else if with_value.is_empty() {
-                        /*                        let tmp: Vec<_> = lists
-                                                  .iter()
-                                                  .map(|e| (e.value.clone(), e.start_index))
-                                                  .collect();
-                                              set.build_channel(tmp, "");
-                        */
+                    if simplified_list.is_empty() == false {
+                        set.build_channel(simplified_list, "0", "", "0", "");
+                        return;
+                    }
+                    if with_value.is_empty() {
+                        let st1 = if lists[0].start_index.is_empty() {
+                            "0"
+                        } else {
+                            &*lists[0].start_index
+                        };
+                        if lists.len() == 1 {
+                            set.build_channel(&lists[0].value, st1, "", "0", with_value);
+                        } else {
+                            let st2 = if lists[1].start_index.is_empty() {
+                                "0"
+                            } else {
+                                &*lists[1].start_index
+                            };
+                            set.build_channel(
+                                &lists[0].value,
+                                st1,
+                                &lists[1].value,
+                                st2,
+                                with_value,
+                            );
+                        }
                     } else {
-                        set.build_channel(&lists[0].value, &lists[0].start_index, with_value);
+                        let st1 = if lists[0].start_index.is_empty() {
+                            "0"
+                        } else {
+                            &*lists[0].start_index
+                        };
+                        set.build_channel(&lists[0].value, st1, "", "0", with_value);
                     }
                 }
 

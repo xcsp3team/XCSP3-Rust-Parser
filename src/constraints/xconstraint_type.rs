@@ -137,7 +137,8 @@ pub mod xcsp3_core {
                 XAllDifferentList,
                 XMaximumArg,
                 XMinimumArg,
-                XElement
+                XElement,
+                XChannel
             );
         }
 
@@ -175,7 +176,8 @@ pub mod xcsp3_core {
                 XAllDifferentList,
                 XMaximumArg,
                 XMinimumArg,
-                XElement
+                XElement,
+                XChannel
             )
         }
     }

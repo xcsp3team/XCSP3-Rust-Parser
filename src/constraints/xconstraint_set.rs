@@ -136,12 +136,29 @@ pub mod xcsp3_core {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
         }
-        pub fn build_channel(&mut self, list: &str, start_index_str: &str, value_str: &str) {
-            match XChannel::from_str(list, start_index_str, value_str, self.set) {
+        pub fn build_channel(
+            &mut self,
+            list1: &str,
+            start_index1: &str,
+            list2: &str,
+            start_index2: &str,
+            value_str: &str,
+        ) {
+            match XChannel::from_str(
+                list1,
+                start_index1,
+                list2,
+                start_index2,
+                value_str,
+                self.set,
+            ) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XChannel(c));
                 }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Err(e) => {
+                    //println!("{:?}", e);
+                    self.constraints.push(XConstraintType::XConstraintNone(e))
+                }
             }
         }
         pub fn build_cardinality(

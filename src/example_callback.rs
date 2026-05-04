@@ -648,6 +648,26 @@ impl XcspCallback for PrintingSolver {
     fn on_constraint_channel_v1(&mut self, scope: &[String], start_index: i32) {
         println!("  [Channel]  {:?} start_index={}", scope, start_index);
     }
+
+    fn on_constraint_channel_v2(
+        &mut self,
+        _list1: &[String],
+        _start_index1: i32,
+        _list2: &[String],
+        _start_index2: i32,
+    ) {
+        println!(
+            "  [Channel]\n      l1={:?} start_index1={}\n      l2={:?} start_index2={}",
+            _list1, _start_index1, _list2, _start_index2
+        );
+    }
+
+    fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
+        println!(
+            "  [Channel]  {:?} start_index={}, _value={:?}",
+            _list, _start_index, _value
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_minimize_var(&mut self, var: String) {
         println!("Objectives: Minimize {:?}", var);
