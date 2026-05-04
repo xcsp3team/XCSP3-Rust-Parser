@@ -668,6 +668,13 @@ impl XcspCallback for PrintingSolver {
             _list, _start_index, _value
         );
     }
+
+    fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
+        println!(
+            "  [Clause]  pos_lit {:?} neg lit {:?}",
+            _positive, _negative
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_minimize_var(&mut self, var: String) {
         println!("Objectives: Minimize {:?}", var);

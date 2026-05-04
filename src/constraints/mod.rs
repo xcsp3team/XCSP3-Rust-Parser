@@ -51,6 +51,7 @@ pub mod xmdd;
 pub mod xordered;
 pub mod xregular;
 
+pub mod XClause;
 pub mod xall_different_list;
 pub mod xcardinality;
 pub mod xchannel;

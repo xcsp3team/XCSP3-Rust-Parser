@@ -66,6 +66,7 @@ pub mod xcsp3_core {
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
+    use crate::constraints::XClause::xcsp3_core::XClause;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::xcsp3_utils::list_to_matrix_ids;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
@@ -454,6 +455,14 @@ pub mod xcsp3_core {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XCircuit(c));
                 }
+            }
+        }
+        pub fn build_clause(&mut self, value: &str) {
+            match XClause::from_str(value, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XClause(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
         }
         pub fn build_precedence(&mut self, list: &str, values: &str, covered: bool) {

@@ -66,6 +66,7 @@ pub mod xcsp3_core {
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
+    use crate::constraints::XClause::xcsp3_core::XClause;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 
@@ -99,6 +100,7 @@ pub mod xcsp3_core {
         XStretch(XStretch<'a>),
         XNoOverlapKDim(XNoOverlapKDim<'a>),
         XCircuit(XCircuit<'a>),
+        XClause(XClause<'a>),
         XPrecedence(XPrecedence<'a>),
     }
 

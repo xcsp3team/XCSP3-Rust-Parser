@@ -646,6 +646,14 @@ impl XcspRunner {
                 }
             }
             //---------------------------------------------------------------------------------------------------
+            // Clause Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XClause(inner) => {
+                let pos = to_var_list(inner.positive_literals(), inner.set());
+                let neg = to_var_list(inner.negative_literals(), inner.set());
+                callback.on_constraint_clause(&*pos, &*neg);
+            }
+            //---------------------------------------------------------------------------------------------------
             // Channel Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XChannel(inner) => {

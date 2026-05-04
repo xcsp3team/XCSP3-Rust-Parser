@@ -1611,6 +1611,22 @@ pub trait XcspCallback {
         println!("c Stretch Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
+    /**
+     * The callback function related to a clause  constraint
+     *
+     * Example:
+     * <clause>
+     *   <list> x not(y) z </list>
+     * </clause>
+     *
+     * @param positive the positive variables in the clause
+     * @param negative the negative variables in the clause
+     */
+
+    fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
+        println!("c Clause not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

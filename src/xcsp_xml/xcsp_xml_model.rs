@@ -467,7 +467,7 @@ pub mod xcsp3_xml {
                         set.build_channel(&lists[0].value, st1, "", "0", with_value);
                     }
                 }
-
+                ConstraintType::Clause { vars } => set.build_clause(vars),
                 // ConstraintType::AllDistant { .. } => {}
                 // ConstraintType::Precedence { .. } => {}
                 // ConstraintType::Balance { .. } => {}

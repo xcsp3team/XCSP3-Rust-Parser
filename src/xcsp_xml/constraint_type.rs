@@ -915,14 +915,11 @@ pub mod xcsp3_xml {
         //     #[serde(rename = "operator", default)]
         //     operator: String,
         // },
-
-        // #[serde(rename = "clause")]
-        // Clause {
-        //     #[serde(rename = "$value", default)]
-        //     vars: String,
-        //     #[serde(rename = "list", default)]
-        //     list: Box<[String]>,
-        // },
+        #[serde(rename = "clause")]
+        Clause {
+            #[serde(rename = "$value", default)]
+            vars: String,
+        },
         #[default]
         ConstraintNone,
     }

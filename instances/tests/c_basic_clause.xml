@@ -1,0 +1,12 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 1</array>
+    </variables>
+    <constraints>
+        <clause>y[0] not(y[1]) y[2] y[3]</clause>
+        <clause>not(y[0]) not(y[1]) y[2] y[5]</clause>
+        <clause>not(y[0]) not(y[1])</clause>
+        <clause>y[2] y[5]</clause>
+    </constraints>
+</instance>
+
