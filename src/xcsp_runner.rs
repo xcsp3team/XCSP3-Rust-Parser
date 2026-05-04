@@ -11,7 +11,9 @@ use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::objectives::xobjectives_set::xcsp3_core::XObjective::XObjectiveExpression;
+use crate::objectives::xobjectives_set::xcsp3_core::XObjective::{
+    XObjectiveElement, XObjectiveExpression,
+};
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
     is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
@@ -139,6 +141,74 @@ impl XcspRunner {
                         }
                     }
                 },
+                XObjectiveElement(o) => {
+                    if o.coeffs().is_empty() == false
+                        && is_var_list(o.scope())
+                        && is_int_list(o.coeffs())
+                    {
+                        let sc = to_var_list(o.scope(), o.set());
+                        let co = to_int_list(o.coeffs());
+                        if o.is_maximize() {
+                            callback.on_maximize_v1(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v1(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && is_var_list(o.scope())
+                        && is_var_list(o.coeffs())
+                    {
+                        let sc = to_var_list(o.scope(), o.set());
+                        let co = to_var_list(o.coeffs(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v2(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v2(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && scope_contains_expressions(o.scope())
+                        && is_int_list(o.coeffs())
+                    {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        let co = to_int_list(o.coeffs());
+                        if o.is_maximize() {
+                            callback.on_maximize_v3(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v3(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && scope_contains_expressions(o.scope())
+                        && is_var_list(o.coeffs())
+                    {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        let co = to_var_list(o.coeffs(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v4(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v4(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    // ------------ WIHTOUT COEFS
+
+                    if o.coeffs().is_empty() && is_var_list(o.scope()) {
+                        let sc = to_var_list(o.scope(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v5(o.operator().clone(), &*sc);
+                        } else {
+                            callback.on_minimize_v5(o.operator().clone(), &*sc);
+                        }
+                    }
+                    if o.coeffs().is_empty() && scope_contains_expressions(o.scope()) {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v6(o.operator().clone(), &*sc);
+                        } else {
+                            callback.on_minimize_v6(o.operator().clone(), &*sc);
+                        }
+                    }
+                }
                 _ => {}
             }
         }

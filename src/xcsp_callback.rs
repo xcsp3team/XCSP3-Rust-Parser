@@ -22,6 +22,7 @@ use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
+use crate::objectives::xobjective_element::xcsp3_core::XElementOperator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
@@ -1590,7 +1591,7 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
     /**
-     * The callback function related to an objective maximize a variable
+     * The callback function related to an objective maximize an expression
      * See http://xcsp.org/specifications/objectives
      *
      * Example:
@@ -1606,7 +1607,7 @@ pub trait XcspCallback {
     }
 
     /**
-     * The callback function related to an objective minimize a variable
+     * The callback function related to an objective minimize an expression
      * See http://xcsp.org/specifications/objectives
      *
      * Example:
@@ -1618,6 +1619,280 @@ pub trait XcspCallback {
      */
     fn on_minimize_expression(&mut self, _expr: &ExpressionTree) {
         println!("c Objective Minimize expression not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> 2 4 1 4 8 </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+        println!("c Objective Minimize v1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> 2 4 1 4 8 </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+        println!("c Objective Maximize v1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective minimize a sum/product with vars coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> y[] </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+        println!("c Objective Minimize v2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with var coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> y[]</coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+        println!("c Objective Maximize v2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with expression and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> 1 2  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v3(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[i32],
+    ) {
+        println!("c Objective Minimize v3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> 1 2  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v3(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[i32],
+    ) {
+        println!("c Objective Maximize v3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective minimize a sum/product with expression and var coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> y[]  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v4(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[String],
+    ) {
+        println!("c Objective Minimize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> y[]  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v4(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[String],
+    ) {
+        println!("c Objective Maximize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product without coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_minimize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+        println!("c Objective Minimize v5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_maximize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+        println!("c Objective Maximize v5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with expression
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_minimize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+        println!("c Objective Minimize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_maximize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+        println!("c Objective Maximize v6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 }
