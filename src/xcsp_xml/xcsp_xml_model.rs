@@ -468,6 +468,12 @@ pub mod xcsp3_xml {
                     }
                 }
                 ConstraintType::Clause { vars } => set.build_clause(vars),
+                ConstraintType::Knapsack {
+                    list,
+                    weights,
+                    profits,
+                    condition,
+                } => set.build_knapsack(list, weights, profits, condition),
                 // ConstraintType::AllDistant { .. } => {}
                 // ConstraintType::Precedence { .. } => {}
                 // ConstraintType::Balance { .. } => {}

@@ -867,6 +867,17 @@ pub mod xcsp3_xml {
             #[serde(rename = "values", default)]
             values: Box<ListWithCovered>,
         },
+        #[serde(rename = "knapsack")]
+        Knapsack {
+            #[serde(rename = "list", default)]
+            list: String,
+            #[serde(rename = "weights", default)]
+            weights: String,
+            #[serde(rename = "condition", default)]
+            condition: Box<[String]>,
+            #[serde(rename = "profits", default)]
+            profits: String,
+        },
 
         // #[serde(rename = "balance")]
         // Balance {

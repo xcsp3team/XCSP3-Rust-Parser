@@ -46,6 +46,7 @@ pub mod xcsp3_core {
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
     use crate::constraints::xcircuit::xcsp3_core::XCircuit;
+    use crate::constraints::xclause::xcsp3_core::XClause;
     use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
@@ -54,6 +55,7 @@ pub mod xcsp3_core {
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
+    use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
     use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
@@ -66,7 +68,6 @@ pub mod xcsp3_core {
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
-    use crate::constraints::XClause::xcsp3_core::XClause;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 
@@ -102,6 +103,7 @@ pub mod xcsp3_core {
         XCircuit(XCircuit<'a>),
         XClause(XClause<'a>),
         XPrecedence(XPrecedence<'a>),
+        XKnapsack(XKnapsack<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -140,7 +142,8 @@ pub mod xcsp3_core {
                 XMaximumArg,
                 XMinimumArg,
                 XElement,
-                XChannel
+                XChannel,
+                XKnapsack,
             );
         }
 
@@ -179,7 +182,8 @@ pub mod xcsp3_core {
                 XMaximumArg,
                 XMinimumArg,
                 XElement,
-                XChannel
+                XChannel,
+                XKnapsack,
             )
         }
     }

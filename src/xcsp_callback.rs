@@ -1627,6 +1627,32 @@ pub trait XcspCallback {
         println!("c Clause not yet implemented");
         panic!("s UNSUPPORTED");
     }
+
+    /**
+     * The callback function related to knapsack  constraint
+     *
+     * @param list the list of variables (not necessary the scope)
+     * @param weights
+     * @param _woperator: Operator,
+     * @param _woperand: Operand,
+     * @param profits
+     * @param _poperator: Operator,
+     * @param _poperand: Operand,
+     */
+    fn on_constraint_knapsack(
+        &mut self,
+        _scope: &[String],
+        _weights: &[i32],
+        _woperator: Operator,
+        _woperand: Operand,
+        _profits: &[i32],
+        _poperator: Operator,
+        _poperand: Operand,
+    ) {
+        println!("c Knapsack  not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

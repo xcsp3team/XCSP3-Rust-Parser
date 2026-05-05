@@ -39,21 +39,21 @@
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
-    use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
-    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
-    use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
-    use crate::constraints::xelement::xcsp3_core::XElement;
-    use crate::constraints::xextension::xcsp3_core::XExtension;
-
-    use crate::constraints::xgroup::xcsp3_core::XGroup;
-    use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
-
     use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
+    use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
+    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
+    use crate::constraints::xclause::xcsp3_core::XClause;
+    use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
+    use crate::constraints::xelement::xcsp3_core::XElement;
+    use crate::constraints::xextension::xcsp3_core::XExtension;
+    use crate::constraints::xgroup::xcsp3_core::XGroup;
+    use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
+    use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
     use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
@@ -66,7 +66,6 @@ pub mod xcsp3_core {
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
-    use crate::constraints::XClause::xcsp3_core::XClause;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::xcsp3_utils::list_to_matrix_ids;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
@@ -461,6 +460,20 @@ pub mod xcsp3_core {
             match XClause::from_str(value, self.set) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XClause(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+        pub fn build_knapsack(
+            &mut self,
+            list: &str,
+            weights: &str,
+            profits: &str,
+            conditions: &Box<[String]>,
+        ) {
+            match XKnapsack::from_str(list, weights, profits, conditions, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XKnapsack(c));
                 }
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }

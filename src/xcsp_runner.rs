@@ -654,6 +654,23 @@ impl XcspRunner {
                 callback.on_constraint_clause(&*pos, &*neg);
             }
             //---------------------------------------------------------------------------------------------------
+            // Knapsack Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XKnapsack(inner) => {
+                let scope = to_var_list(&inner.scope(), &inner.set());
+                let profits = to_int_list(&inner.profits());
+                let weights = to_int_list(&inner.weights());
+                callback.on_constraint_knapsack(
+                    &*scope,
+                    &*weights,
+                    inner.weight_operator(),
+                    inner.weight_operand().clone(),
+                    &*profits,
+                    inner.profit_operator(),
+                    inner.profit_operand().clone(),
+                );
+            }
+            //---------------------------------------------------------------------------------------------------
             // Channel Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XChannel(inner) => {

@@ -675,6 +675,22 @@ impl XcspCallback for PrintingSolver {
             _positive, _negative
         );
     }
+
+    fn on_constraint_knapsack(
+        &mut self,
+        _scope: &[String],
+        _weights: &[i32],
+        _woperator: Operator,
+        _woperand: Operand,
+        _profits: &[i32],
+        _poperator: Operator,
+        _poperand: Operand,
+    ) {
+        println!(
+            "  [Knapsack]: {:?} weight: {:?} profits:{:?}",
+            _scope, _weights, _profits
+        );
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_minimize_var(&mut self, var: String) {
         println!("Objectives: Minimize {:?}", var);
