@@ -11,7 +11,6 @@ use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective::{
     XObjectiveElement, XObjectiveExpression,
 };
@@ -250,6 +249,14 @@ impl XcspRunner {
                     .map(|e| to_var_list(e, inner.set()))
                     .collect();
                 callback.on_constraint_all_different_list(&*tmp);
+            }
+            XConstraintType::XAllDifferentMatrix(inner) => {
+                let tmp: Vec<_> = inner
+                    .matrix()
+                    .iter()
+                    .map(|e| to_var_list(e, inner.set()))
+                    .collect();
+                callback.on_constraint_all_different_matrix(&*tmp);
             }
 
             //---------------------------------------------------------------------------------------------------

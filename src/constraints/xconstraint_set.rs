@@ -40,6 +40,7 @@ pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
     use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
+    use crate::constraints::xall_different_matrix::xcsp3_core::XAllDifferentMatrix;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
     use crate::constraints::xbinpacking::xcsp3_core::XBinpacking;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
@@ -453,7 +454,14 @@ pub mod xcsp3_core {
             }
         }
         pub fn build_all_different_matrix(&mut self, list: &str) {
-            let mat = list_to_matrix_ids(list);
+            match XAllDifferentMatrix::from_str(list, self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints
+                        .push(XConstraintType::XAllDifferentMatrix(c));
+                }
+            }
+            /*let mat = list_to_matrix_ids(list);
             for line in mat.iter() {
                 let mut scope: Vec<XVarVal> = vec![];
                 for e in line {
@@ -473,7 +481,7 @@ pub mod xcsp3_core {
                     .push(XConstraintType::XAllDifferent(XAllDifferent::from_str_vec(
                         scope, self.set,
                     )))
-            }
+            }*/
         }
 
         pub fn build_circuit(&mut self, list: &str, size: &str) {

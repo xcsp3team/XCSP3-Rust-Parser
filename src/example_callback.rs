@@ -100,6 +100,12 @@ impl XcspCallback for PrintingSolver {
             println!("       {:?} ", v);
         }
     }
+    fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
+        println!("  [AllDiff Matrix]");
+        for v in _lists {
+            println!("       {:?} ", v);
+        }
+    }
     fn on_constraint_all_equal_v1(&mut self, scope: &[String]) {
         self.nb_constraints += 1;
         println!("  [AllEqual]  {:?}", scope);

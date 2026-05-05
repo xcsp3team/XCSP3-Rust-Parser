@@ -221,6 +221,25 @@ pub trait XcspCallback {
     }
 
     /**
+     * The callback function related to a alldifferent  matrix constraint
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * <allDifferent id="c1">
+     *    <matrix>
+     *     (x1,x2,x3,x4,x5)
+     *     (y1,y2,y3,y4,y5)
+     *     (z1,z2,z3,z4,z5)
+     *    </matrix>
+     * </allDifferent>
+     *
+     * @param matrix the matrix (not the scope, a variable may appear at different place!)
+     */
+    fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
+        println!("c Alldifferent matrix not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
      * The callback function related to a allequal constraint
      * See http://xcsp.org/specifications/allEqual
      *
