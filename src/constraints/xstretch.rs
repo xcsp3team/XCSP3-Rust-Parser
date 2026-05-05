@@ -41,13 +41,10 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
     #[derive(Clone)]
     pub struct XStretch<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         values: Vec<XVarVal>,
         widths: Vec<XVarVal>,
@@ -102,19 +99,29 @@ pub mod xcsp3_core {
         ) -> Self {
             Self {
                 scope,
-                map: Default::default(),
                 set,
                 values,
                 widths,
                 patterns,
             }
         }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
         pub fn values(&self) -> &Vec<XVarVal> {
             &self.values
         }
+
         pub fn widths(&self) -> &Vec<XVarVal> {
             &self.widths
         }
+
         pub fn patterns(&self) -> &Option<Vec<XVarVal>> {
             &self.patterns
         }

@@ -41,12 +41,12 @@
 pub mod xcsp3_core {
     use crate::objectives::xobjective_element::xcsp3_core::XObjectiveElement;
     use crate::objectives::xobjective_expression::xcsp3_core::XObjectiveExpression;
-    pub(crate) use crate::objectives::xobjectives_type::xcsp3_core::{XObjective, XObjectivesType};
+    pub(crate) use crate::objectives::xobjectives_type::xcsp3_core::XObjective;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::slice::{Iter, IterMut};
 
     pub struct XObjectivesSet<'a> {
-        objectives: Vec<XObjectivesType<'a>>,
+        objectives: Vec<XObjective<'a>>,
         set: &'a XVariableSet,
     }
 
@@ -60,25 +60,22 @@ pub mod xcsp3_core {
         ) {
             // println!("list {} coeffs {} expression {} type_str {}", list, coeffs, expression, type_str);
             if type_str.is_empty() {
-                match XObjectiveExpression::from_expr(expression, self.set) {
+                match XObjectiveExpression::from_expr(expression, true, self.set) {
                     Ok(xoe) => {
-                        self.objectives.push(XObjectivesType::Maximize(
-                            XObjective::XObjectiveExpression(xoe),
-                        ));
+                        self.objectives.push(XObjective::XObjectiveExpression(xoe));
                     }
-                    Err(e) => self.objectives.push(XObjectivesType::XObjectiveNone(e)),
+                    Err(e) => panic!("Objectives not recognized"),
                 }
             } else {
                 match XObjectiveElement::from_str(
                     if !list.is_empty() { list } else { expression },
                     coeffs,
                     type_str,
+                    true,
                     self.set,
                 ) {
-                    Ok(ele) => self.objectives.push(XObjectivesType::Maximize(
-                        XObjective::XObjectiveElement(ele),
-                    )),
-                    Err(e) => self.objectives.push(XObjectivesType::XObjectiveNone(e)),
+                    Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
+                    Err(e) => panic!("Objectives not recognized"),
                 }
             }
         }
@@ -92,40 +89,39 @@ pub mod xcsp3_core {
         ) {
             // println!("list {} coeffs {} expression {} type_str {}", list, coeffs, expression, type_str);
             if type_str.is_empty() {
-                match XObjectiveExpression::from_expr(expression, self.set) {
+                match XObjectiveExpression::from_expr(expression, false, self.set) {
                     Ok(xoe) => {
-                        self.objectives.push(XObjectivesType::Minimize(
-                            XObjective::XObjectiveExpression(xoe),
-                        ));
+                        self.objectives.push(XObjective::XObjectiveExpression(xoe));
                     }
-                    Err(e) => self.objectives.push(XObjectivesType::XObjectiveNone(e)),
+                    Err(e) => panic!("Objectives not recognized"),
                 }
             } else {
                 match XObjectiveElement::from_str(
                     if !list.is_empty() { list } else { expression },
                     coeffs,
                     type_str,
+                    false,
                     self.set,
                 ) {
-                    Ok(ele) => self.objectives.push(XObjectivesType::Minimize(
-                        XObjective::XObjectiveElement(ele),
-                    )),
-                    Err(e) => self.objectives.push(XObjectivesType::XObjectiveNone(e)),
+                    Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
+                    Err(e) => panic!("Objectives not recognized"),
                 }
             }
         }
 
-        pub fn iter(&self) -> Iter<'_, XObjectivesType<'_>> {
-            self.objectives.iter()
-        }
-        pub fn iter_mut(&mut self) -> IterMut<'_, XObjectivesType<'a>> {
-            self.objectives.iter_mut()
-        }
         pub fn new(set: &'a XVariableSet) -> Self {
             Self {
                 objectives: vec![],
                 set,
             }
+        }
+
+        pub fn objectives(&self) -> &Vec<XObjective<'a>> {
+            &self.objectives
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
         }
     }
 }

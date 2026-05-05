@@ -40,9 +40,35 @@ use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {
+    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     // use std::str::FromStr;
+
+    pub fn extract_operator(condition: &str) -> Result<(Operator, Operand), Xcsp3Error> {
+        let tmp = condition.replace(['(', ')', ','], " ");
+        let split: Vec<&str> = tmp.split_whitespace().collect();
+        let ope: Operator = match Operator::get_operator_by_str(split[0]) {
+            None => {
+                return Err(Xcsp3Error::get_constraint_sum_error(
+                    "parse sum  constraint Operator error, ",
+                ));
+            }
+            Some(o) => o,
+        };
+
+        let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
+            None => {
+                return Err(Xcsp3Error::get_constraint_sum_error(
+                    "parse sum constraint Operand error, ",
+                ));
+            }
+            Some(r) => r,
+        };
+        Ok((ope, rand))
+    }
 
     pub fn list_to_vec_var_val(list: &str) -> Result<Vec<XVarVal>, Xcsp3Error> {
         let mut ret: Vec<XVarVal> = vec![];
@@ -86,27 +112,24 @@ pub mod xcsp3_utils {
         lower: Vec<usize>,
         upper: Vec<usize>,
     ) -> Vec<Vec<usize>> {
-        let mut ret: Vec<Vec<usize>> = vec![];
         let mut tmp: Vec<Vec<usize>> = vec![];
-        // println!("{:?},{:?}", lower, upper);
-
-        // recursion_for_get_all_variables(0,&lower,&upper,&ret);
-        for i in lower[0]..upper[0] + 1 {
+        for i in lower[0]..=upper[0] {
             tmp.push(vec![i]);
         }
+
         for deep in 1..lower.len() {
-            for i in lower[deep]..upper[deep] + 1 {
-                for e in tmp.iter() {
+            let mut ret: Vec<Vec<usize>> = vec![];
+            for e in tmp.iter() {
+                // outer: existing combinations
+                for i in lower[deep]..=upper[deep] {
+                    // inner: new dimension
                     let mut ee = e.clone();
                     ee.push(i);
-                    ret.push(ee)
+                    ret.push(ee);
                 }
             }
-            tmp = ret.clone();
-            ret.clear();
+            tmp = ret;
         }
-        // println!("ret = {:?}\n", ret);
-        // println!("tmp = {:?}\n", tmp);
         tmp
     }
 

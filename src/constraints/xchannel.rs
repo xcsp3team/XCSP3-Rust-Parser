@@ -39,100 +39,111 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
+    use std::cmp::max;
 
     #[derive(Clone)]
     pub struct XChannel<'a> {
-        scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
-        set: &'a XVariableSet,
-        start_index: Option<i32>,
+        list1: Vec<XVarVal>,
+        start_index1: i32,
+        list2: Vec<XVarVal>,
+        start_index2: i32,
         value: Option<XVarVal>,
+        set: &'a XVariableSet,
     }
 
+    impl XConstraintUnfold for XChannel<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let tmp = self.max_args_used();
+            self.list1 = inject_parameters_in_list(&*self.list1, arg, tmp);
+            self.list2 = inject_parameters_in_list(&*self.list2, arg, tmp);
+            if let Some(value) = &mut self.value {
+                self.value = Option::from(inject_parameters_in_var_val(value.clone(), arg));
+            }
+        }
+        fn max_args_used(&mut self) -> i32 {
+            let mut tmp = max(max_arg_in_list(&*self.list1), max_arg_in_list(&*self.list2));
+            if let Some(value) = &mut self.value {
+                let mut s = Vec::new();
+                s.push(value.clone());
+                tmp = max(max_arg_in_list(&*s), tmp);
+            }
+            tmp
+        }
+    }
     impl<'a> XChannel<'a> {
-        pub fn get_start_index(&self) -> &Option<i32> {
-            &self.start_index
-        }
-
-        pub fn get_value(&self) -> &Option<XVarVal> {
-            &self.value
-        }
-
         pub fn from_str(
-            list: &str,
-            start_index_str: &str,
+            list1: &str,
+            start_index_str1: &str,
+            list2: &str,
+            start_index_str2: &str,
             value_str: &str,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let start_index = if start_index_str.is_empty() {
-                        None
-                    } else {
-                        match start_index_str.parse::<i32>() {
-                            Ok(n) => Some(n),
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_constraint_channel_error(
-                                    "parse channel constraint start_index error, ",
-                                ));
-                            }
-                        }
-                    };
-                    let value = if value_str.is_empty() {
-                        None
-                    } else {
-                        match XVarVal::from_string(value_str) {
-                            None => {
-                                return Err(Xcsp3Error::get_constraint_channel_error(
-                                    "parse channel constraint value error, ",
-                                ));
-                            }
-                            Some(v) => Some(v),
-                        }
-                    };
-                    Ok(Self::new(scope_vec_str, set, start_index, value))
+            let sc1 = list_to_vec_var_val(list1)?;
+            let sc2 = list_to_vec_var_val(list2)?;
+            let start1 = start_index_str1.parse().unwrap();
+            let start2 = start_index_str2.parse().unwrap();
+            let v = if value_str.is_empty() {
+                None
+            } else {
+                match XVarVal::from_string(value_str) {
+                    None => {
+                        return Err(Xcsp3Error::get_constraint_channel_error(
+                            "parse channel constraint value error, ",
+                        ));
+                    }
+                    Some(v) => Some(v),
                 }
-                Err(e) => Err(e),
-            }
+            };
+            Ok(Self::new(sc1, start1, sc2, start2, v, set))
         }
-        pub fn new(
-            scope: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            start_index: Option<i32>,
-            value: Option<XVarVal>,
-        ) -> Self {
-            Self {
-                scope,
-                map: Default::default(),
-                set,
-                start_index,
-                value,
-            }
-        }
-    }
 
-    impl Display for XChannel<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
+        pub fn new(
+            list1: Vec<XVarVal>,
+            start_index1: i32,
+            list2: Vec<XVarVal>,
+            start_index2: i32,
+            value: Option<XVarVal>,
+            set: &'a XVariableSet,
+        ) -> Self {
+            XChannel {
+                list1,
+                start_index1,
+                list2,
+                start_index2,
+                value,
+                set,
             }
-            if let Some(XVarVal::IntVar(e)) = &self.value {
-                ret.push_str(&format!(" value = {}, ", e))
-            }
-            if let Some(n) = &self.start_index {
-                ret.push_str(&format!(" start_index = {}, ", n))
-            }
-            write!(f, "XChannel: list  =  {}", ret,)
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn start_index1(&self) -> i32 {
+            self.start_index1
+        }
+        pub fn start_index2(&self) -> i32 {
+            self.start_index2
+        }
+
+        pub fn list1(&self) -> &Vec<XVarVal> {
+            &self.list1
+        }
+
+        pub fn list2(&self) -> &Vec<XVarVal> {
+            &self.list2
+        }
+
+        pub fn value(&self) -> &Option<XVarVal> {
+            &self.value
         }
     }
 }

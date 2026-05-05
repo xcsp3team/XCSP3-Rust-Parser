@@ -1,0 +1,16 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 2</array>
+        <array id="t" size="[6]">0 2</array>
+        <array id="a" size="[6]">0 2</array>
+
+    </variables>
+    <constraints>
+        <binPacking>
+            <list>y[]</list>
+            <sizes>1 2 3 4</sizes>
+            <condition>(eq,1)</condition>
+        </binPacking>
+    </constraints>
+</instance>
+

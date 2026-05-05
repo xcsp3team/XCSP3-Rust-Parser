@@ -40,7 +40,7 @@
 
 pub mod xcsp3_xml {
     use crate::xcsp_xml::constraint::xcsp3_xml::{
-        ListWithClosed, ListWithOffset, ListWithStartIndex,
+        ListWithClosed, ListWithCovered, ListWithOffset, ListWithStartIndex,
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
@@ -553,6 +553,16 @@ pub mod xcsp3_xml {
             condition: String,
         },
 
+        #[serde(rename = "minimumArg")]
+        MinimumArg {
+            #[serde(rename = "list", default)]
+            list: ListWithStartIndex,
+            #[serde(rename = "@rank", default)]
+            rank: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+        },
+
         /**
         syntax.
         ```xml
@@ -578,6 +588,16 @@ pub mod xcsp3_xml {
         Maximum {
             #[serde(rename = "list", default)]
             list: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+        },
+
+        #[serde(rename = "maximumArg")]
+        MaximumArg {
+            #[serde(rename = "list", default)]
+            list: ListWithStartIndex,
+            #[serde(rename = "@rank", default)]
+            rank: String,
             #[serde(rename = "condition", default)]
             condition: String,
         },
@@ -838,14 +858,40 @@ pub mod xcsp3_xml {
         //     #[serde(rename = "condition", default)]
         //     condition: String,
         // },
+        #[serde(rename = "precedence")]
+        Precedence {
+            #[serde(rename = "$value", default)]
+            vars: String,
+            #[serde(rename = "list", default)]
+            list: Box<[String]>,
+            #[serde(rename = "values", default)]
+            values: Box<ListWithCovered>,
+        },
+        #[serde(rename = "knapsack")]
+        Knapsack {
+            #[serde(rename = "list", default)]
+            list: String,
+            #[serde(rename = "weights", default)]
+            weights: String,
+            #[serde(rename = "condition", default)]
+            condition: Box<[String]>,
+            #[serde(rename = "profits", default)]
+            profits: String,
+        },
 
-        // #[serde(rename = "precedence")]
-        // Precedence {
-        //     #[serde(rename = "list", default)]
-        //     vars: String,
-        //     #[serde(rename = "values", default)]
-        //     values: String,
-        // },
+        #[serde(rename = "binPacking")]
+        BinPacking {
+            #[serde(rename = "list", default)]
+            list: String,
+            #[serde(rename = "sizes", default)]
+            sizes: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+            #[serde(rename = "limits", default)]
+            limits: String,
+            #[serde(rename = "loads", default)]
+            loads: String,
+        },
 
         // #[serde(rename = "balance")]
         // Balance {
@@ -877,16 +923,6 @@ pub mod xcsp3_xml {
         //     total: String,
         // },
 
-        // #[serde(rename = "binPacking")]
-        // BinPacking {
-        //     #[serde(rename = "list", default)]
-        //     vars: String,
-        //     #[serde(rename = "sizes", default)]
-        //     sizes: String,
-        //     #[serde(rename = "condition", default)]
-        //     condition: String,
-        // },
-
         // #[serde(rename = "lex")]
         // Lex {
         //     #[serde(rename = "matrix", default)]
@@ -894,14 +930,22 @@ pub mod xcsp3_xml {
         //     #[serde(rename = "operator", default)]
         //     operator: String,
         // },
+        #[serde(rename = "clause")]
+        Clause {
+            #[serde(rename = "$value", default)]
+            vars: String,
+        },
 
-        // #[serde(rename = "clause")]
-        // Clause {
-        //     #[serde(rename = "$value", default)]
-        //     vars: String,
-        //     #[serde(rename = "list", default)]
-        //     list: Box<[String]>,
-        // },
+        #[serde(rename = "lex")]
+        Lex {
+            #[serde(rename = "list", default)]
+            lists: Vec<String>,
+            #[serde(rename = "matrix", default)]
+            matrix: String,
+            #[serde(rename = "operator", default)]
+            operator: String,
+        },
+
         #[default]
         ConstraintNone,
     }

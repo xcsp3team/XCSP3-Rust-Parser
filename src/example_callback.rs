@@ -94,6 +94,18 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
+        println!("  [AllDiff List]");
+        for v in _lists {
+            println!("       {:?} ", v);
+        }
+    }
+    fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
+        println!("  [AllDiff Matrix]");
+        for v in _lists {
+            println!("       {:?} ", v);
+        }
+    }
     fn on_constraint_all_equal_v1(&mut self, scope: &[String]) {
         self.nb_constraints += 1;
         println!("  [AllEqual]  {:?}", scope);
@@ -224,6 +236,62 @@ impl XcspCallback for PrintingSolver {
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_maximum_arg_v1(
+        &mut self,
+        scope: &[String],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Maximum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_maximum_arg_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Maxnimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_minimum_arg_v1(
+        &mut self,
+        scope: &[String],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
+    fn on_constraint_minimum_arg_v2(
+        &mut self,
+        scope: &[ExpressionTree],
+        start_index: i32,
+        rank: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
+            scope, rank, start_index, operator, operand
+        );
+    }
+
     fn on_constraint_count_v1(
         &mut self,
         scope: &[ExpressionTree],
@@ -274,6 +342,126 @@ impl XcspCallback for PrintingSolver {
             "  [Count]  {:?} - values: {:?} {:?} {:?}",
             scope, values, operator, operand
         );
+    }
+
+    fn on_constraint_cumulative_v1(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V1] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v2(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V2] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v3(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[i32],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V3] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v4(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V4] {:?} lengths={:?} heights={:?} {:?} {:?}",
+            origins, lengths, heights, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v5(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[i32],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V5] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v6(
+        &mut self,
+        origins: &[String],
+        lengths: &[i32],
+        heights: &[String],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V6] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v7(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[i32],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V7] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_cumulative_v8(
+        &mut self,
+        origins: &[String],
+        lengths: &[String],
+        heights: &[String],
+        ends: &[String],
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Cumulative V8] {:?} lengths={:?} heights={:?} ends={:? } {:?} {:?}",
+            origins, lengths, heights, ends, operator, operand
+        );
+    }
+
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("  [Element V1] {:?} value={}", scope, value);
     }
 
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
@@ -451,11 +639,84 @@ impl XcspCallback for PrintingSolver {
     fn on_constraint_circuit_v3(&mut self, scope: &Vec<String>, size: String) {
         println!("  [Circuit]  {:?} size={}", scope, size);
     }
-    // -- Objectifs -----------------------------------------------------------
-    fn on_objective_minimize(&mut self, obj: &XObjective) {
-        println!("=== Objectif : Minimiser {} ===", obj);
+
+    fn on_constraint_precedence_v1(&mut self, scope: &[String], covered: bool) {
+        println!("  [Precedence]  {:?} covered={}", scope, covered);
     }
-    fn on_objective_maximize(&mut self, obj: &XObjective) {
-        println!("=== Objectif : Maximiser {} ===", obj);
+
+    fn on_constraint_precedence_v2(&mut self, scope: &[String], values: &[i32], covered: bool) {
+        println!(
+            "  [Precedence]  {:?} covered={} values={:?}",
+            scope, covered, values
+        );
+    }
+
+    fn on_constraint_channel_v1(&mut self, scope: &[String], start_index: i32) {
+        println!("  [Channel]  {:?} start_index={}", scope, start_index);
+    }
+
+    fn on_constraint_channel_v2(
+        &mut self,
+        _list1: &[String],
+        _start_index1: i32,
+        _list2: &[String],
+        _start_index2: i32,
+    ) {
+        println!(
+            "  [Channel]\n      l1={:?} start_index1={}\n      l2={:?} start_index2={}",
+            _list1, _start_index1, _list2, _start_index2
+        );
+    }
+
+    fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
+        println!(
+            "  [Channel]  {:?} start_index={}, _value={:?}",
+            _list, _start_index, _value
+        );
+    }
+
+    fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
+        println!(
+            "  [Clause]  pos_lit {:?} neg lit {:?}",
+            _positive, _negative
+        );
+    }
+
+    fn on_constraint_knapsack(
+        &mut self,
+        _scope: &[String],
+        _weights: &[i32],
+        _woperator: Operator,
+        _woperand: Operand,
+        _profits: &[i32],
+        _poperator: Operator,
+        _poperand: Operand,
+    ) {
+        println!(
+            "  [Knapsack]: {:?} weight: {:?} profits:{:?}",
+            _scope, _weights, _profits
+        );
+    }
+
+    fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
+        println!("  [Lex] {:?} {:?}", lists, operator);
+    }
+    fn on_constraint_lex_matrix(&mut self, matrix: &Vec<Vec<String>>, operator: Operator) {
+        println!("  [Lex Matrix] {:?} {:?}", matrix, operator);
+    }
+    // -- Objectifs -----------------------------------------------------------
+    fn on_minimize_var(&mut self, var: String) {
+        println!("Objectives: Minimize {:?}", var);
+    }
+    fn on_maximize_var(&mut self, var: String) {
+        println!("Objectives: Maximize {:?}", var);
+    }
+
+    fn on_minimize_expression(&mut self, expr: &ExpressionTree) {
+        println!("Objectives: Minimize {:?}", expr);
+    }
+
+    fn on_maximize_expression(&mut self, expr: &ExpressionTree) {
+        println!("Objectives: Maximize {:?}", expr);
     }
 }

@@ -39,26 +39,33 @@
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
+    use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
+    use crate::constraints::xall_different_matrix::xcsp3_core::XAllDifferentMatrix;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
-    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
-    use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
-    use crate::constraints::xelement::xcsp3_core::XElement;
-    use crate::constraints::xextension::xcsp3_core::XExtension;
-
-    use crate::constraints::xgroup::xcsp3_core::XGroup;
-    use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
-
+    use crate::constraints::xbinpacking::xcsp3_core::XBinpacking;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
+    use crate::constraints::xcircuit::xcsp3_core::XCircuit;
+    use crate::constraints::xclause::xcsp3_core::XClause;
+    use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
+    use crate::constraints::xelement::xcsp3_core::XElement;
+    use crate::constraints::xextension::xcsp3_core::XExtension;
+    use crate::constraints::xgroup::xcsp3_core::XGroup;
+    use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
+    use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
+    use crate::constraints::xlex::xcsp3_core::XLex;
+    use crate::constraints::xlex_matrix::xcsp3_core::XLexMatrix;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
+    use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
     use crate::constraints::xn_values::xcsp3_core::XNValues;
     use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
     use crate::constraints::xno_overlap_k_dimensional::xcsp3_core::XNoOverlapKDim;
     use crate::constraints::xordered::xcsp3_core::XOrdered;
+    use crate::constraints::xprecedence::xcsp3_core::XPrecedence;
     use crate::constraints::xregular::xcsp3_core::XRegular;
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
@@ -106,7 +113,21 @@ pub mod xcsp3_core {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
         }
-
+        pub fn build_bin_packing(
+            &mut self,
+            list: &str,
+            sizes: &str,
+            condition: &str,
+            limits: &str,
+            loads: &str,
+        ) {
+            match XBinpacking::from_str(list, sizes, condition, limits, loads, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XBinpacking(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
         pub fn build_cumulative(
             &mut self,
             origins_str: &str,
@@ -133,12 +154,52 @@ pub mod xcsp3_core {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
         }
-        pub fn build_channel(&mut self, list: &str, start_index_str: &str, value_str: &str) {
-            match XChannel::from_str(list, start_index_str, value_str, self.set) {
+
+        pub fn build_lex(&mut self, lists: &[String], operator: &str) {
+            match XLex::from_str(lists, operator, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XLex(c));
+                }
+                Err(e) => {
+                    //println!("{:?}", e);
+                    self.constraints.push(XConstraintType::XConstraintNone(e))
+                }
+            }
+        }
+        pub fn build_lex_matrix(&mut self, matrix: &str, operator: &str) {
+            match XLexMatrix::from_str(matrix, operator, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XLexMatrix(c));
+                }
+                Err(e) => {
+                    //println!("{:?}", e);
+                    self.constraints.push(XConstraintType::XConstraintNone(e))
+                }
+            }
+        }
+        pub fn build_channel(
+            &mut self,
+            list1: &str,
+            start_index1: &str,
+            list2: &str,
+            start_index2: &str,
+            value_str: &str,
+        ) {
+            match XChannel::from_str(
+                list1,
+                start_index1,
+                list2,
+                start_index2,
+                value_str,
+                self.set,
+            ) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XChannel(c));
                 }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Err(e) => {
+                    //println!("{:?}", e);
+                    self.constraints.push(XConstraintType::XConstraintNone(e))
+                }
             }
         }
         pub fn build_cardinality(
@@ -239,6 +300,35 @@ pub mod xcsp3_core {
             match XMaxMin::from_str(vars, condition, false, self.set) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XMaximum(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+        pub fn build_maximum_arg(
+            &mut self,
+            vars: &str,
+            rank: &str,
+            start_index: i32,
+            condition: &str,
+        ) {
+            match XMaxMinArg::from_str(vars, condition, rank, start_index, true, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XMaximumArg(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+
+        pub fn build_minimum_arg(
+            &mut self,
+            vars: &str,
+            rank: &str,
+            start_index: i32,
+            condition: &str,
+        ) {
+            match XMaxMinArg::from_str(vars, condition, rank, start_index, false, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XMinimumArg(c));
                 }
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
@@ -367,8 +457,23 @@ pub mod xcsp3_core {
                 }
             }
         }
+        pub fn build_all_different_list(&mut self, lists: &[String]) {
+            match XAllDifferentList::from_str(lists, self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XAllDifferentList(c));
+                }
+            }
+        }
         pub fn build_all_different_matrix(&mut self, list: &str) {
-            let mat = list_to_matrix_ids(list);
+            match XAllDifferentMatrix::from_str(list, self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints
+                        .push(XConstraintType::XAllDifferentMatrix(c));
+                }
+            }
+            /*let mat = list_to_matrix_ids(list);
             for line in mat.iter() {
                 let mut scope: Vec<XVarVal> = vec![];
                 for e in line {
@@ -388,7 +493,7 @@ pub mod xcsp3_core {
                     .push(XConstraintType::XAllDifferent(XAllDifferent::from_str_vec(
                         scope, self.set,
                     )))
-            }
+            }*/
         }
 
         pub fn build_circuit(&mut self, list: &str, size: &str) {
@@ -396,6 +501,36 @@ pub mod xcsp3_core {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XCircuit(c));
+                }
+            }
+        }
+        pub fn build_clause(&mut self, value: &str) {
+            match XClause::from_str(value, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XClause(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+        pub fn build_knapsack(
+            &mut self,
+            list: &str,
+            weights: &str,
+            profits: &str,
+            conditions: &Box<[String]>,
+        ) {
+            match XKnapsack::from_str(list, weights, profits, conditions, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XKnapsack(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+        pub fn build_precedence(&mut self, list: &str, values: &str, covered: bool) {
+            match XPrecedence::from_str(list, values, Option::from(covered), self.set) {
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XPrecedence(c));
                 }
             }
         }

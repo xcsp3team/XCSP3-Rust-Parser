@@ -55,7 +55,7 @@ pub mod xcsp3_core {
         nodes: Vec<XVariableTreeNode>,
         others: XVariableTreeNode,
         pub(crate) id: String,
-        sizes: Vec<usize>,
+        pub(crate) sizes: Vec<usize>,
         has_others: bool,
     }
 

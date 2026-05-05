@@ -24,18 +24,18 @@
 */
 
 /*
- * <p>@project_name: xcsp3-rust
- * </p>
- * <p>@author: luhan zhen
- * </p>
- * <p>@date:  2023/7/20 14:52
- * </p>
- * <p>@email: zhenlh20@mails.jlu.edu.cn
- * </p>
- * <p>@version: 1.0
- * </p>
- * <p>@description:
- * </p>
+* <p>@project_name: xcsp3-rust
+* </p>
+* <p>@author: luhan zhen
+* </p>
+* <p>@date:  2023/7/21 10:42
+* </p>
+* <p>@email: zhenlh20@mails.jlu.edu.cn
+* </p>
+* <p>@version: 1.0
+* </p>
+ * <p>@description: 1.0
+* </p>
  */
 
 pub mod xcsp3_core {
@@ -47,100 +47,124 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
-    pub struct XSum<'a> {
+    pub struct XMaxMinArg<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
         operator: Operator,
         operand: Operand,
-        coeffs: Option<Vec<XVarVal>>,
+        rank: String,
+        start_index: i32,
+        is_maximum_or_minimum: bool, // true if maximum, false if minimum
     }
 
-    impl XConstraintUnfold for XSum<'_> {
+    impl XConstraintUnfold for XMaxMinArg<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
             self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            if let Some(vals) = &mut self.coeffs {
-                *vals = inject_parameters_in_list(vals, arg, tmp);
-            }
-            self.operand = inject_parameters_in_operand(&self.operand, arg)
+            self.operand = inject_parameters_in_operand(&self.operand, arg);
         }
-
         fn max_args_used(&mut self) -> i32 {
-            let tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
-            match self.coeffs.as_deref() {
-                Some(v) => max(tmp, max_arg_in_list(v)),
-                None => tmp,
-            }
+            max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope))
         }
     }
 
-    impl<'a> XSum<'a> {
+    impl<'a> XMaxMinArg<'a> {
         pub fn from_str(
             list: &str,
             condition: &str,
-            coeffs: &str,
+            rank: &str,
+            start_index: i32,
+            is_maximum_or_minimum: bool,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let coe = if coeffs.is_empty() {
-                        None
-                    } else {
-                        match list_to_vec_var_val(coeffs) {
-                            Ok(coe_vec) => Some(coe_vec),
-                            Err(e) => return Err(e),
+                Ok(scope) => {
+                    let condition = condition.replace(['(', ')', ','], " ");
+                    let spilt: Vec<&str> = condition.split_whitespace().collect();
+                    let ope: Operator = match Operator::get_operator_by_str(spilt[0]) {
+                        None => {
+                            return Err(Xcsp3Error::get_constraint_sum_error(
+                                "parse sum constraint error, ",
+                            ))
                         }
+                        Some(o) => o,
                     };
-                    let (ope, rand) = match extract_operator(condition) {
-                        Ok(value) => value,
-                        Err(value) => panic!("Error on condition: {}", condition),
+                    let rand: Operand = match Operand::get_operand_by_str(&spilt[1..], &ope) {
+                        None => {
+                            return Err(Xcsp3Error::get_constraint_sum_error(
+                                "parse sum constraint error, ",
+                            ))
+                        }
+                        Some(r) => r,
                     };
-                    Ok(Self::new(scope_vec_str, set, ope, rand, coe))
+                    Ok(Self::new(
+                        scope,
+                        set,
+                        ope,
+                        rand,
+                        rank.parse().unwrap(),
+                        start_index,
+                        is_maximum_or_minimum,
+                    ))
                 }
                 Err(e) => Err(e),
             }
         }
-
         pub fn new(
             scope: Vec<XVarVal>,
             set: &'a XVariableSet,
             operator: Operator,
             operand: Operand,
-            coeffs: Option<Vec<XVarVal>>,
+            rank: String,
+            start_index: i32,
+            is_maximum_or_minimum: bool,
         ) -> Self {
             Self {
                 scope,
                 set,
                 operator,
+                rank,
+                start_index,
                 operand,
-                coeffs,
+                is_maximum_or_minimum,
             }
         }
-
-        pub fn scope(&self) -> &Vec<XVarVal> {
-            &self.scope
+        pub fn is_maximum(&self) -> bool {
+            self.is_maximum_or_minimum
         }
 
-        pub fn set(&self) -> &'a XVariableSet {
-            self.set
-        }
-
-        pub fn operator(&self) -> Operator {
-            self.operator
+        pub fn is_minimum(&self) -> bool {
+            !self.is_maximum_or_minimum
         }
 
         pub fn operand(&self) -> &Operand {
             &self.operand
         }
 
-        pub fn coeffs(&self) -> &Option<Vec<XVarVal>> {
-            &self.coeffs
+        pub fn operator(&self) -> Operator {
+            self.operator
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn start_index(&self) -> i32 {
+            self.start_index
+        }
+
+        pub fn rank(&self) -> &str {
+            &self.rank
         }
     }
 }

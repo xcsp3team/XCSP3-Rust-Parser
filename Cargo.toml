@@ -29,8 +29,8 @@ repository = "https://github.com/luhanzhen/xcsp3-rust"
 
 
 [dependencies]
-quick-xml = {version = "0.29.0", features = ["serialize"]}
-serde = {version = "1.0.166", features = ["serde_derive"]}
+quick-xml = { version = "0.29.0", features = ["serialize", "overlapped-lists"] }
+serde = { version = "1.0.166", features = ["serde_derive"] }
 regex = "1.9.1"
 
 

@@ -52,11 +52,10 @@ pub mod xcsp3_core {
     #[derive(Clone)]
     pub struct XVariableArray {
         pub(crate) id: String,
-        sizes: Vec<usize>,
+        pub(crate) sizes: Vec<usize>,
         pub domain: XDomainInteger,
-        pub variables: Vec<String>
+        pub variables: Vec<String>,
     }
-
 
     impl Display for XVariableArray {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {

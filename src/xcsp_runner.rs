@@ -11,7 +11,9 @@ use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
+use crate::objectives::xobjectives_set::xcsp3_core::XObjective::{
+    XObjectiveElement, XObjectiveExpression,
+};
 use crate::utils::utils_functions::xcsp3_utils::get_all_variables_between_lower_and_upper;
 use crate::utils::utils_functions::{
     is_int_list, is_interval_list, is_var_list, scope_contains_expressions, to_expression_list,
@@ -108,7 +110,7 @@ impl XcspRunner {
                         c.extract_parameters(arg);
                         Self::build_constraint(callback, &mut c)?;
                     }
-                    callback.begin_group();
+                    callback.end_group();
                 }
 
                 _ => {
@@ -121,11 +123,93 @@ impl XcspRunner {
         // ── Objectifs ────────────────────────────────────────────────────────
         callback.begin_objectives();
         let objectives = model.build_objectives(&variables);
-        for o in objectives.iter() {
-            match o {
-                XObjectivesType::Minimize(inner) => callback.on_objective_minimize(inner),
-                XObjectivesType::Maximize(inner) => callback.on_objective_maximize(inner),
-                XObjectivesType::XObjectiveNone(_) => {}
+        for objective in objectives.objectives().iter() {
+            match objective {
+                XObjectiveExpression(o) => match o.expression().as_variable() {
+                    None => {
+                        if o.is_maximize() {
+                            callback.on_maximize_expression(o.expression());
+                        } else {
+                            callback.on_minimize_expression(o.expression());
+                        }
+                    }
+                    Some(v) => {
+                        if o.is_maximize() {
+                            callback.on_maximize_var(v.clone());
+                        } else {
+                            callback.on_minimize_var(v.clone());
+                        }
+                    }
+                },
+                XObjectiveElement(o) => {
+                    if o.coeffs().is_empty() == false
+                        && is_var_list(o.scope())
+                        && is_int_list(o.coeffs())
+                    {
+                        let sc = to_var_list(o.scope(), o.set());
+                        let co = to_int_list(o.coeffs());
+                        if o.is_maximize() {
+                            callback.on_maximize_v1(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v1(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && is_var_list(o.scope())
+                        && is_var_list(o.coeffs())
+                    {
+                        let sc = to_var_list(o.scope(), o.set());
+                        let co = to_var_list(o.coeffs(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v2(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v2(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && scope_contains_expressions(o.scope())
+                        && is_int_list(o.coeffs())
+                    {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        let co = to_int_list(o.coeffs());
+                        if o.is_maximize() {
+                            callback.on_maximize_v3(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v3(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    if o.coeffs().is_empty() == false
+                        && scope_contains_expressions(o.scope())
+                        && is_var_list(o.coeffs())
+                    {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        let co = to_var_list(o.coeffs(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v4(o.operator().clone(), &*sc, &*co);
+                        } else {
+                            callback.on_minimize_v4(o.operator().clone(), &*sc, &*co);
+                        }
+                    }
+                    // ------------ WIHTOUT COEFS
+
+                    if o.coeffs().is_empty() && is_var_list(o.scope()) {
+                        let sc = to_var_list(o.scope(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v5(o.operator().clone(), &*sc);
+                        } else {
+                            callback.on_minimize_v5(o.operator().clone(), &*sc);
+                        }
+                    }
+                    if o.coeffs().is_empty() && scope_contains_expressions(o.scope()) {
+                        let sc = to_expression_list(o.scope(), o.set());
+                        if o.is_maximize() {
+                            callback.on_maximize_v6(o.operator().clone(), &*sc);
+                        } else {
+                            callback.on_minimize_v6(o.operator().clone(), &*sc);
+                        }
+                    }
+                }
+                _ => {}
             }
         }
         callback.end_objectives();
@@ -156,6 +240,23 @@ impl XcspRunner {
             XConstraintType::XAllDifferentExcept(inner) => {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                 callback.on_constraint_all_different_except(&*scope, &*inner.except());
+            }
+
+            XConstraintType::XAllDifferentList(inner) => {
+                let tmp: Vec<_> = inner
+                    .lists()
+                    .iter()
+                    .map(|e| to_var_list(e, inner.set()))
+                    .collect();
+                callback.on_constraint_all_different_list(&*tmp);
+            }
+            XConstraintType::XAllDifferentMatrix(inner) => {
+                let tmp: Vec<_> = inner
+                    .matrix()
+                    .iter()
+                    .map(|e| to_var_list(e, inner.set()))
+                    .collect();
+                callback.on_constraint_all_different_matrix(&*tmp);
             }
 
             //---------------------------------------------------------------------------------------------------
@@ -268,7 +369,23 @@ impl XcspRunner {
                     }
                 }
             }
-
+            //---------------------------------------------------------------------------------------------------
+            // LEx constraints
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XLex(inner) => {
+                let mut lists = Vec::with_capacity(inner.lists().len());
+                for list in inner.lists().iter() {
+                    lists.push(to_var_list(list, inner.set()));
+                }
+                callback.on_constraint_lex(&lists, *inner.operator());
+            }
+            XConstraintType::XLexMatrix(inner) => {
+                let mut lists = Vec::with_capacity(inner.matrix().len());
+                for list in inner.matrix().iter() {
+                    lists.push(to_var_list(list, inner.set()));
+                }
+                callback.on_constraint_lex_matrix(&lists, *inner.operator());
+            }
             //---------------------------------------------------------------------------------------------------
             // Regular Constraint
             //---------------------------------------------------------------------------------------------------
@@ -341,7 +458,52 @@ impl XcspRunner {
                 }
             }
 
-            XConstraintType::XElement(inner) => callback.on_constraint_element(inner),
+            XConstraintType::XMinimumArg(inner) => {
+                if scope_contains_expressions(inner.scope()) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_minimum_arg_v2(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_minimum_arg_v1(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                }
+            }
+
+            XConstraintType::XMaximumArg(inner) => {
+                if scope_contains_expressions(inner.scope()) {
+                    let scope: Vec<ExpressionTree> =
+                        to_expression_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_arg_v2(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                } else {
+                    let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                    callback.on_constraint_maximum_arg_v1(
+                        &*scope,
+                        inner.start_index(),
+                        inner.rank().parse()?,
+                        inner.operator(),
+                        inner.operand().clone(),
+                    );
+                }
+            }
+
             XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
@@ -491,8 +653,259 @@ impl XcspRunner {
                     );
                 }
             }
-            XConstraintType::XChannel(inner) => callback.on_constraint_channel(inner),
-            XConstraintType::XCumulative(inner) => callback.on_constraint_cumulative(inner),
+            //---------------------------------------------------------------------------------------------------
+            // Precedence Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XPrecedence(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+
+                match inner.values() {
+                    None => {
+                        callback.on_constraint_precedence_v1(&*scope, inner.covered());
+                    }
+                    Some(vals) => {
+                        let values = to_int_list(vals);
+                        callback.on_constraint_precedence_v2(&*scope, &*values, inner.covered());
+                    }
+                }
+            }
+            //---------------------------------------------------------------------------------------------------
+            // Clause Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XClause(inner) => {
+                let pos = to_var_list(inner.positive_literals(), inner.set());
+                let neg = to_var_list(inner.negative_literals(), inner.set());
+                callback.on_constraint_clause(&*pos, &*neg);
+            }
+            //---------------------------------------------------------------------------------------------------
+            // Knapsack Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XKnapsack(inner) => {
+                let scope = to_var_list(&inner.scope(), &inner.set());
+                let profits = to_int_list(&inner.profits());
+                let weights = to_int_list(&inner.weights());
+                callback.on_constraint_knapsack(
+                    &*scope,
+                    &*weights,
+                    inner.weight_operator(),
+                    inner.weight_operand().clone(),
+                    &*profits,
+                    inner.profit_operator(),
+                    inner.profit_operand().clone(),
+                );
+            }
+            //---------------------------------------------------------------------------------------------------
+            // BinPacking Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XBinpacking(inner) => {
+                let scope = to_var_list(&inner.scope(), &inner.set());
+                let sizes = to_int_list(&inner.sizes());
+                match inner.operand() {
+                    None => {
+                        if inner.limits().len() > 0 && is_int_list(inner.limits()) {
+                            let limits = to_int_list(inner.limits());
+                            callback.on_constraint_bin_packing_v2(&*scope, &*sizes, &*limits);
+                        }
+                        if inner.limits().len() > 0 && is_var_list(inner.limits()) {
+                            let limits = to_var_list(inner.limits(), inner.set());
+                            callback.on_constraint_bin_packing_v3(&*scope, &*sizes, &*limits);
+                        }
+                        if inner.loads().len() > 0 && is_int_list(inner.loads()) {
+                            let loads = to_int_list(inner.loads());
+                            callback.on_constraint_bin_packing_v4(&*scope, &*sizes, &*loads);
+                        }
+                        if inner.loads().len() > 0 && is_var_list(inner.loads()) {
+                            let loads = to_var_list(inner.loads(), inner.set());
+                            callback.on_constraint_bin_packing_v5(&*scope, &*sizes, &*loads);
+                        }
+                    }
+                    Some(operand) => match inner.operator() {
+                        None => {}
+                        Some(o) => {
+                            callback.on_constraint_bin_packing_v1(
+                                &*scope,
+                                &*sizes,
+                                *o,
+                                operand.clone(),
+                            );
+                        }
+                    },
+                }
+            }
+
+            //---------------------------------------------------------------------------------------------------
+            // Channel Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XChannel(inner) => {
+                let list1: Vec<String> = to_var_list(&inner.list1(), &inner.set());
+                match inner.value() {
+                    None => {
+                        if inner.list2().len() == 0 {
+                            callback.on_constraint_channel_v1(&*list1, inner.start_index1())
+                        } else {
+                            let list2 = to_var_list(&inner.list2(), &inner.set());
+                            callback.on_constraint_channel_v2(
+                                &*list1,
+                                inner.start_index1(),
+                                &*list2,
+                                inner.start_index2(),
+                            );
+                        }
+                    }
+                    Some(value) => {
+                        match value {
+                            XVarVal::IntVar(v) => callback.on_constraint_channel_v3(
+                                &*list1,
+                                inner.start_index1(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Expected value in channel to be var"),
+                        };
+                    }
+                }
+            }
+            //---------------------------------------------------------------------------------------------------
+            // Cumulative Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XCumulative(inner) => match inner.ends() {
+                None => {
+                    if is_int_list(inner.lengths()) && is_int_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_int_list(inner.heights());
+                        callback.on_constraint_cumulative_v1(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        callback.on_constraint_cumulative_v2(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_int_list(inner.heights());
+                        callback.on_constraint_cumulative_v3(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        callback.on_constraint_cumulative_v4(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                }
+                Some(ends) => {
+                    if is_int_list(inner.lengths())
+                        && is_int_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_int_list(inner.heights());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v5(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_int_list(inner.lengths())
+                        && is_var_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_int_list(inner.lengths());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v6(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        );
+                    }
+                    if is_var_list(inner.lengths())
+                        && is_int_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_int_list(inner.heights());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v7(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        )
+                    }
+                    if is_var_list(inner.lengths())
+                        && is_var_list(inner.heights())
+                        && is_var_list(ends)
+                    {
+                        let tmp = to_var_list(inner.scope(), inner.set());
+                        let lengths = to_var_list(inner.lengths(), inner.set());
+                        let heights = to_var_list(inner.heights(), inner.set());
+                        let to_ends = to_var_list(ends, inner.set());
+                        callback.on_constraint_cumulative_v8(
+                            &*tmp,
+                            &*lengths,
+                            &*heights,
+                            &*to_ends,
+                            *inner.operator(),
+                            inner.operand().clone(),
+                        )
+                    }
+                }
+            },
+            //---------------------------------------------------------------------------------------------------
+            // Element Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XElement(inner) => match inner.index() {
+                None => match inner.value() {
+                    XVarVal::IntVal(v) => {
+                        let scope = to_var_list(inner.scope(), inner.set());
+                        callback.on_constraint_element_v1(&*scope, *v);
+                    }
+
+                    _ => {
+                        panic!("Unexpected variant in value")
+                    }
+                },
+                Some(index) => {}
+            },
+
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint
             //---------------------------------------------------------------------------------------------------
@@ -554,6 +967,9 @@ impl XcspRunner {
                     }
                 }
             }
+            //---------------------------------------------------------------------------------------------------
+            // Element Circuit
+            //---------------------------------------------------------------------------------------------------
             XConstraintType::XCircuit(inner) => {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
 
@@ -568,7 +984,10 @@ impl XcspRunner {
                     },
                 }
             }
-            XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
+            //---------------------------------------------------------------------------------------------------
+            // Streteh Constraint
+            //---------------------------------------------------------------------------------------------------
+            //XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
             XConstraintType::XConstraintNone(_) => {}
             _ => {
                 panic!("Unknown constraint");

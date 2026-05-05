@@ -24,102 +24,98 @@
 */
 
 /*
- * <p>@project_name: xcsp3-rust
- * </p>
- * <p>@author: luhan zhen
- * </p>
- * <p>@date:  2023/7/20 14:52
- * </p>
- * <p>@email: zhenlh20@mails.jlu.edu.cn
- * </p>
- * <p>@version: 1.0
- * </p>
- * <p>@description:
- * </p>
+* <p>@project_name: xcsp3-rust
+* </p>
+* <p>@author: luhan zhen
+* </p>
+* <p>@date:  2023/7/14 22:50
+* </p>
+* <p>@email: zhenlh20@mails.jlu.edu.cn
+* </p>
+* <p>@version: 1.0
+* </p>
+ * <p>@description: 1.0
+* </p>
  */
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
-    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
-    pub struct XSum<'a> {
+    pub struct XPrecedence<'a> {
         scope: Vec<XVarVal>,
+        values: Option<Vec<XVarVal>>,
         set: &'a XVariableSet,
-        operator: Operator,
-        operand: Operand,
-        coeffs: Option<Vec<XVarVal>>,
+        covered: Option<bool>,
     }
 
-    impl XConstraintUnfold for XSum<'_> {
+    impl XConstraintUnfold for XPrecedence<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
-            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            if let Some(vals) = &mut self.coeffs {
+            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
+            if let Some(vals) = &mut self.values {
                 *vals = inject_parameters_in_list(vals, arg, tmp);
             }
-            self.operand = inject_parameters_in_operand(&self.operand, arg)
         }
-
         fn max_args_used(&mut self) -> i32 {
-            let tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
-            match self.coeffs.as_deref() {
+            let tmp = max_arg_in_list(&*self.scope);
+            match self.values.as_deref() {
                 Some(v) => max(tmp, max_arg_in_list(v)),
                 None => tmp,
             }
         }
     }
 
-    impl<'a> XSum<'a> {
+    impl<'a> XPrecedence<'a> {
+        pub fn from_str_vec(
+            scope_vec_str: Vec<XVarVal>,
+            values: Option<Vec<XVarVal>>,
+            covered: Option<bool>,
+            set: &'a XVariableSet,
+        ) -> Self {
+            XPrecedence::new(scope_vec_str, values, covered, set)
+        }
+
         pub fn from_str(
             list: &str,
-            condition: &str,
-            coeffs: &str,
+            values: &str,
+            covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => {
-                    let coe = if coeffs.is_empty() {
+                    let vals = if values.is_empty() {
                         None
                     } else {
-                        match list_to_vec_var_val(coeffs) {
-                            Ok(coe_vec) => Some(coe_vec),
+                        match list_to_vec_var_val(values) {
+                            Ok(vals_vec) => Some(vals_vec),
                             Err(e) => return Err(e),
                         }
                     };
-                    let (ope, rand) = match extract_operator(condition) {
-                        Ok(value) => value,
-                        Err(value) => panic!("Error on condition: {}", condition),
-                    };
-                    Ok(Self::new(scope_vec_str, set, ope, rand, coe))
+                    Ok(XPrecedence::new(scope_vec_str, vals, covered, set)) // virgule supprimée
                 }
-                Err(e) => Err(e),
+                Err(_) => panic!("parse precedence constraint error, list is not valid"), // doublon supprimé
             }
         }
-
         pub fn new(
             scope: Vec<XVarVal>,
+            values: Option<Vec<XVarVal>>,
+            covered: Option<bool>,
             set: &'a XVariableSet,
-            operator: Operator,
-            operand: Operand,
-            coeffs: Option<Vec<XVarVal>>,
         ) -> Self {
-            Self {
+            XPrecedence {
                 scope,
+                values,
+                covered,
                 set,
-                operator,
-                operand,
-                coeffs,
             }
         }
 
@@ -127,20 +123,16 @@ pub mod xcsp3_core {
             &self.scope
         }
 
+        pub fn values(&self) -> &Option<Vec<XVarVal>> {
+            &self.values
+        }
+
         pub fn set(&self) -> &'a XVariableSet {
             self.set
         }
 
-        pub fn operator(&self) -> Operator {
-            self.operator
-        }
-
-        pub fn operand(&self) -> &Operand {
-            &self.operand
-        }
-
-        pub fn coeffs(&self) -> &Option<Vec<XVarVal>> {
-            &self.coeffs
+        pub fn covered(&self) -> bool {
+            self.covered.unwrap_or(false)
         }
     }
 }

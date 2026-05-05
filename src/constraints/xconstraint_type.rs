@@ -41,10 +41,14 @@
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
+    use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
+    use crate::constraints::xall_different_matrix::xcsp3_core::XAllDifferentMatrix;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
+    use crate::constraints::xbinpacking::xcsp3_core::XBinpacking;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
     use crate::constraints::xcircuit::xcsp3_core::XCircuit;
+    use crate::constraints::xclause::xcsp3_core::XClause;
     use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
@@ -53,12 +57,17 @@ pub mod xcsp3_core {
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
+    use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
+    use crate::constraints::xlex::xcsp3_core::XLex;
+    use crate::constraints::xlex_matrix::xcsp3_core::XLexMatrix;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
+    use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
     use crate::constraints::xn_values::xcsp3_core::XNValues;
     use crate::constraints::xno_overlap::xcsp3_core::XNoOverlap;
     use crate::constraints::xno_overlap_k_dimensional::xcsp3_core::XNoOverlapKDim;
     use crate::constraints::xordered::xcsp3_core::XOrdered;
+    use crate::constraints::xprecedence::xcsp3_core::XPrecedence;
     use crate::constraints::xregular::xcsp3_core::XRegular;
     use crate::constraints::xslide::xcsp3_core::XSlide;
     use crate::constraints::xstretch::xcsp3_core::XStretch;
@@ -71,6 +80,8 @@ pub mod xcsp3_core {
         XConstraintNone(Xcsp3Error),
         XExtension(XExtension<'a>),
         XAllDifferent(XAllDifferent<'a>),
+        XAllDifferentList(XAllDifferentList<'a>),
+        XAllDifferentMatrix(XAllDifferentMatrix<'a>),
         XAllDifferentExcept(XAllDifferentExcept<'a>),
         XInstantiation(XInstantiation<'a>),
         XAllEqual(XAllEqual<'a>),
@@ -82,6 +93,8 @@ pub mod xcsp3_core {
         XSum(XSum<'a>),
         XMaximum(XMaxMin<'a>),
         XMinimum(XMaxMin<'a>),
+        XMaximumArg(XMaxMinArg<'a>),
+        XMinimumArg(XMaxMinArg<'a>),
         XElement(XElement<'a>),
         XSlide(XSlide<'a>),
         XCount(XCount<'a>),
@@ -93,6 +106,12 @@ pub mod xcsp3_core {
         XStretch(XStretch<'a>),
         XNoOverlapKDim(XNoOverlapKDim<'a>),
         XCircuit(XCircuit<'a>),
+        XClause(XClause<'a>),
+        XPrecedence(XPrecedence<'a>),
+        XKnapsack(XKnapsack<'a>),
+        XBinpacking(XBinpacking<'a>),
+        XLex(XLex<'a>),
+        XLexMatrix(XLexMatrix<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -115,6 +134,7 @@ pub mod xcsp3_core {
                 XAllDifferentExcept,
                 XCardinality,
                 XCount,
+                XCumulative,
                 XInstantiation,
                 XMaximum,
                 XMinimum,
@@ -124,7 +144,16 @@ pub mod xcsp3_core {
                 XOrdered,
                 XRegular,
                 XSum,
-                XCircuit
+                XCircuit,
+                XPrecedence,
+                XAllDifferentList,
+                XMaximumArg,
+                XMinimumArg,
+                XElement,
+                XChannel,
+                XKnapsack,
+                XBinpacking,
+                XLex
             );
         }
 
@@ -147,6 +176,7 @@ pub mod xcsp3_core {
                 XAllDifferentExcept,
                 XCardinality,
                 XCount,
+                XCumulative,
                 XInstantiation,
                 XMaximum,
                 XMinimum,
@@ -156,7 +186,16 @@ pub mod xcsp3_core {
                 XOrdered,
                 XRegular,
                 XSum,
-                XCircuit
+                XCircuit,
+                XPrecedence,
+                XAllDifferentList,
+                XMaximumArg,
+                XMinimumArg,
+                XElement,
+                XChannel,
+                XKnapsack,
+                XBinpacking,
+                XLex
             )
         }
     }

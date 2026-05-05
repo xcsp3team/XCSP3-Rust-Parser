@@ -13,8 +13,6 @@
  *   }
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
-use crate::constraints::xchannel::xcsp3_core::XChannel;
-use crate::constraints::xcumulative::xcsp3_core::XCumulative;
 use crate::constraints::xelement::xcsp3_core::XElement;
 use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xslide::xcsp3_core::XSlide;
@@ -22,7 +20,7 @@ use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-use crate::objectives::xobjectives_set::xcsp3_core::XObjective;
+use crate::objectives::xobjective_element::xcsp3_core::XElementOperator;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
 pub trait XcspCallback {
@@ -205,6 +203,42 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    /**
+     * The callback function related to a alldifferent  list constraint
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * <allDifferent id="c1">
+     *    <list> x1 x2 x3 x4 </list>
+     *    <list> y1 y2 y3 y4 </list>
+     * </allDifferent>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     */
+    fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
+        println!("c Alldifferent lists not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a alldifferent  matrix constraint
+     * See http://xcsp.org/specifications/alldifferent
+     *
+     * Example:
+     * <allDifferent id="c1">
+     *    <matrix>
+     *     (x1,x2,x3,x4,x5)
+     *     (y1,y2,y3,y4,y5)
+     *     (z1,z2,z3,z4,z5)
+     *    </matrix>
+     * </allDifferent>
+     *
+     * @param matrix the matrix (not the scope, a variable may appear at different place!)
+     */
+    fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
+        println!("c Alldifferent matrix not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     /**
      * The callback function related to a allequal constraint
      * See http://xcsp.org/specifications/allEqual
@@ -570,6 +604,60 @@ pub trait XcspCallback {
      * See http://xcsp.org/specifications/minimum
      *
      * Example:
+     * &lt;minimumArg>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_arg_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minim arg constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_minimum_arg_v1(
+        &mut self,
+        _scope: &[String],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Minimum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minimum constraint with expressions in scope
+     * See http://xcsp.org/specifications/minimum
+     *
+     * Example:
      * &lt;minimum>
      *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
      *    &lt;condition> (ge,2) &lt;/condition>
@@ -587,6 +675,60 @@ pub trait XcspCallback {
         _operand: Operand,
     ) {
         println!("c Minimum Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minimum constraint with expressions in scope
+     * See http://xcsp.org/specifications/minimum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> eq(x1,3) add(x2,2) le(x3,0) div(x4,4) &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_arg_v2(
+        &mut self,
+        _scope: &[ExpressionTree],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Arg Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a minim arg constraint
+     * See http://xcsp.org/specifications/maximum
+     *
+     * Example:
+     * &lt;minimumArg>
+     *    &lt;list> x1 x2 x3 x4 &lt;/list>
+     *    &lt;condition> (ge,2) &lt;/condition>
+     * &lt;/minimumArg>
+     *
+     * @param scope the scope of the constraint
+     * @param operator the operator (Le,...)
+     * @param operand the operand (int, var...)
+     */
+
+    fn on_constraint_maximum_arg_v1(
+        &mut self,
+        _scope: &[String],
+        _start_index: i32,
+        _rank: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Maximum Arg Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -931,13 +1073,341 @@ pub trait XcspCallback {
         println!("c Cardinality Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-    /// <channel> ... </channel>
-    fn on_constraint_channel(&mut self, _c: &XChannel) {}
 
-    /// <cumulative> ... </cumulative>
-    fn on_constraint_cumulative(&mut self, _c: &XCumulative) {}
+    /**
+     * The callback function related to a cumulative constraint with variable origins, int lengths and int heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> 3 4 5 6 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here ints)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v1(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <noOverlap> ... </noOverlap>  (2D)
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and variable heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v2(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and int heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here ints)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v3(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and variable heights
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v4(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and int heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here ints)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v5(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[i32],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, int lengths and variable heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> 1 2 3 4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here ints)
+     * @param heights the vector of heights (here variables)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v6(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[i32],
+        _heights: &[String],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and int heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> 1 2 3 4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here ints)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+
+    fn on_constraint_cumulative_v7(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[i32],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 7 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a cumulative constraint with variable origin, variable lengths and variable heights and variable ends
+     * See http://xcsp.org/specifications/cumulative
+     *
+     * Example:
+     * <cumulative>
+     *     <origins> s1 s2 s3 s4 </origins>
+     *     <lengths> l1 l2 l3 l4 </lengths>
+     *     <heights> h1 h2 h3 h4 </heights>
+     *     <end> e1 e2 e3 e4 </end>
+     *     <condition> (le,4) </condition>
+     * </cumulative>
+     *
+     * @param id the id (name) of the constraint
+     * @param origins the vector of origins
+     * @param lengths the vector of lenghts (here variables)
+     * @param heights the vector of heights (here variables)
+     * @param ends the vector of ends (here variables)
+     * @param xc the condition (see XCondition)
+     */
+    fn on_constraint_cumulative_v8(
+        &mut self,
+        _origins: &[String],
+        _lengths: &[String],
+        _heights: &[String],
+        _ends: &[String],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Cumulative Variant 8 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a element constraint with int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[] </list>
+     *    <value> 2 </value>
+     * </element>
+     *
+     * @param scope the scope of the constraint
+     * @param value the value (here an int)
+     */
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("c Element Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a channel constraint
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     *    <list> z1 z2 z3 z4 z5 </list>
+     * </channel>
+     *
+     * @param _scope the scope of the constraint
+     */
+    fn on_constraint_channel_v1(&mut self, _scope: &[String], _start_index: i32) {
+        println!("c Channel Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a channel constraint
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     *     <list> x1 x2 x3 x4 </list>
+     *     <list> y1 y2 y3 y4 </list>
+     * </channel>
+     *
+     * The size of the array {@code list1} must be less than or equal to the size of {@code list2}.
+     *
+     * If list1.size() == list2.size() then list1[i] = j <=> list2[j] = i
+     * If list1.size() <  list2.size() then list1[i] = j  => list2[j] = i
+     *
+     * @param id the id (name) of the constraint
+     * @param list1 the first list
+     * @param startIndex1 the starting index for list1
+     * @param list2 the second list
+     * @param startIndex2 the starting index for list2
+     *
+     */
+    fn on_constraint_channel_v2(
+        &mut self,
+        _list1: &[String],
+        _start_index1: i32,
+        _list2: &[String],
+        _start_index2: i32,
+    ) {
+        println!("c Channel Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a channel constraint with a value
+     * See http://xcsp.org/specifications/channel
+     *
+     * Example:
+     * <channel>
+     * <list> z1 z2 z3 z4 z5 </list>
+     * <value> v </value>
+     * </channel>
+     *
+     * @param id the id (name) of the constraint
+     * @param list the list of the constraint not necessary the scope)
+     * @param startIndex the starting index for list
+     * @param value the vaule
+     */
+    fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
+        println!("c Channel Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     fn on_constraint_no_overlap_v1(
         &mut self,
         _scope: &[String],
@@ -1085,16 +1555,541 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    /// <stretch> ... </stretch>
-    fn on_constraint_stretch(&mut self, _c: &XStretch) {}
+    /**
+     * The callback function related to precedence  constraint with defined variable size
+     *
+     * Example:
+     * <precedence class="symmetry-breaking">
+     * <list> x[][] </list>
+     * </precedence>
+     *
+     * @param  the list of variables (not necessary the scope)
+     */
+    fn on_constraint_precedence_v1(&mut self, _scope: &[String], _covered: bool) {
+        println!("c Precedence Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
+    /**
+     * The callback function related to precedence constraint with defined variable size
+     *
+     * Example:
+     * <precedence class="symmetry-breaking">
+     * <list> x[][] </list>
+     * <values> 1 2 </values>
+     * </precedence>
+     *
+     * @param list the list of variables (not necessary the scope)
+     * @param values the different vaules
+     */
+    fn on_constraint_precedence_v2(&mut self, _scope: &[String], _values: &[i32], _covered: bool) {
+        println!("c Precedence Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a strectch constraint with values and widths
+     * See http://xcsp.org/specifications/stretch
+     *
+     * Example:
+     * <stretch>
+     *   <list> x1 x2 x3 x4 x5 x6 x7 </list>
+     *   <values> 1 2 3 0 </values>
+     *   <widths> 1..3 1..3 2..3 2..4 </widths>
+     * </stretch>
+     *
+     * @param list the scope of the constraint
+     * @param values thelist of values
+     * @param widths the list of intervals for widths
+     */
+    fn on_constraint_stretch_v1(
+        &mut self,
+        _scope: &[String],
+        _values: &[(i32, i32)],
+        _widths: &[i32],
+    ) {
+        println!("c Stretch Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a strectch constraint with values, widths and patterns
+     * See http://xcsp.org/specifications/stretch
+     *
+     * @param id the id (name) of the constraint
+     * @param list the scope of the constraint
+     * @param values thelist of values
+     * @param widths the list of intervals for widths
+     * @param patterns
+     *
+     */
+    fn on_constraint_stretch_v2(
+        &mut self,
+        _scope: &[String],
+        _values: &[(i32, i32)],
+        _widths: &[i32],
+    ) {
+        println!("c Stretch Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a clause  constraint
+     *
+     * Example:
+     * <clause>
+     *   <list> x not(y) z </list>
+     * </clause>
+     *
+     * @param positive the positive variables in the clause
+     * @param negative the negative variables in the clause
+     */
+
+    fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
+        println!("c Clause not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to knapsack  constraint
+     *
+     * @param list the list of variables (not necessary the scope)
+     * @param weights
+     * @param _woperator: Operator,
+     * @param _woperand: Operand,
+     * @param profits
+     * @param _poperator: Operator,
+     * @param _poperand: Operand,
+     */
+    fn on_constraint_knapsack(
+        &mut self,
+        _scope: &[String],
+        _weights: &[i32],
+        _woperator: Operator,
+        _woperand: Operand,
+        _profits: &[i32],
+        _poperator: Operator,
+        _poperand: Operand,
+    ) {
+        println!("c Knapsack  not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v1(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Bin Packing Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v2(&mut self, _scope: &[String], _sizes: &[i32], _limits: &[i32]) {
+        println!("c Bin Packing Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v3(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _limits: &[String],
+    ) {
+        println!("c Bin Packing Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    fn on_constraint_bin_packing_v4(&mut self, _scope: &[String], _sizes: &[i32], _loads: &[i32]) {
+        println!("c Bin Packing Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v5(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _loads: &[String],
+    ) {
+        println!("c Bin Packing Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an ordered list constraint (this is a lex constraint)
+     * See http://xcsp.org/specifications/ordered
+     *
+     *
+     * Example:
+     * <ordered>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <list> y1 y2 y3 y4 </list>
+     *   <operator> lt </operator>
+     * </ordered>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param order the order LT, LE...
+     */
+    fn on_constraint_lex(&mut self, _lists: &Vec<Vec<String>>, _operator: Operator) {
+        println!("c Lex not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an ordered matrix constraint (this is a lex constraint)
+     * See http://xcsp.org/specifications/ordered
+     *
+     *
+     * Example:
+     * <ordered>
+     *   <matrix>
+     *   x[][]
+     *   </matrix>
+     *   <operator> lt </operator>
+     * </ordered>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param order the order LT, LE...
+     */
+    fn on_constraint_lex_matrix(&mut self, _matrix: &Vec<Vec<String>>, _operator: Operator) {
+        println!("c Lex not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------
 
-    /// <minimize> ... </minimize>
-    fn on_objective_minimize(&mut self, _obj: &XObjective) {}
+    /**
+     * The callback function related to an objective maximize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_maximize_var(&mut self, _var: String) {
+        println!("c Objective Maximize Var not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
-    /// <maximize> ... </maximize>
-    fn on_objective_maximize(&mut self, _obj: &XObjective) {}
+    /**
+     * The callback function related to an objective minimize a variable
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;minimize> x &lt;/minimize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_minimize_var(&mut self, _var: String) {
+        println!("c Objective Minimiez Var not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective maximize an expression
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_maximize_expression(&mut self, _expr: &ExpressionTree) {
+        println!("c Objective Maximize expression not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize an expression
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * &lt;objectives>
+     *    &lt;maximize> x &lt;/maximize>
+     * &lt;/objectives>
+     *
+     * @param var the variable
+     */
+    fn on_minimize_expression(&mut self, _expr: &ExpressionTree) {
+        println!("c Objective Minimize expression not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> 2 4 1 4 8 </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+        println!("c Objective Minimize v1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> 2 4 1 4 8 </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+        println!("c Objective Maximize v1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective minimize a sum/product with vars coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> y[] </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+        println!("c Objective Minimize v2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with var coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *     <coeffs> y[]</coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+        println!("c Objective Maximize v2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with expression and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> 1 2  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v3(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[i32],
+    ) {
+        println!("c Objective Minimize v3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> 1 2  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v3(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[i32],
+    ) {
+        println!("c Objective Maximize v3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to an objective minimize a sum/product with expression and var coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> y[]  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_minimize_v4(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[String],
+    ) {
+        println!("c Objective Minimize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions and int coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *     <coeffs> y[]  </coeffs>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     * @param coefs the vector of coefficients
+     */
+
+    fn on_maximize_v4(
+        &mut self,
+        _type: XElementOperator,
+        _scope: &[ExpressionTree],
+        _coefs: &[String],
+    ) {
+        println!("c Objective Maximize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product without coefs
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_minimize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+        println!("c Objective Minimize v5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> x1 x2 x3 x4 x5 </list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_maximize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+        println!("c Objective Maximize v5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective minimize a sum/product with expression
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_minimize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+        println!("c Objective Minimize v4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an objective maximize a sum/product with expressions
+     * See http://xcsp.org/specifications/objectives
+     *
+     * Example:
+     * <objectives>
+     *   <minimize type="sum">
+     *     <list> eq(x[0],0) eq(x[1],0)</list>
+     *   </minimize>
+     * <objectives>
+     *
+     * @param type SUM, PRODUCT...
+     * @param list the scope
+     */
+
+    fn on_maximize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+        println!("c Objective Maximize v6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 }

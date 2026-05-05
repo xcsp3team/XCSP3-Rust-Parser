@@ -1,0 +1,17 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 2</array>
+        <array id="t" size="[6]">0 2</array>
+        <array id="a" size="[6]">0 2</array>
+
+    </variables>
+    <constraints>
+        <cumulative>
+            <origins>t[]</origins>
+            <lengths>a[]</lengths>
+            <heights>t[]</heights>
+            <condition>(eq,1)</condition>
+        </cumulative>
+    </constraints>
+</instance>
+

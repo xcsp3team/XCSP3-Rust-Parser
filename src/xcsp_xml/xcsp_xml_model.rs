@@ -226,9 +226,8 @@ pub mod xcsp3_xml {
                                 set.build_all_different_except(e, except);
                             }
                         } else {
-                            for e in list.iter() {
-                                set.build_all_different(e);
-                            }
+                            let tmp: Vec<_> = list.iter().map(|e| e.clone()).collect();
+                            set.build_all_different_list(&*tmp);
                         }
                     } else {
                         set.build_all_different_matrix(matrix);
@@ -249,6 +248,21 @@ pub mod xcsp3_xml {
                     } else {
                         for e in list.iter() {
                             set.build_circuit(e, size);
+                        }
+                    }
+                }
+                ConstraintType::Precedence { vars, list, values } => {
+                    if !vars.is_empty() {
+                        set.build_precedence(vars, &*values.value, false);
+                    } else {
+                        let mut tmp = false;
+                        if values.covered.is_empty() == false {
+                            if values.covered == "true" {
+                                tmp = true;
+                            }
+                        }
+                        for e in list.iter() {
+                            set.build_precedence(e, &*values.value, tmp);
                         }
                     }
                 }
@@ -324,6 +338,39 @@ pub mod xcsp3_xml {
                 } => set.build_cardinality(list, &values.vars, occurs, &values.closed),
                 ConstraintType::Minimum { list, condition } => set.build_minimum(list, condition),
                 ConstraintType::Maximum { list, condition } => set.build_maximum(list, condition),
+                ConstraintType::MinimumArg {
+                    list,
+                    rank,
+                    condition,
+                } => {
+                    set.build_minimum_arg(
+                        &*list.value,
+                        if rank.is_empty() { "any" } else { rank },
+                        if list.start_index.is_empty() {
+                            0
+                        } else {
+                            list.start_index.parse().unwrap()
+                        },
+                        condition,
+                    );
+                }
+                ConstraintType::MaximumArg {
+                    list,
+                    rank,
+                    condition,
+                } => {
+                    set.build_maximum_arg(
+                        &*list.value,
+                        if rank.is_empty() { "any" } else { rank },
+                        if list.start_index.is_empty() {
+                            0
+                        } else {
+                            list.start_index.parse().unwrap()
+                        },
+                        condition,
+                    );
+                }
+
                 ConstraintType::Element { vars, value, index } => {
                     set.build_element(&vars.value, value, index, &vars.start_index)
                 }
@@ -345,6 +392,13 @@ pub mod xcsp3_xml {
                         set.build_no_overlap(origins, lengths, zero_ignored);
                     }
                 }
+                ConstraintType::BinPacking {
+                    list,
+                    sizes,
+                    condition,
+                    limits,
+                    loads,
+                } => set.build_bin_packing(list, sizes, condition, limits, loads),
                 ConstraintType::Cumulative {
                     origins,
                     lengths,
@@ -385,17 +439,61 @@ pub mod xcsp3_xml {
                     with_value,
                     simplified_list,
                 } => {
-                    if !simplified_list.is_empty() {
-                        set.build_channel(simplified_list, "", "");
-                    } else if with_value.is_empty() {
-                        for e in lists.iter() {
-                            set.build_channel(&e.value, &e.start_index, "");
+                    if simplified_list.is_empty() == false {
+                        set.build_channel(simplified_list, "0", "", "0", "");
+                        return;
+                    }
+                    if with_value.is_empty() {
+                        let st1 = if lists[0].start_index.is_empty() {
+                            "0"
+                        } else {
+                            &*lists[0].start_index
+                        };
+                        if lists.len() == 1 {
+                            set.build_channel(&lists[0].value, st1, "", "0", with_value);
+                        } else {
+                            let st2 = if lists[1].start_index.is_empty() {
+                                "0"
+                            } else {
+                                &*lists[1].start_index
+                            };
+                            set.build_channel(
+                                &lists[0].value,
+                                st1,
+                                &lists[1].value,
+                                st2,
+                                with_value,
+                            );
                         }
                     } else {
-                        set.build_channel(&lists[0].value, &lists[0].start_index, with_value);
+                        let st1 = if lists[0].start_index.is_empty() {
+                            "0"
+                        } else {
+                            &*lists[0].start_index
+                        };
+                        set.build_channel(&lists[0].value, st1, "", "0", with_value);
+                    }
+                }
+                ConstraintType::Clause { vars } => set.build_clause(vars),
+
+                ConstraintType::Lex {
+                    lists,
+                    matrix,
+                    operator,
+                } => {
+                    if matrix.is_empty() == false {
+                        set.build_lex_matrix(matrix, operator)
+                    } else {
+                        set.build_lex(lists, operator)
                     }
                 }
 
+                ConstraintType::Knapsack {
+                    list,
+                    weights,
+                    profits,
+                    condition,
+                } => set.build_knapsack(list, weights, profits, condition),
                 // ConstraintType::AllDistant { .. } => {}
                 // ConstraintType::Precedence { .. } => {}
                 // ConstraintType::Balance { .. } => {}

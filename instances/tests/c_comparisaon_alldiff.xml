@@ -1,0 +1,26 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 1</array>
+        <array id="z" size="[6]">0 1</array>
+        <array id="t" size="[6]">0 1</array>
+        <array id="sudoku" size="[9][9]">1..9</array>
+    </variables>
+    <constraints>
+        <allDifferent>y[]</allDifferent>
+        <allDifferent>
+            <list>z[]</list>
+        </allDifferent>
+        <allDifferent>
+            <list>z[]</list>
+            <list>t[]</list>
+        </allDifferent>
+        <allDifferent>sudoku[][]</allDifferent>
+        <allDifferent>
+            <matrix>(y[0],y[1],y[2])(z[0],z[1],z[2])(t[0],t[1],t[2])</matrix>
+        </allDifferent>
+        <allDifferent>
+            <matrix>sudoku[][]</matrix>
+        </allDifferent>
+    </constraints>
+</instance>
+
