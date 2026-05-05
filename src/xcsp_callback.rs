@@ -1653,6 +1653,45 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    fn on_constraint_bin_packing_v1(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Bin Packing Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v2(&mut self, _scope: &[String], _sizes: &[i32], _limits: &[i32]) {
+        println!("c Bin Packing Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v3(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _limits: &[String],
+    ) {
+        println!("c Bin Packing Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    fn on_constraint_bin_packing_v4(&mut self, _scope: &[String], _sizes: &[i32], _loads: &[i32]) {
+        println!("c Bin Packing Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_bin_packing_v5(
+        &mut self,
+        _scope: &[String],
+        _sizes: &[i32],
+        _loads: &[String],
+    ) {
+        println!("c Bin Packing Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

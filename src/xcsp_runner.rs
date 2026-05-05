@@ -11,6 +11,7 @@ use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 use crate::objectives::xobjectives_set::xcsp3_core::XObjective::{
     XObjectiveElement, XObjectiveExpression,
 };
@@ -670,6 +671,45 @@ impl XcspRunner {
                     inner.profit_operand().clone(),
                 );
             }
+            //---------------------------------------------------------------------------------------------------
+            // BinPacking Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XBinpacking(inner) => {
+                let scope = to_var_list(&inner.scope(), &inner.set());
+                let sizes = to_int_list(&inner.sizes());
+                match inner.operand() {
+                    None => {
+                        if inner.limits().len() > 0 && is_int_list(inner.limits()) {
+                            let limits = to_int_list(inner.limits());
+                            callback.on_constraint_bin_packing_v2(&*scope, &*sizes, &*limits);
+                        }
+                        if inner.limits().len() > 0 && is_var_list(inner.limits()) {
+                            let limits = to_var_list(inner.limits(), inner.set());
+                            callback.on_constraint_bin_packing_v3(&*scope, &*sizes, &*limits);
+                        }
+                        if inner.loads().len() > 0 && is_int_list(inner.loads()) {
+                            let loads = to_int_list(inner.loads());
+                            callback.on_constraint_bin_packing_v4(&*scope, &*sizes, &*loads);
+                        }
+                        if inner.loads().len() > 0 && is_var_list(inner.loads()) {
+                            let loads = to_var_list(inner.loads(), inner.set());
+                            callback.on_constraint_bin_packing_v5(&*scope, &*sizes, &*loads);
+                        }
+                    }
+                    Some(operand) => match inner.operator() {
+                        None => {}
+                        Some(o) => {
+                            callback.on_constraint_bin_packing_v1(
+                                &*scope,
+                                &*sizes,
+                                *o,
+                                operand.clone(),
+                            );
+                        }
+                    },
+                }
+            }
+
             //---------------------------------------------------------------------------------------------------
             // Channel Constraint
             //---------------------------------------------------------------------------------------------------

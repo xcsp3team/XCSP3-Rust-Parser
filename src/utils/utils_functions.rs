@@ -47,25 +47,23 @@ pub mod xcsp3_utils {
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     // use std::str::FromStr;
 
-    pub fn extract_operator(
-        condition: &str,
-    ) -> Result<(Operator, Operand), Result<XSum, Xcsp3Error>> {
+    pub fn extract_operator(condition: &str) -> Result<(Operator, Operand), Xcsp3Error> {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
         let ope: Operator = match Operator::get_operator_by_str(split[0]) {
             None => {
-                return Err(Err(Xcsp3Error::get_constraint_sum_error(
+                return Err(Xcsp3Error::get_constraint_sum_error(
                     "parse sum  constraint Operator error, ",
-                )));
+                ));
             }
             Some(o) => o,
         };
 
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
             None => {
-                return Err(Err(Xcsp3Error::get_constraint_sum_error(
+                return Err(Xcsp3Error::get_constraint_sum_error(
                     "parse sum constraint Operand error, ",
-                )));
+                ));
             }
             Some(r) => r,
         };

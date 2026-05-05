@@ -41,6 +41,7 @@ pub mod xcsp3_core {
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
     use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
+    use crate::constraints::xbinpacking::xcsp3_core::XBinpacking;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
     use crate::constraints::xcircuit::xcsp3_core::XCircuit;
@@ -109,7 +110,21 @@ pub mod xcsp3_core {
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
         }
-
+        pub fn build_bin_packing(
+            &mut self,
+            list: &str,
+            sizes: &str,
+            condition: &str,
+            limits: &str,
+            loads: &str,
+        ) {
+            match XBinpacking::from_str(list, sizes, condition, limits, loads, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XBinpacking(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
         pub fn build_cumulative(
             &mut self,
             origins_str: &str,

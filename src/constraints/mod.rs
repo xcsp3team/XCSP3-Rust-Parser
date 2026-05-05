@@ -52,6 +52,7 @@ pub mod xordered;
 pub mod xregular;
 
 pub mod xall_different_list;
+pub mod xbinpacking;
 pub mod xcardinality;
 pub mod xchannel;
 mod xcircuit;

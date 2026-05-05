@@ -43,6 +43,7 @@ pub mod xcsp3_core {
     use crate::constraints::xall_different_except::xcsp3_core::XAllDifferentExcept;
     use crate::constraints::xall_different_list::xcsp3_core::XAllDifferentList;
     use crate::constraints::xall_equal::xcsp3_core::XAllEqual;
+    use crate::constraints::xbinpacking::xcsp3_core::XBinpacking;
     use crate::constraints::xcardinality::xcsp3_core::XCardinality;
     use crate::constraints::xchannel::xcsp3_core::XChannel;
     use crate::constraints::xcircuit::xcsp3_core::XCircuit;
@@ -104,6 +105,7 @@ pub mod xcsp3_core {
         XClause(XClause<'a>),
         XPrecedence(XPrecedence<'a>),
         XKnapsack(XKnapsack<'a>),
+        XBinpacking(XBinpacking<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -144,6 +146,7 @@ pub mod xcsp3_core {
                 XElement,
                 XChannel,
                 XKnapsack,
+                XBinpacking
             );
         }
 
@@ -184,6 +187,7 @@ pub mod xcsp3_core {
                 XElement,
                 XChannel,
                 XKnapsack,
+                XBinpacking
             )
         }
     }

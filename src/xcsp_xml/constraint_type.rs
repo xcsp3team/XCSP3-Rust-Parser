@@ -879,6 +879,20 @@ pub mod xcsp3_xml {
             profits: String,
         },
 
+        #[serde(rename = "binPacking")]
+        BinPacking {
+            #[serde(rename = "list", default)]
+            list: String,
+            #[serde(rename = "sizes", default)]
+            sizes: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+            #[serde(rename = "limits", default)]
+            limits: String,
+            #[serde(rename = "loads", default)]
+            loads: String,
+        },
+
         // #[serde(rename = "balance")]
         // Balance {
         //     #[serde(rename = "list", default)]
@@ -907,16 +921,6 @@ pub mod xcsp3_xml {
         //     condition: String,
         //     #[serde(rename = "total", default)]
         //     total: String,
-        // },
-
-        // #[serde(rename = "binPacking")]
-        // BinPacking {
-        //     #[serde(rename = "list", default)]
-        //     vars: String,
-        //     #[serde(rename = "sizes", default)]
-        //     sizes: String,
-        //     #[serde(rename = "condition", default)]
-        //     condition: String,
         // },
 
         // #[serde(rename = "lex")]

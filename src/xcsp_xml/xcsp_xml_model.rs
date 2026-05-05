@@ -392,6 +392,13 @@ pub mod xcsp3_xml {
                         set.build_no_overlap(origins, lengths, zero_ignored);
                     }
                 }
+                ConstraintType::BinPacking {
+                    list,
+                    sizes,
+                    condition,
+                    limits,
+                    loads,
+                } => set.build_bin_packing(list, sizes, condition, limits, loads),
                 ConstraintType::Cumulative {
                     origins,
                     lengths,

@@ -8,7 +8,7 @@
     <constraints>
         <binPacking>
             <list>y[]</list>
-            <sizes>z[]</sizes>
+            <sizes>1 2 3 4</sizes>
             <condition>(eq,1)</condition>
         </binPacking>
     </constraints>
