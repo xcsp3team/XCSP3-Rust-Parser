@@ -480,7 +480,13 @@ pub mod xcsp3_xml {
                     lists,
                     matrix,
                     operator,
-                } => set.build_lex(lists, operator),
+                } => {
+                    if matrix.is_empty() == false {
+                        set.build_lex_matrix(matrix, operator)
+                    } else {
+                        set.build_lex(lists, operator)
+                    }
+                }
 
                 ConstraintType::Knapsack {
                     list,

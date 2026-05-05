@@ -1727,11 +1727,31 @@ pub trait XcspCallback {
      * @param lists the set of lists (not the scope, a variable may appear at different place!)
      * @param order the order LT, LE...
      */
-    fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
+    fn on_constraint_lex(&mut self, _lists: &Vec<Vec<String>>, _operator: Operator) {
         println!("c Lex not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
+    /**
+     * The callback function related to an ordered matrix constraint (this is a lex constraint)
+     * See http://xcsp.org/specifications/ordered
+     *
+     *
+     * Example:
+     * <ordered>
+     *   <matrix>
+     *   x[][]
+     *   </matrix>
+     *   <operator> lt </operator>
+     * </ordered>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param order the order LT, LE...
+     */
+    fn on_constraint_lex_matrix(&mut self, _matrix: &Vec<Vec<String>>, _operator: Operator) {
+        println!("c Lex not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

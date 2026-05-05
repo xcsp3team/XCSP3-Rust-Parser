@@ -379,6 +379,13 @@ impl XcspRunner {
                 }
                 callback.on_constraint_lex(&lists, *inner.operator());
             }
+            XConstraintType::XLexMatrix(inner) => {
+                let mut lists = Vec::with_capacity(inner.matrix().len());
+                for list in inner.matrix().iter() {
+                    lists.push(to_var_list(list, inner.set()));
+                }
+                callback.on_constraint_lex_matrix(&lists, *inner.operator());
+            }
             //---------------------------------------------------------------------------------------------------
             // Regular Constraint
             //---------------------------------------------------------------------------------------------------

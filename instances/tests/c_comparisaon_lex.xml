@@ -3,12 +3,17 @@
         <array id="y" size="[6]">0 1</array>
         <array id="z" size="[6]">0 1</array>
         <array id="t" size="[6]">0 1</array>
+        <array id="m" size="[4][4]">1..6</array>
     </variables>
     <constraints>
         <lex>
             <list>y[]</list>
             <list>z[]</list>
-            <list>[]</list>
+            <list>t[]</list>
+            <operator>gt</operator>
+        </lex>
+        <lex>
+            <matrix>m[][]</matrix>
             <operator>gt</operator>
         </lex>
     </constraints>
