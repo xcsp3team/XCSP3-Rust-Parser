@@ -691,6 +691,10 @@ impl XcspCallback for PrintingSolver {
             _scope, _weights, _profits
         );
     }
+
+    fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
+        println!("  [Lex] {:?} {:?}", lists, operator);
+    }
     // -- Objectifs -----------------------------------------------------------
     fn on_minimize_var(&mut self, var: String) {
         println!("Objectives: Minimize {:?}", var);
