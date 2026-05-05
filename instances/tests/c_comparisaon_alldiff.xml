@@ -1,0 +1,20 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 1</array>
+        <array id="z" size="[6]">0 1</array>
+        <array id="t" size="[6]">0 1</array>
+        <array id="sudoku" size="[9][9]">1..9</array>
+    </variables>
+    <constraints>
+        <allDifferent>y[]</allDifferent>
+        <allDifferent>
+            <list>z[]</list>
+        </allDifferent>
+        <allDifferent>
+            <list>z[]</list>
+            <list>t[]</list>
+        </allDifferent>
+        <allDifferent>sudoku[][]</allDifferent>
+    </constraints>
+</instance>
+

@@ -112,27 +112,24 @@ pub mod xcsp3_utils {
         lower: Vec<usize>,
         upper: Vec<usize>,
     ) -> Vec<Vec<usize>> {
-        let mut ret: Vec<Vec<usize>> = vec![];
         let mut tmp: Vec<Vec<usize>> = vec![];
-        // println!("{:?},{:?}", lower, upper);
-
-        // recursion_for_get_all_variables(0,&lower,&upper,&ret);
-        for i in lower[0]..upper[0] + 1 {
+        for i in lower[0]..=upper[0] {
             tmp.push(vec![i]);
         }
+
         for deep in 1..lower.len() {
-            for i in lower[deep]..upper[deep] + 1 {
-                for e in tmp.iter() {
+            let mut ret: Vec<Vec<usize>> = vec![];
+            for e in tmp.iter() {
+                // outer: existing combinations
+                for i in lower[deep]..=upper[deep] {
+                    // inner: new dimension
                     let mut ee = e.clone();
                     ee.push(i);
-                    ret.push(ee)
+                    ret.push(ee);
                 }
             }
-            tmp = ret.clone();
-            ret.clear();
+            tmp = ret;
         }
-        // println!("ret = {:?}\n", ret);
-        // println!("tmp = {:?}\n", tmp);
         tmp
     }
 
