@@ -1692,6 +1692,27 @@ pub trait XcspCallback {
         println!("c Bin Packing Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
+
+    /**
+     * The callback function related to an ordered list constraint (this is a lex constraint)
+     * See http://xcsp.org/specifications/ordered
+     *
+     *
+     * Example:
+     * <ordered>
+     *   <list> x1 x2 x3 x4 </list>
+     *   <list> y1 y2 y3 y4 </list>
+     *   <operator> lt </operator>
+     * </ordered>
+     *
+     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param order the order LT, LE...
+     */
+    fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
+        println!("c Lex not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

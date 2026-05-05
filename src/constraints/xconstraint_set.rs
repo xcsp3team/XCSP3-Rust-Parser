@@ -55,6 +55,7 @@ pub mod xcsp3_core {
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
     use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
+    use crate::constraints::xlex::xcsp3_core::XLex;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
     use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
@@ -149,6 +150,18 @@ pub mod xcsp3_core {
                     self.constraints.push(XConstraintType::XCumulative(c));
                 }
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+
+        pub fn build_lex(&mut self, lists: &[String], operator: &str) {
+            match XLex::from_str(lists, operator, self.set) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XLex(c));
+                }
+                Err(e) => {
+                    //println!("{:?}", e);
+                    self.constraints.push(XConstraintType::XConstraintNone(e))
+                }
             }
         }
         pub fn build_channel(

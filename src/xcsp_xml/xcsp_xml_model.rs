@@ -475,6 +475,13 @@ pub mod xcsp3_xml {
                     }
                 }
                 ConstraintType::Clause { vars } => set.build_clause(vars),
+
+                ConstraintType::Lex {
+                    lists,
+                    matrix,
+                    operator,
+                } => set.build_lex(lists, operator),
+
                 ConstraintType::Knapsack {
                     list,
                     weights,

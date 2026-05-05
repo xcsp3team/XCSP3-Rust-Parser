@@ -64,6 +64,7 @@ pub mod xelement;
 pub mod xgroup;
 pub mod xintension;
 pub mod xknapsack;
+pub mod xlex;
 pub mod xmax_min;
 pub mod xmax_min_arg;
 pub mod xn_values;

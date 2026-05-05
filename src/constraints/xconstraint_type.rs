@@ -57,6 +57,7 @@ pub mod xcsp3_core {
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
     use crate::constraints::xknapsack::xcsp3_core::XKnapsack;
+    use crate::constraints::xlex::xcsp3_core::XLex;
     use crate::constraints::xmax_min::xcsp3_core::XMaxMin;
     use crate::constraints::xmax_min_arg::xcsp3_core::XMaxMinArg;
     use crate::constraints::xmdd::xcsp3_core::XMdd;
@@ -106,6 +107,7 @@ pub mod xcsp3_core {
         XPrecedence(XPrecedence<'a>),
         XKnapsack(XKnapsack<'a>),
         XBinpacking(XBinpacking<'a>),
+        XLex(XLex<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -146,7 +148,8 @@ pub mod xcsp3_core {
                 XElement,
                 XChannel,
                 XKnapsack,
-                XBinpacking
+                XBinpacking,
+                XLex
             );
         }
 
@@ -187,7 +190,8 @@ pub mod xcsp3_core {
                 XElement,
                 XChannel,
                 XKnapsack,
-                XBinpacking
+                XBinpacking,
+                XLex
             )
         }
     }

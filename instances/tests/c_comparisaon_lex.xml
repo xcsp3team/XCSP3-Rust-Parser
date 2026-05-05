@@ -1,0 +1,16 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 1</array>
+        <array id="z" size="[6]">0 1</array>
+        <array id="t" size="[6]">0 1</array>
+    </variables>
+    <constraints>
+        <lex>
+            <list>y[]</list>
+            <list>z[]</list>
+            <list>[]</list>
+            <operator>gt</operator>
+        </lex>
+    </constraints>
+</instance>
+

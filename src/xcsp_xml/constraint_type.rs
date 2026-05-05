@@ -935,6 +935,17 @@ pub mod xcsp3_xml {
             #[serde(rename = "$value", default)]
             vars: String,
         },
+
+        #[serde(rename = "lex")]
+        Lex {
+            #[serde(rename = "list", default)]
+            lists: Vec<String>,
+            #[serde(rename = "matrix", default)]
+            matrix: String,
+            #[serde(rename = "operator", default)]
+            operator: String,
+        },
+
         #[default]
         ConstraintNone,
     }
