@@ -105,7 +105,6 @@ impl XcspRunner {
                 XConstraintType::XGroup(inner) => {
                     callback.begin_group();
                     for arg in inner.get_args() {
-                        println!("{:?}", arg);
                         let mut c = inner.get_template().clone();
                         c.extract_parameters(arg);
                         Self::build_constraint(callback, &mut c)?;
@@ -278,8 +277,9 @@ impl XcspRunner {
             // Intension constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XIntention(inner) => {
-                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
-                callback.on_constraint_intention(&*scope, inner.tree());
+                let tree = inner.to_tree();
+                let scope = tree.get_scope();
+                callback.on_constraint_intention(&*scope, &tree);
             }
 
             //---------------------------------------------------------------------------------------------------

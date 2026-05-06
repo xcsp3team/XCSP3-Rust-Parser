@@ -79,7 +79,6 @@ pub mod xcsp3_core {
                     Err(e) => return Err(e),
                 }
             }
-            // println!("this group cost {:?}", tt.get());
             Ok(XGroup::new(args, set, Box::new(cc)))
         }
 

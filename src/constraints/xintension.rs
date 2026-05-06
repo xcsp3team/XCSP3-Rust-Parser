@@ -39,6 +39,10 @@
  */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
+    };
+    use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -47,43 +51,39 @@ pub mod xcsp3_core {
     // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XIntention<'a> {
-        scope: Vec<XVarVal>,
+        expression: String,
         set: &'a XVariableSet,
-        tree: ExpressionTree,
     }
 
-    impl<'a> XIntention<'a> {
-        pub fn get_expression(&self) -> &ExpressionTree {
-            &self.tree
-        }
-
-        pub fn from_str_without_scope(
-            expression: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match ExpressionTree::from_string(expression) {
-                Ok(tree) => {
-                    let scope: Vec<XVarVal> = tree.get(set);
-                    Ok(Self::new(scope, set, tree))
-                }
-                Err(e) => Err(e),
+    impl XConstraintUnfold for XIntention<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            let index = 0;
+            for index in 0..arg.len() {
+                self.expression = self
+                    .expression
+                    .replace(&format!("%{}", index), arg[index].to_string().as_str());
             }
         }
-
-        pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, tree: ExpressionTree) -> Self {
-            Self { scope, set, tree }
+        fn max_args_used(&mut self) -> i32 {
+            -1
         }
-
-        pub fn scope(&self) -> &Vec<XVarVal> {
-            &self.scope
+    }
+    impl<'a> XIntention<'a> {
+        pub fn create(expression: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+            Ok(Self::new(expression.to_string(), set))
+        }
+        pub fn to_tree(&self) -> ExpressionTree {
+            match ExpressionTree::from_string(&*self.expression) {
+                Ok(tree) => tree,
+                Err(e) => panic!("{:?}", e),
+            }
+        }
+        pub fn new(expression: String, set: &'a XVariableSet) -> Self {
+            Self { expression, set }
         }
 
         pub fn set(&self) -> &'a XVariableSet {
             self.set
-        }
-
-        pub fn tree(&self) -> &ExpressionTree {
-            &self.tree
         }
     }
 }
