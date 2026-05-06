@@ -225,8 +225,16 @@ pub mod xcsp3_core {
             values_str: &str,
             index_str: &str,
             start_index_str: &str,
+            condition: &str,
         ) {
-            match XElement::from_str(vars, values_str, index_str, start_index_str, self.set) {
+            match XElement::from_str(
+                vars,
+                values_str,
+                index_str,
+                start_index_str,
+                condition,
+                self.set,
+            ) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XElement(c));
                 }

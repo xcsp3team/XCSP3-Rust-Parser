@@ -949,6 +949,19 @@ impl XcspRunner {
                                 _ => panic!("Unexpected value for element constraint"),
                             }
                         } else {
+                            let (operand, operator) = inner
+                                .operand()
+                                .clone()
+                                .zip(*inner.operator())
+                                .expect("Missing condition for element constraint");
+
+                            callback.on_constraint_element_v5(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                operator,
+                                operand.clone(),
+                            );
                         }
                     } else {
                         let Some(value) = inner.value() else {

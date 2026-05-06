@@ -621,6 +621,8 @@ pub mod xcsp3_xml {
             value: String,
             #[serde(rename = "index", default)]
             index: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
         },
 
         /**

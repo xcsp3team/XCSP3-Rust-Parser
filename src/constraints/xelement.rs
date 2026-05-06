@@ -31,8 +31,10 @@ pub mod xcsp3_core {
         inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -44,6 +46,8 @@ pub mod xcsp3_core {
         value: Option<XVarVal>,
         index: Option<XVarVal>,
         start_index: Option<i32>,
+        operator: Option<Operator>,
+        operand: Option<Operand>,
     }
 
     impl XConstraintUnfold for XElement<'_> {
@@ -66,6 +70,7 @@ pub mod xcsp3_core {
             value_str: &str,
             index_str: &str,
             start_index_str: &str,
+            condition: &str,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             // println!("{start_index_str}");
@@ -99,8 +104,23 @@ pub mod xcsp3_core {
                     } else {
                         None
                     };
-
-                    Ok(XElement::new(scope_vec_str, set, value, index, start_index))
+                    let (operator, operand) = if condition.is_empty() {
+                        (None, None)
+                    } else {
+                        match extract_operator(&condition) {
+                            Ok((op, val)) => (Some(op), Some(val)),
+                            Err(_) => panic!("condition in binpacking is wrong: {}", condition),
+                        }
+                    };
+                    Ok(XElement::new(
+                        scope_vec_str,
+                        set,
+                        value,
+                        index,
+                        start_index,
+                        operator,
+                        operand,
+                    ))
                 }
 
                 Err(e) => Err(e),
@@ -113,6 +133,8 @@ pub mod xcsp3_core {
             value: Option<XVarVal>,
             index: Option<XVarVal>,
             start_index: Option<i32>,
+            operator: Option<Operator>,
+            operand: Option<Operand>,
         ) -> Self {
             Self {
                 scope,
@@ -120,6 +142,8 @@ pub mod xcsp3_core {
                 value,
                 index,
                 start_index,
+                operator,
+                operand,
             }
         }
 
@@ -141,6 +165,14 @@ pub mod xcsp3_core {
 
         pub fn start_index(&self) -> i32 {
             self.start_index.unwrap_or(0)
+        }
+
+        pub fn operator(&self) -> &Option<Operator> {
+            &self.operator
+        }
+
+        pub fn operand(&self) -> &Option<Operand> {
+            &self.operand
         }
     }
 }

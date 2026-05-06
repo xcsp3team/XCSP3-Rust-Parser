@@ -498,14 +498,17 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
-    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
-        println!("  [Element V1] {:?} value={}", scope, value);
-    }
-
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_element_v2(&mut self, scope: &[String], value: String) {
+        println!("  [Element V2] {:?} value={}", scope, value);
+    }
+
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("  [Element V1] {:?} value={}", scope, value);
+    }
     fn on_constraint_element_v3(
         &mut self,
         list: &[String],
@@ -528,6 +531,20 @@ impl XcspCallback for PrintingSolver {
         println!(
             "  [Element V4] {:?} start={} index= {} value={}",
             list, start_index, index, value
+        );
+    }
+
+    fn on_constraint_element_v5(
+        &mut self,
+        list: &[String],
+        start_index: i32,
+        index: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Element V5] {:?} start={} index= {}  operator={:?}, operand={:?}",
+            list, start_index, index, operator, operand
         );
     }
     fn on_constraint_nvalues_v2(

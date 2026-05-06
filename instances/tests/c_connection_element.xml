@@ -11,7 +11,10 @@
             <list>y[]</list>
             <value>3</value>
         </element>
-
+        <element>
+            <list>y[]</list>
+            <value>t[1]</value>
+        </element>
         <element>
             <list startIndex="1">y[]</list>
             <index>i</index>
@@ -21,6 +24,11 @@
             <list startIndex="1">y[]</list>
             <index>i</index>
             <value>a[0]</value>
+        </element>
+        <element>
+            <list startIndex="1">y[]</list>
+            <index>i</index>
+            <condition>(eq,a[0])</condition>
         </element>
     </constraints>
 </instance>

@@ -359,9 +359,12 @@ pub mod xcsp3_xml {
                     );
                 }
 
-                ConstraintType::Element { vars, value, index } => {
-                    set.build_element(&vars.value, value, index, &vars.start_index)
-                }
+                ConstraintType::Element {
+                    vars,
+                    value,
+                    index,
+                    condition,
+                } => set.build_element(&vars.value, value, index, &vars.start_index, condition),
 
                 ConstraintType::Stretch {
                     vars,

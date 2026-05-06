@@ -1123,7 +1123,8 @@ pub trait XcspCallback {
      * @param origins the vector of origins
      * @param lengths the vector of lenghts (here ints)
      * @param heights the vector of heights (here ints)
-     * @param xc the condition (see XCondition)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
      */
     fn on_constraint_cumulative_v1(
         &mut self,
@@ -1443,6 +1444,36 @@ pub trait XcspCallback {
         _value: i32,
     ) {
         println!("c Element Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and condition
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <condition> (le,3) </condition>
+     * </element>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param start_index the start index
+     * @param index the index (here a int)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
+     */
+    fn on_constraint_element_v5(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
