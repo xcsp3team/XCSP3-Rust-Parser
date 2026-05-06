@@ -43,7 +43,6 @@ pub mod xcsp3_core {
     use crate::objectives::xobjective_expression::xcsp3_core::XObjectiveExpression;
     pub(crate) use crate::objectives::xobjectives_type::xcsp3_core::XObjective;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::slice::{Iter, IterMut};
 
     pub struct XObjectivesSet<'a> {
         objectives: Vec<XObjective<'a>>,
@@ -64,7 +63,7 @@ pub mod xcsp3_core {
                     Ok(xoe) => {
                         self.objectives.push(XObjective::XObjectiveExpression(xoe));
                     }
-                    Err(e) => panic!("Objectives not recognized"),
+                    Err(_e) => panic!("Objectives not recognized"),
                 }
             } else {
                 match XObjectiveElement::from_str(
@@ -75,7 +74,7 @@ pub mod xcsp3_core {
                     self.set,
                 ) {
                     Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
-                    Err(e) => panic!("Objectives not recognized"),
+                    Err(_e) => panic!("Objectives not recognized"),
                 }
             }
         }
@@ -93,7 +92,7 @@ pub mod xcsp3_core {
                     Ok(xoe) => {
                         self.objectives.push(XObjective::XObjectiveExpression(xoe));
                     }
-                    Err(e) => panic!("Objectives not recognized"),
+                    Err(_e) => panic!("Objectives not recognized"),
                 }
             } else {
                 match XObjectiveElement::from_str(
@@ -104,7 +103,7 @@ pub mod xcsp3_core {
                     self.set,
                 ) {
                     Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
-                    Err(e) => panic!("Objectives not recognized"),
+                    Err(_e) => panic!("Objectives not recognized"),
                 }
             }
         }

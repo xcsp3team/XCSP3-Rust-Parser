@@ -39,10 +39,7 @@
  */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, inject_parameters_in_operand, XConstraintUnfold,
-    };
-    use crate::constraints::xcount::xcsp3_core::XCount;
+    use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
@@ -57,7 +54,6 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XIntention<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            let index = 0;
             for index in 0..arg.len() {
                 self.expression = self
                     .expression

@@ -13,7 +13,6 @@
  *   }
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
-use crate::constraints::xelement::xcsp3_core::XElement;
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -178,7 +177,7 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
+    fn on_constraint_unary(&mut self, _scope: &String, _values: &[i32], _is_support: bool) {
         println!("c Unary not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1359,7 +1358,7 @@ pub trait XcspCallback {
      * @param scope the scope of the constraint
      * @param value the value (here an int)
      */
-    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+    fn on_constraint_element_v1(&mut self, _scope: &[String], _value: i32) {
         println!("c Element Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }

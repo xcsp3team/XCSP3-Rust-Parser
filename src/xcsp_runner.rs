@@ -79,7 +79,7 @@ impl XcspRunner {
                         let var_id = format!("{}{}", av.id, brackets);
                         let tmp = av.find_variable(&*brackets);
                         if let Ok(vec) = tmp {
-                            for (s, domain) in &vec {
+                            for (_s, domain) in &vec {
                                 if XDomainInteger::default().equals(domain)
                                     && av.has_others() == false
                                 {
@@ -208,7 +208,6 @@ impl XcspRunner {
                         }
                     }
                 }
-                _ => {}
             }
         }
         callback.end_objectives();

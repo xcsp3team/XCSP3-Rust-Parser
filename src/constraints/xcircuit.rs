@@ -43,8 +43,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
-    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;

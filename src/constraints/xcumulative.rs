@@ -42,12 +42,11 @@ pub mod xcsp3_core {
         arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
         XConstraintUnfold,
     };
-    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -121,22 +120,9 @@ pub mod xcsp3_core {
                 }
             };
             let binding = condition_str.replace(['(', ')', ','], " ");
-            let spilt: Vec<&str> = binding.split_whitespace().collect();
-            let ope: Operator = match Operator::get_operator_by_str(spilt[0]) {
-                None => {
-                    return Err(Xcsp3Error::get_constraint_cumulative_error(
-                        "parse cumulative constraint error, ",
-                    ))
-                }
-                Some(o) => o,
-            };
-            let rand: Operand = match Operand::get_operand_by_str(&spilt[1..], &ope) {
-                None => {
-                    return Err(Xcsp3Error::get_constraint_cumulative_error(
-                        "parse cumulative constraint error, ",
-                    ))
-                }
-                Some(r) => r,
+            let (ope, rand) = match extract_operator(condition_str) {
+                Ok(value) => value,
+                Err(e) => return Err(e),
             };
             let ends = if ends_str.is_empty() {
                 None

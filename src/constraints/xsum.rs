@@ -99,7 +99,7 @@ pub mod xcsp3_core {
                     };
                     let (ope, rand) = match extract_operator(condition) {
                         Ok(value) => value,
-                        Err(value) => panic!("Error on condition: {}", condition),
+                        Err(e) => return Err(e),
                     };
                     Ok(Self::new(scope_vec_str, set, ope, rand, coe))
                 }

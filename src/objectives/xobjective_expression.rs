@@ -42,10 +42,7 @@ pub mod xcsp3_core {
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
-    use std::fmt::{Display, Formatter};
 
     #[derive(Clone)]
     pub struct XObjectiveExpression<'a> {

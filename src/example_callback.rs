@@ -4,11 +4,9 @@
  * Exemple concret d'implémentation du trait XcspCallback.
  * Définit PrintingSolver, un solveur qui affiche et compte chaque élément parsé.
  */
-use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-use crate::objectives::xobjectives_type::xcsp3_core::XObjective;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 // ---------------------------------------------------------------------------

@@ -41,7 +41,7 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_matrix_ids, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::list_to_matrix_ids;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
         XVariableArray, XVariableTree,
