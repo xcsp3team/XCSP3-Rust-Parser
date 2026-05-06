@@ -1,7 +1,10 @@
 /*=============================================================================
-* parser for CSP instances represented in XCSP3 Format
+* RUST parser for CSP instances represented in XCSP3 Format
 *
-* Copyright (c) 2023 xcsp.org (contact @ xcsp.org)
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +25,6 @@
 * THE SOFTWARE.
 *=============================================================================
 */
-
-/*
- * <p>@project_name: XCSP3-Rust
- * </p>
- * <p>@author: luhanzhen
- * </p>
- * <p>@date: 2023/6/30
- * </p>
- * <p>@time: 13:55
- * </p>
- * <p>@this_file_name:xcsp3domain
- * </p>
- */
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
