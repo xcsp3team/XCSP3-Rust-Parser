@@ -56,7 +56,6 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XExtension<'a> {
-        /// construct the constraint from two strings and a bool
         pub fn from_str(
             list: &str,
             tuple: &str,
@@ -66,7 +65,7 @@ pub mod xcsp3_core {
             let a = match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => match tuple_to_vector(tuple, !tuple.contains('(')) {
                     Ok(tuples) => {
-                        let mut has_star = false;
+                        let has_star = tuples.iter().flatten().any(|&x| x == i32::MAX);
                         Ok(XExtension::new(
                             scope_vec_str,
                             set,
