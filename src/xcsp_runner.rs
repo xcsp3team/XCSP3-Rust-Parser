@@ -240,6 +240,9 @@ impl XcspRunner {
         c: &mut XConstraintType,
     ) -> Result<(), Box<dyn Error>> {
         match c {
+            XConstraintType::XConstraintNone(_) => {
+                panic!("An error during parsing constraints appeared")
+            }
             //---------------------------------------------------------------------------------------------------
             // All Diff constraints
             //---------------------------------------------------------------------------------------------------
