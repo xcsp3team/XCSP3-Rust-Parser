@@ -27,6 +27,7 @@
 */
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {
@@ -516,11 +517,13 @@ pub fn to_int_list(the_list: &[XVarVal]) -> Vec<i32> {
 pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
     the_list
         .iter()
-        .filter_map(|e| {
-            if let XVarVal::IntVar(s) = e {
-                set.construct_scope(&[&s]).ok()
-            } else {
-                None
+        .filter_map(|e| match e {
+            XVarVal::IntVar(s) => match set.construct_scope(&[&s]) {
+                Ok(s) => Some(s),
+                Err(_) => panic!("Variable {} unknown", s),
+            },
+            _ => {
+                panic!("Only vars in this list are allowed: {}", e)
             }
         })
         .flatten()
