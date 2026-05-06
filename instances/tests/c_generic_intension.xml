@@ -1,0 +1,40 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="y" size="[6]">0 1</array>
+        <var id="a">1..5</var>
+        <var id="b">1..5</var>
+        <var id="c">1..5</var>
+        <var id="d">1..5</var>
+    </variables>
+    <constraints>
+        <intension>
+            <function>eq(add(a,b),a)</function>
+        </intension>
+        <intension>
+            <function>ge(a,b)</function>
+        </intension>
+        <intension>eq(add(a,b),3)</intension>
+        <group>
+            <intension>
+                eq(%0,%1)
+            </intension>
+            <args>a b</args>
+            <args>c d</args>
+        </group>
+        <group>
+            <intension>
+                <function>eq(add(%0,%1),%0)</function>
+            </intension>
+            <args>a b</args>
+            <args>c d</args>
+        </group>
+        <group>
+            <intension>
+                <function>eq(sub(%0,%1),%2)</function>
+            </intension>
+            <args>a b 1</args>
+            <args>c d 2</args>
+        </group>
+    </constraints>
+</instance>
+

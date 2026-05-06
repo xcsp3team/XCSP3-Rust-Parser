@@ -153,7 +153,8 @@ pub mod xcsp3_core {
                 XChannel,
                 XKnapsack,
                 XBinpacking,
-                XLex
+                XLex,
+                XIntention
             );
         }
 
@@ -195,7 +196,8 @@ pub mod xcsp3_core {
                 XChannel,
                 XKnapsack,
                 XBinpacking,
-                XLex
+                XLex,
+                XIntention
             )
         }
     }
