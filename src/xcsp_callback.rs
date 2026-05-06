@@ -1374,9 +1374,75 @@ pub trait XcspCallback {
         println!("c Element Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-
+    /**
+     * The callback function related to a element constraint with var value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[] </list>
+     *    <value> v </value>
+     * </element>
+     *
+     * @param scope the scope of the constraint
+     * @param value the value (here a variable)
+     */
     fn on_constraint_element_v2(&mut self, _scope: &[String], _value: String) {
         println!("c Element Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a variable)
+     */
+    fn on_constraint_element_v3(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _value: String,
+    ) {
+        println!("c Element Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <value> 3 </value>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a int)
+     */
+    fn on_constraint_element_v4(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _value: i32,
+    ) {
+        println!("c Element Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 

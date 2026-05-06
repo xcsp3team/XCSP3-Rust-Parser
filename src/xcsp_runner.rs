@@ -928,24 +928,45 @@ impl XcspRunner {
             //---------------------------------------------------------------------------------------------------
             // Element Constraint
             //---------------------------------------------------------------------------------------------------
-            XConstraintType::XElement(inner) => match inner.index() {
-                None => match inner.value() {
-                    XVarVal::IntVal(v) => {
-                        let scope = to_var_list(inner.scope(), inner.set());
-                        callback.on_constraint_element_v1(&*scope, *v)
-                    }
-                    XVarVal::IntVar(v) => {
-                        let scope = to_var_list(inner.scope(), inner.set());
-                        callback.on_constraint_element_v2(&*scope, v.clone())
-                    }
-                    _ => {
-                        panic!("Unexpected value in value")
-                    }
-                },
-                Some(index) => {
+            XConstraintType::XElement(inner) => {
+                if is_var_list(inner.scope()) {
                     let scope = to_var_list(inner.scope(), inner.set());
+                    if let Some(index) = inner.index() {
+                        if let Some(value) = inner.value() {
+                            match value {
+                                XVarVal::IntVal(v) => callback.on_constraint_element_v4(
+                                    &*scope,
+                                    inner.start_index(),
+                                    index.to_string(),
+                                    *v,
+                                ),
+                                XVarVal::IntVar(v) => callback.on_constraint_element_v3(
+                                    &*scope,
+                                    inner.start_index(),
+                                    index.to_string(),
+                                    v.clone(),
+                                ),
+                                _ => panic!("Unexpected value for element constraint"),
+                            }
+                        } else {
+                        }
+                    } else {
+                        let Some(value) = inner.value() else {
+                            panic!("Wanted a value or an index in element constraint")
+                        };
+                        match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_v1(&*scope, *v),
+                            XVarVal::IntVar(v) => {
+                                callback.on_constraint_element_v2(&*scope, v.clone())
+                            }
+                            (_) => panic!("Unexpected value for element constraint"),
+                        }
+                    }
                 }
-            },
+                if is_int_list(inner.scope()) {
+                    let scope = to_int_list(inner.scope());
+                }
+            }
 
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint

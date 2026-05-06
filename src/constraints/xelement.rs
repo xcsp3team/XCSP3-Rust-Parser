@@ -41,7 +41,7 @@ pub mod xcsp3_core {
     pub struct XElement<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
-        value: XVarVal,
+        value: Option<XVarVal>,
         index: Option<XVarVal>,
         start_index: Option<i32>,
     }
@@ -50,12 +50,13 @@ pub mod xcsp3_core {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
             self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            self.value = inject_parameters_in_var_val(self.value.clone(), arg);
+            // self.value = inject_parameters_in_var_val(self.value.clone(), arg);
         }
         fn max_args_used(&mut self) -> i32 {
-            let mut s = Vec::new();
-            s.push(self.value.clone());
-            max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+            //let mut s = Vec::new();
+            //s.push(self.value.clone());
+            //max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+            -1
         }
     }
 
@@ -71,12 +72,8 @@ pub mod xcsp3_core {
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => {
                     let value = match XVarVal::from_string(value_str) {
-                        None => {
-                            return Err(Xcsp3Error::get_constraint_sum_error(
-                                "parse element constraint value error, ",
-                            ));
-                        }
-                        Some(v) => v,
+                        None => None,
+                        Some(v) => Some(v),
                     };
                     let index = if index_str.is_empty() {
                         None
@@ -113,7 +110,7 @@ pub mod xcsp3_core {
         pub fn new(
             scope: Vec<XVarVal>,
             set: &'a XVariableSet,
-            value: XVarVal,
+            value: Option<XVarVal>,
             index: Option<XVarVal>,
             start_index: Option<i32>,
         ) -> Self {
@@ -134,7 +131,7 @@ pub mod xcsp3_core {
             self.set
         }
 
-        pub fn value(&self) -> &XVarVal {
+        pub fn value(&self) -> &Option<XVarVal> {
             &self.value
         }
 
@@ -142,8 +139,8 @@ pub mod xcsp3_core {
             &self.index
         }
 
-        pub fn start_index(&self) -> Option<i32> {
-            self.start_index
+        pub fn start_index(&self) -> i32 {
+            self.start_index.unwrap_or(0)
         }
     }
 }
