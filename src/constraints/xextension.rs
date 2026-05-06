@@ -39,24 +39,36 @@
  */
 
 pub mod xcsp3_core {
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, tuple_to_vector};
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
-    use std::collections::HashMap;
-
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
+        XConstraintUnfold,
+    };
+    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, tuple_to_vector};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::slice::Iter;
+    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XExtension<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         ///if the  value in tuples is i32::MAX, then it is the star
         tuples: Vec<Vec<i32>>,
         is_support: bool,
+        has_star: bool,
+    }
+
+    impl XConstraintUnfold for XExtension<'_> {
+        fn extract_parameters(&mut self, arg: &[XVarVal]) {
+            self.scope = inject_parameters_in_list(&self.scope, arg, -1);
+        }
+
+        fn max_args_used(&mut self) -> i32 {
+            -1
+        }
     }
 
     impl<'a> XExtension<'a> {
@@ -67,18 +79,22 @@ pub mod xcsp3_core {
             is_support: bool,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
-            // let tt= TimeInterval::new();
             let a = match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => match tuple_to_vector(tuple, !tuple.contains('(')) {
                     Ok(tuples) => {
-                        // println!("{:?}", &tuples);
-                        Ok(XExtension::new(scope_vec_str, set, tuples, is_support))
+                        let mut has_star = false;
+                        Ok(XExtension::new(
+                            scope_vec_str,
+                            set,
+                            tuples,
+                            is_support,
+                            has_star,
+                        ))
                     }
                     Err(e) => Err(e),
                 },
                 Err(e) => Err(e),
             };
-            // println!("{:?}",tt.get());
             a
         }
 
@@ -87,31 +103,35 @@ pub mod xcsp3_core {
             set: &'a XVariableSet,
             tuples: Vec<Vec<i32>>,
             is_support: bool,
+            has_star: bool,
         ) -> Self {
             XExtension {
                 scope,
-                map: Default::default(),
                 set,
                 tuples,
                 is_support,
-            }
-        }
-        ///return the iter of the supports tuples, if the value is i32::MAX, then it is the star
-        pub fn supports_iter(&self) -> Option<Iter<'_, Vec<i32>>> {
-            if self.is_support {
-                Some(self.tuples.iter())
-            } else {
-                None
+                has_star,
             }
         }
 
-        ///return the iter of the conflict tuples, if the value is i32::MAX, then it is the star
-        pub fn conflicts_iter(&self) -> Option<Iter<'_, Vec<i32>>> {
-            if !self.is_support {
-                Some(self.tuples.iter())
-            } else {
-                None
-            }
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn tuples(&self) -> &Vec<Vec<i32>> {
+            &self.tuples
+        }
+
+        pub fn is_support(&self) -> bool {
+            self.is_support
+        }
+
+        pub fn has_star(&self) -> bool {
+            self.has_star
         }
     }
 }

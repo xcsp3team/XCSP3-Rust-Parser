@@ -154,7 +154,8 @@ pub mod xcsp3_core {
                 XKnapsack,
                 XBinpacking,
                 XLex,
-                XIntention
+                XIntention,
+                XExtension,
             );
         }
 
@@ -197,7 +198,8 @@ pub mod xcsp3_core {
                 XKnapsack,
                 XBinpacking,
                 XLex,
-                XIntention
+                XIntention,
+                XExtension,
             )
         }
     }

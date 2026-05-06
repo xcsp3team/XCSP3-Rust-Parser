@@ -14,9 +14,7 @@
  *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
  */
 use crate::constraints::xelement::xcsp3_core::XElement;
-use crate::constraints::xextension::xcsp3_core::XExtension;
 use crate::constraints::xslide::xcsp3_core::XSlide;
-use crate::constraints::xstretch::xcsp3_core::XStretch;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -154,6 +152,37 @@ pub trait XcspCallback {
     // -------------------------------------------------------------------------
 
     /**
+     * The callback function related to an constraint in extension
+     * See http://xcsp.org/specifications/extension
+     *
+     * Example:
+     * <extension>
+     *   <list> y1 y2 y3 y4 </list>
+     *   <conflicts> (1,2,3,4)(3,1,3,4) </conflicts>
+     * </extension>
+     *
+     * @param list the scope of the constraint
+     * @param tuples the set of tuples in the constraint
+     * @param support  support or conflicts?
+     * @param hasStar is the tuples contain star values?
+     */
+    fn on_constraint_extension(
+        &mut self,
+        _scope: &[String],
+        _tuples: &Vec<Vec<i32>>,
+        _is_support: bool,
+        _has_star: bool,
+    ) {
+        println!("c Extension not yet implemented");
+        println!("WARNING: tuples are not checked wrt domains");
+        panic!("s UNSUPPORTED");
+    }
+
+    fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
+        println!("c Unary not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
      * The callback function related to a alldifferent constraint.
      * See http://xcsp.org/specifications/alldifferent
      *
@@ -271,9 +300,6 @@ pub trait XcspCallback {
         println!("c Alldifferent with expressions in scope not yet implemented");
         panic!("s UNSUPPORTED");
     }
-
-    /// <extension> ... </extension>  (table de tuples autorisés/interdits)
-    fn on_constraint_extension(&mut self, _c: &XExtension) {}
 
     /**
      * The callback function related to a constraint in intension
@@ -731,9 +757,6 @@ pub trait XcspCallback {
         println!("c Maximum Arg Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-
-    /// <element> ... </element>
-    fn on_constraint_element(&mut self, _c: &XElement) {}
 
     /// <slide> ... </slide>
     fn on_constraint_slide(&mut self, _c: &XSlide) {}

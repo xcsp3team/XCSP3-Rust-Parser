@@ -125,9 +125,28 @@ impl XcspCallback for PrintingSolver {
             scope, lengths, operator
         );
     }
-    fn on_constraint_extension(&mut self, _c: &XExtension) {
-        println!("Extension in progress");
+
+    fn on_constraint_extension(
+        &mut self,
+        scope: &[String],
+        tuples: &Vec<Vec<i32>>,
+        is_support: bool,
+        has_star: bool,
+    ) {
+        println!(
+            "  [Extension] scope={:?} is_support={} has_star={}",
+            scope, is_support, has_star
+        );
+        println!("           tuples: {:?}", tuples);
+        println!("           address = {:X}", tuples.as_ptr() as usize);
     }
+    fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
+        println!(
+            "  [Unary]  {:?} values: {:?} is_support: {}",
+            _scope, values, is_support
+        );
+    }
+
     fn on_constraint_intention(&mut self, scope: &[String], tree: &ExpressionTree) {
         self.nb_constraints += 1;
         println!("  [Intent]   {} scope={:?}", tree, scope);

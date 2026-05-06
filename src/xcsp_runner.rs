@@ -271,7 +271,20 @@ impl XcspRunner {
                     callback.on_constraint_all_equal_v1(&*scope);
                 }
             }
-            XConstraintType::XExtension(inner) => callback.on_constraint_extension(inner),
+            XConstraintType::XExtension(inner) => {
+                let scope = to_var_list(&inner.scope(), &inner.set());
+                if scope.len() == 1 {
+                    let tmp: Vec<_> = inner.tuples().iter().flatten().copied().collect();
+                    callback.on_constraint_unary(&scope[0], &*tmp, inner.is_support());
+                } else {
+                    callback.on_constraint_extension(
+                        &*scope,
+                        inner.tuples(),
+                        inner.is_support(),
+                        inner.has_star(),
+                    );
+                }
+            }
 
             //---------------------------------------------------------------------------------------------------
             // Intension constraint
