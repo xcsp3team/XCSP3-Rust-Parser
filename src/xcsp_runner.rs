@@ -633,7 +633,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_int_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
@@ -643,7 +643,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_int_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
@@ -653,7 +653,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_int_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -663,7 +663,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -673,7 +673,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -683,8 +683,9 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
+                panic!("Unexpected variant for cardinality constraint");
             }
             //---------------------------------------------------------------------------------------------------
             // Precedence Constraint
@@ -812,7 +813,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -824,7 +825,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -836,7 +837,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -848,8 +849,9 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
+                    panic!("Unexpected variant for cumulative constraint");
                 }
                 Some(ends) => {
                     if is_int_list(inner.lengths())
@@ -920,6 +922,7 @@ impl XcspRunner {
                             inner.operand().clone(),
                         )
                     }
+                    panic!("Unexpected variant for cumulative constraint");
                 }
             },
             //---------------------------------------------------------------------------------------------------
@@ -958,7 +961,9 @@ impl XcspRunner {
                         let tmp = to_var_list(&inner.lengths(), inner.set());
                         callback.on_constraint_no_overlap_v2(&*scope, &*tmp, inner.zero_ignored())
                     }
-                    _ => {}
+                    _ => {
+                        panic!("Unexpected variant for nooverlap constraint");
+                    }
                 }
             }
             XConstraintType::XNoOverlapKDim(inner) => {
