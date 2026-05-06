@@ -3,7 +3,6 @@ pub mod xcsp3_core {
         arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
         XConstraintUnfold,
     };
-    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;

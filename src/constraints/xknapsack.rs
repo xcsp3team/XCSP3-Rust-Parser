@@ -3,7 +3,6 @@ pub mod xcsp3_core {
         arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
         XConstraintUnfold,
     };
-    use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -58,11 +57,11 @@ pub mod xcsp3_core {
             let profits = list_to_vec_var_val(profits)?;
             let (weight_operator, weight_operand) = match extract_operator(&*conditions[0]) {
                 Ok(value) => value,
-                Err(value) => panic!("Error on condition: {}", conditions[0]),
+                Err(_e) => panic!("Error on condition: {}", conditions[0]),
             };
             let (profit_operator, profit_operand) = match extract_operator(&*conditions[1]) {
                 Ok(value) => value,
-                Err(value) => panic!("Error on condition: {}", conditions[1]),
+                Err(_e) => panic!("Error on condition: {}", conditions[1]),
             };
             Ok(Self::new(
                 scope,

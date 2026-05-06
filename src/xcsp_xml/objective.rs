@@ -75,8 +75,6 @@ pub mod xcsp3_xml {
      */
     #[derive(Deserialize, Debug)]
     pub struct MaximizeMinimize {
-        #[serde(rename = "id", default)]
-        pub id: String,
         #[serde(rename = "@type", default)]
         pub r#type: String,
         #[serde(rename = "list", default)]

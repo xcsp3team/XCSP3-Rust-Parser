@@ -39,10 +39,8 @@
  */
 
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::objectives::xobjective_element::xcsp3_core::XObjectiveElement;
     use crate::objectives::xobjective_expression::xcsp3_core::XObjectiveExpression;
-    use std::fmt::{Display, Formatter};
 
     #[derive(Clone)]
     pub enum XObjective<'a> {

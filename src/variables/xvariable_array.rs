@@ -100,9 +100,7 @@ pub mod xcsp3_core {
             &self,
             id: &str,
         ) -> Result<Vec<(String, &XDomainInteger)>, Xcsp3Error> {
-            // println!("{}", id);
             let mut ret: Vec<(String, &XDomainInteger)> = vec![];
-            // println!("{}", id);
             match id.find('[') {
                 None => {
                     return Err(Xcsp3Error::get_variable_size_invalid_error(
@@ -127,9 +125,7 @@ pub mod xcsp3_core {
                             ret.push((size_to_string(&id[..v], size_vec), &self.domain));
                         }
                     }
-                    Err(e) => {
-                        return Err(e);
-                    }
+                    Err(e) => return Err(e),
                 },
             }
             Ok(ret)

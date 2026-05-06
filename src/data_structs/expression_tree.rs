@@ -38,7 +38,6 @@
  * </p>
  */
 pub mod xcsp3_utils {
-    use crate::data_structs::expression_tree::xcsp3_utils::TreeNode::Variable;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;

@@ -47,7 +47,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -81,23 +81,9 @@ pub mod xcsp3_core {
         ) -> Result<Self, Xcsp3Error> {
             match list_to_vec_var_val(list) {
                 Ok(scope) => {
-                    let condition = condition.replace(['(', ')', ','], " ");
-                    let spilt: Vec<&str> = condition.split_whitespace().collect();
-                    let ope: Operator = match Operator::get_operator_by_str(spilt[0]) {
-                        None => {
-                            return Err(Xcsp3Error::get_constraint_sum_error(
-                                "parse sum constraint error, ",
-                            ))
-                        }
-                        Some(o) => o,
-                    };
-                    let rand: Operand = match Operand::get_operand_by_str(&spilt[1..], &ope) {
-                        None => {
-                            return Err(Xcsp3Error::get_constraint_sum_error(
-                                "parse sum constraint error, ",
-                            ))
-                        }
-                        Some(r) => r,
+                    let (ope, rand) = match extract_operator(condition) {
+                        Ok(value) => value,
+                        Err(e) => return Err(e),
                     };
                     Ok(Self::new(scope, set, ope, rand, is_maximum_or_minimum))
                 }
