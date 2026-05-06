@@ -11,7 +11,7 @@
         <group>
             <extension>
                 <list>%...</list>
-                <supports>(0,1,0)(1,0,0)(1,1,0)(1,1,1)(3,5,6</supports>
+                <supports>(0,1,0)(*,0,0)(1,1,0)(1,1,1)(3,5,6</supports>
             </extension>
             <args>z[0..2]</args>
             <args>z[0..2]</args>

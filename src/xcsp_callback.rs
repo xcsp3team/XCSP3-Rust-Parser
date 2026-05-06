@@ -1375,6 +1375,11 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
+    fn on_constraint_element_v2(&mut self, _scope: &[String], _value: String) {
+        println!("c Element Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
     /**
      * The callback function related to a channel constraint
      * See http://xcsp.org/specifications/channel

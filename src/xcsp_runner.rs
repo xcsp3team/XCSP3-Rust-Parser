@@ -929,14 +929,19 @@ impl XcspRunner {
                 None => match inner.value() {
                     XVarVal::IntVal(v) => {
                         let scope = to_var_list(inner.scope(), inner.set());
-                        callback.on_constraint_element_v1(&*scope, *v);
+                        callback.on_constraint_element_v1(&*scope, *v)
                     }
-
+                    XVarVal::IntVar(v) => {
+                        let scope = to_var_list(inner.scope(), inner.set());
+                        callback.on_constraint_element_v2(&*scope, v.clone())
+                    }
                     _ => {
-                        panic!("Unexpected variant in value")
+                        panic!("Unexpected value in value")
                     }
                 },
-                Some(index) => {}
+                Some(index) => {
+                    let scope = to_var_list(inner.scope(), inner.set());
+                }
             },
 
             //---------------------------------------------------------------------------------------------------
