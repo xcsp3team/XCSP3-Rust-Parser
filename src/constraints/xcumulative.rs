@@ -33,12 +33,11 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
+    use crate::utils::utils_functions::xcsp3_utils::{
+        list_to_vec_var_val, str_to_condition, to_i32_option,
+    };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
-    use std::collections::HashMap;
 
     #[derive(Clone)]
     pub struct XCumulative<'a> {
@@ -86,65 +85,25 @@ pub mod xcsp3_core {
             machines_str: &str,
             start_index_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = match list_to_vec_var_val(origins_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let lengths = match list_to_vec_var_val(lengths_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let heights = match list_to_vec_var_val(heights_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
+        ) -> Self {
+            let scope = list_to_vec_var_val(origins_str);
+            let lengths = list_to_vec_var_val(lengths_str);
+            let heights = list_to_vec_var_val(heights_str);
             let binding = condition_str.replace(['(', ')', ','], " ");
-            let (ope, rand) = match str_to_condition(condition_str) {
-                Ok(value) => value,
-                Err(e) => return Err(e),
-            };
+            let (ope, rand) = str_to_condition(condition_str);
             let ends = if ends_str.is_empty() {
                 None
             } else {
-                match list_to_vec_var_val(ends_str) {
-                    Ok(n) => Some(n),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                }
+                Option::from(list_to_vec_var_val(ends_str))
             };
 
             let machines = if machines_str.is_empty() {
                 None
             } else {
-                match list_to_vec_var_val(machines_str) {
-                    Ok(n) => Some(n),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                }
+                Option::from(list_to_vec_var_val(machines_str))
             };
-            let start_index = if !start_index_str.is_empty() {
-                match start_index_str.parse::<i32>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_cumulative_error(
-                            "parse cumulative constraint start_index error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
-
-            Ok(Self::new(
+            let start_index = to_i32_option(start_index_str);
+            Self::new(
                 scope,
                 set,
                 lengths,
@@ -154,7 +113,7 @@ pub mod xcsp3_core {
                 ope,
                 rand,
                 start_index,
-            ))
+            )
         }
 
         pub fn new(

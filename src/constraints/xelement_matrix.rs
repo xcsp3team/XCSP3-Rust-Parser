@@ -34,7 +34,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_matrix_ids, list_to_vec_var_val, str_to_condition, to_i32_option, to_matrix,
     };
@@ -98,7 +98,7 @@ pub mod xcsp3_core {
             start_col_index_str: &str,
             condition: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        ) -> Self {
             let value = XVarVal::from_string(value_str);
             let (row_index, col_index) = if index_str.is_empty() {
                 panic!("index in element matrix constraint must be specified");

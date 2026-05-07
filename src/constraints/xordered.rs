@@ -31,7 +31,7 @@ pub mod xcsp3_core {
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -67,7 +67,7 @@ pub mod xcsp3_core {
             lengths_str: &str,
             operator: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        ) -> Self {
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => match list_to_vec_var_val(lengths_str) {
                     Ok(length_vec_str) => match Operator::get_operator_by_str(operator) {
@@ -84,11 +84,7 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn from_str_without_lengths(
-            list: &str,
-            operator: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        pub fn from_str_without_lengths(list: &str, operator: &str, set: &'a XVariableSet) -> Self {
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => match Operator::get_operator_by_str(operator) {
                     None => Err(Xcsp3Error::get_constraint_list_of_values_error(

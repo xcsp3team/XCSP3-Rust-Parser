@@ -31,7 +31,7 @@ pub mod xcsp3_core {
         inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -64,21 +64,11 @@ pub mod xcsp3_core {
             lengths_str: &str,
             zero_ignored_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = match list_to_vec_var_val(list) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let lengths = match list_to_vec_var_val(lengths_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let lengths = list_to_vec_var_val(lengths_str);
             let zero_ignored = to_bool_option(zero_ignored_str);
-            Ok(Self::new(scope, lengths, set, zero_ignored))
+            Self::new(scope, lengths, set, zero_ignored)
         }
         pub fn new(
             scope: Vec<XVarVal>,

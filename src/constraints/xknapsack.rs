@@ -33,7 +33,6 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -78,10 +77,10 @@ pub mod xcsp3_core {
             profits: &str,
             conditions: &Box<[String]>,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = list_to_vec_var_val(list)?;
-            let weights = list_to_vec_var_val(weights)?;
-            let profits = list_to_vec_var_val(profits)?;
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let weights = list_to_vec_var_val(weights);
+            let profits = list_to_vec_var_val(profits);
             let (weight_operator, weight_operand) = match str_to_condition(&*conditions[0]) {
                 Ok(value) => value,
                 Err(_e) => panic!("Error on condition: {}", conditions[0]),
@@ -90,7 +89,7 @@ pub mod xcsp3_core {
                 Ok(value) => value,
                 Err(_e) => panic!("Error on condition: {}", conditions[1]),
             };
-            Ok(Self::new(
+            Self::new(
                 scope,
                 weights,
                 profits,
@@ -99,7 +98,7 @@ pub mod xcsp3_core {
                 profit_operator,
                 profit_operand,
                 set,
-            ))
+            )
         }
 
         #[allow(clippy::too_many_arguments)]

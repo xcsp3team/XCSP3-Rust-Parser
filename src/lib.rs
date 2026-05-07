@@ -30,7 +30,6 @@
 
 pub mod constraints;
 mod data_structs;
-mod errors;
 pub mod objectives;
 pub mod utils;
 pub mod variables;

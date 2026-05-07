@@ -34,7 +34,6 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, str_to_condition, to_i32_option,
     };
@@ -52,6 +51,8 @@ pub mod xcsp3_core {
         operator: Option<Operator>,
         operand: Option<Operand>,
     }
+
+
 
     impl XConstraintUnfold for XElement<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
@@ -92,61 +93,58 @@ pub mod xcsp3_core {
             start_index_str: &str,
             condition: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            // println!("{start_index_str}");
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let value = XVarVal::from_string(value_str);
-                    let index = XVarVal::from_string(index_str);
-                    let start_index = to_i32_option(start_index_str);
-                    let (operator, operand) = if condition.is_empty() {
-                        (None, None)
-                    } else {
-                        match str_to_condition(&condition) {
-                            Ok((op, val)) => (Some(op), Some(val)),
-                            Err(_) => panic!("condition in binpacking is wrong: {}", condition),
-                        }
-                    };
-                    Ok(XElement::new(
-                        scope_vec_str,
-                        set,
-                        value,
-                        index,
-                        start_index,
-                        operator,
-                        operand,
-                    ))
-                }
-
-                Err(e) => Err(e),
-            }
-        }
-
-        pub fn new(
-            scope: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            value: Option<XVarVal>,
-            index: Option<XVarVal>,
-            start_index: Option<i32>,
-            operator: Option<Operator>,
-            operand: Option<Operand>,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                value,
-                index,
-                start_index,
-                operator,
-                operand,
-            }
+            // println!("{start_index_str}");
+            let scope_vec_str = list_to_vec_var_val(list);
+            let value = XVarVal::from_string(value_str);
+            let index = XVarVal::from_string(index_str);
+            let start_index = to_i32_option(start_index_str);
+            let (operator, operand) = if condition.is_empty() {
+                (None, None)
+            } else {
+                match str_to_condition(&condition) {
+                    Ok((op, val)) => (Some(op), Some(val)),
+                    Err(_) => panic!("condition in binpacking is wrong: {}", condition),
+                }
+            };
+
+            XElement::new(scope_vec_str,
+                          set,
+                          value,
+                          index,
+                          start_index,
+                          operator,
+                          operand,
+            )
         }
 
-        pub fn scope(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
 
-        pub fn set(&self) -> &'a XVariableSet {
+    pub fn new(
+        scope: Vec<XVarVal>,
+        set: &'a XVariableSet,
+        value: Option<XVarVal>,
+        index: Option<XVarVal>,
+        start_index: Option<i32>,
+        operator: Option<Operator>,
+        operand: Option<Operand>,
+    ) ->
+        Self {
+        scope,
+        set,
+        value,
+        index,
+        start_index,
+        operator,
+        operand,
+    }
+
+
+
+pub fn scope(&self) -> &Vec<XVarVal> {
+    &self.scope
+}
+
+pub fn set(&self) -> &'a XVariableSet {
             self.set
         }
 

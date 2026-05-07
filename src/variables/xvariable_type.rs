@@ -27,7 +27,7 @@
 */
 
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_array::xcsp3_core::XVariableArray;
     use crate::variables::xvariable_int::xcsp3_core::XVariableInt;

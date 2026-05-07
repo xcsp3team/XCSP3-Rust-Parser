@@ -31,7 +31,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -60,19 +59,12 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XAllDifferentList<'a> {
-        //pub fn from_str_vec(scope_vec_str: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
-        //    XAllDifferentList::new(scope_vec_str, set)
-        // }
-
-        pub fn from_str(lists: &[String], set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+        pub fn from_str(lists: &[String], set: &'a XVariableSet) -> Self {
             let mut tmp = Vec::new();
             for list in lists {
-                match list_to_vec_var_val(list) {
-                    Ok(scope_vec_str) => tmp.push(scope_vec_str),
-                    Err(e) => return Err(e),
-                }
+                tmp.push(list_to_vec_var_val(list));
             }
-            Ok(XAllDifferentList::new(tmp, set))
+            XAllDifferentList::new(tmp, set)
         }
         pub fn new(lists: Vec<Vec<XVarVal>>, set: &'a XVariableSet) -> Self {
             XAllDifferentList { lists, set }

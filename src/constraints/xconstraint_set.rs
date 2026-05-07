@@ -86,21 +86,13 @@ pub mod xcsp3_core {
             lengths_str: &str,
             zero_ignored_str: &str,
         ) {
-            match XNoOverlapKDim::from_str(list, lengths_str, zero_ignored_str, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XNoOverlapKDim(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XNoOverlapKDim::from_str(list, lengths_str, zero_ignored_str, self.set);
+            self.constraints.push(XConstraintType::XNoOverlapKDim(c));
         }
 
         pub fn build_no_overlap(&mut self, list: &str, lengths_str: &str, zero_ignored_str: &str) {
-            match XNoOverlap::from_str(list, lengths_str, zero_ignored_str, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XNoOverlap(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XNoOverlap::from_str(list, lengths_str, zero_ignored_str, self.set);
+            self.constraints.push(XConstraintType::XNoOverlap(c));
         }
         pub fn build_bin_packing(
             &mut self,
@@ -110,12 +102,8 @@ pub mod xcsp3_core {
             limits: &str,
             loads: &str,
         ) {
-            match XBinpacking::from_str(list, sizes, condition, limits, loads, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XBinpacking(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XBinpacking::from_str(list, sizes, condition, limits, loads, self.set);
+            self.constraints.push(XConstraintType::XBinpacking(c));
         }
         pub fn build_cumulative(
             &mut self,

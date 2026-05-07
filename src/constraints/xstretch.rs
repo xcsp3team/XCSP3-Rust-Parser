@@ -27,7 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     #[derive(Clone)]
@@ -46,7 +46,7 @@ pub mod xcsp3_core {
             widths_str: &str,
             patterns_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        ) -> Self {
             let scope = match list_to_vec_var_val(list) {
                 Ok(n) => n,
                 Err(e) => {

@@ -28,12 +28,8 @@
 
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_matrix_ids, to_matrix};
+    use crate::utils::utils_functions::xcsp3_utils::to_matrix;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
-        XVariableArray, XVariableTree,
-    };
 
     // #[derive(Clone)]
     #[derive(Clone)]
@@ -43,9 +39,9 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XAllDifferentMatrix<'a> {
-        pub fn from_str(list: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+        pub fn from_str(list: &str, set: &'a XVariableSet) -> Self {
             let matrix = to_matrix(list, set);
-            Ok(Self::new(matrix, set))
+            Self::new(matrix, set)
         }
         pub fn new(matrix: Vec<Vec<XVarVal>>, set: &'a XVariableSet) -> Self {
             XAllDifferentMatrix { matrix, set }

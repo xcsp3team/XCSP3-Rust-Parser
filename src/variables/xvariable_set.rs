@@ -27,7 +27,7 @@
 */
 
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_type::xcsp3_core::XVariableType;
     use std::collections::HashMap;

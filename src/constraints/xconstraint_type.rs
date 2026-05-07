@@ -62,11 +62,10 @@ pub mod xcsp3_core {
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 
     #[derive(Clone)]
     pub enum XConstraintType<'a> {
-        XConstraintNone(Xcsp3Error),
+        XConstraintNone(),
         XExtension(XExtension<'a>),
         XAllDifferent(XAllDifferent<'a>),
         XAllDifferentList(XAllDifferentList<'a>),

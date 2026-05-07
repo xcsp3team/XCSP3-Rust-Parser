@@ -31,7 +31,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -73,13 +72,13 @@ pub mod xcsp3_core {
             start_index_str2: &str,
             value_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let sc1 = list_to_vec_var_val(list1)?;
-            let sc2 = list_to_vec_var_val(list2)?;
+        ) -> Self {
+            let sc1 = list_to_vec_var_val(list1);
+            let sc2 = list_to_vec_var_val(list2);
             let start1 = start_index_str1.parse().unwrap();
             let start2 = start_index_str2.parse().unwrap();
             let v = XVarVal::from_string(value_str);
-            Ok(Self::new(sc1, start1, sc2, start2, v, set))
+            Self::new(sc1, start1, sc2, start2, v, set)
         }
 
         pub fn new(

@@ -31,7 +31,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::fmt::{Display, Formatter};
@@ -65,11 +64,9 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XAllEqual<'a> {
-        pub fn from_str(list: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => Ok(XAllEqual::new(scope_vec_str, set)),
-                Err(e) => Err(e),
-            }
+        pub fn from_str(list: &str, set: &'a XVariableSet) -> Self {
+            let scope_vec_str = list_to_vec_var_val(list);
+            XAllEqual::new(scope_vec_str, set)
         }
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
             XAllEqual { scope, set }

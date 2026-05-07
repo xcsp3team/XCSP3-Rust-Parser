@@ -29,7 +29,7 @@
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
@@ -85,7 +85,7 @@ pub mod xcsp3_core {
             offset_str: &str,
             circular_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        ) -> Self {
             match list_to_vec_var_val(arg_str) {
                 Ok(scope_vec_str) => {
                     let offset = if offset_str.is_empty() {

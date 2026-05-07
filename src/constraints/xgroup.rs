@@ -28,7 +28,6 @@
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
@@ -53,20 +52,13 @@ pub mod xcsp3_core {
             cc: XConstraintType<'a>,
             arg_str: &[String],
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            // let tt = TimeInterval::new();
+        ) -> Self {
             let mut args: Vec<Vec<XVarVal>> = vec![];
             args.reserve(arg_str.len());
             for a in arg_str.iter() {
-                // args.push(list_to_vec_var(a));
-                match list_to_vec_var_val(a) {
-                    Ok(scope_vec_str) => {
-                        args.push(scope_vec_str);
-                    }
-                    Err(e) => return Err(e),
-                }
+                args.push(list_to_vec_var_val(a));
             }
-            Ok(XGroup::new(args, set, Box::new(cc)))
+            XGroup::new(args, set, Box::new(cc))
         }
 
         pub fn new(

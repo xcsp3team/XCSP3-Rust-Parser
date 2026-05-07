@@ -1,5 +1,5 @@
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use std::fmt::{Display, Formatter};
     use std::str::FromStr;
 

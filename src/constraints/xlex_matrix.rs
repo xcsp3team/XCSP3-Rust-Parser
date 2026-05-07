@@ -28,12 +28,8 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_matrix_ids, to_matrix};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
-        XVariableArray, XVariableTree,
-    };
 
     #[derive(Clone)]
     pub struct XLexMatrix<'a> {
@@ -43,21 +39,15 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XLexMatrix<'a> {
-        pub fn from_str(
-            list: &str,
-            operator: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        pub fn from_str(list: &str, operator: &str, set: &'a XVariableSet) -> Self {
             let operator = match Operator::get_operator_by_str(operator) {
                 Some(operator) => operator,
                 None => {
-                    return Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse lex operator error, ",
-                    ));
+                    panic!("Error on operator: {}", operator);
                 }
             };
             let matrix = to_matrix(list, set);
-            Ok(Self::new(matrix, operator, set))
+            Self::new(matrix, operator, set)
         }
 
         pub fn new(lists: Vec<Vec<XVarVal>>, operator: Operator, set: &'a XVariableSet) -> Self {
