@@ -28,7 +28,8 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
+        arg_in_operand, arg_in_var, inject_parameters_in_list, inject_parameters_in_operand,
+        inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -54,13 +55,30 @@ pub mod xcsp3_core {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
             self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            // self.value = inject_parameters_in_var_val(self.value.clone(), arg);
+            if let Some(index) = &mut self.index {
+                *index = inject_parameters_in_var_val(index.clone(), arg);
+            }
+            if let Some(value) = &mut self.value {
+                *value = inject_parameters_in_var_val(value.clone(), arg);
+            }
+            if let Some(o) = &mut self.operand {
+                *o = inject_parameters_in_operand(o, arg);
+            }
         }
         fn max_args_used(&mut self) -> i32 {
-            //let mut s = Vec::new();
-            //s.push(self.value.clone());
-            //max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
-            -1
+            let tmp = max_arg_in_list(&*self.scope);
+            let tmp = match self.operand.clone() {
+                Some(v) => max(tmp, arg_in_operand(&v)),
+                None => tmp,
+            };
+            let tmp = match self.index() {
+                Some(v) => max(tmp, arg_in_var(&v)),
+                None => tmp,
+            };
+            match self.index() {
+                Some(v) => max(tmp, arg_in_var(&v)),
+                None => tmp,
+            }
         }
     }
 

@@ -99,6 +99,12 @@ pub mod xcsp3_core {
         max
     }
 
+    pub fn arg_in_var(value: &XVarVal) -> i32 {
+        match value {
+            XVarVal::IntArgument(index) => *index as i32,
+            _ => -1,
+        }
+    }
     pub fn arg_in_operand(operand: &Operand) -> i32 {
         match operand {
             Operand::IntArgument(index) => *index as i32,
