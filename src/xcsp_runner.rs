@@ -1,12 +1,30 @@
-/*
- * xcsp_runner.rs
- *
- * Moteur principal : charge un fichier XCSP3, parse les variables / contraintes /
- * objectifs, puis dispatch chaque élément vers le callback correspondant.
- *
- * Usage :
- *   XcspRunner::run("mon_fichier.xml", &mut mon_callback)?;
- */
+/*=============================================================================
+* RUST parser for CSP instances represented in XCSP3 Format
+*
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*=============================================================================
+*/
 use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
 use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
@@ -222,6 +240,9 @@ impl XcspRunner {
         c: &mut XConstraintType,
     ) -> Result<(), Box<dyn Error>> {
         match c {
+            XConstraintType::XConstraintNone(_) => {
+                panic!("An error during parsing constraints appeared")
+            }
             //---------------------------------------------------------------------------------------------------
             // All Diff constraints
             //---------------------------------------------------------------------------------------------------
@@ -612,7 +633,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_int_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
@@ -622,7 +643,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_int_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
@@ -632,7 +653,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_int_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -642,7 +663,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -652,7 +673,7 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
                 if is_var_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
@@ -662,8 +683,9 @@ impl XcspRunner {
                         &*values,
                         &*occurs,
                         inner.closed(),
-                    );
+                    )
                 }
+                panic!("Unexpected variant for cardinality constraint");
             }
             //---------------------------------------------------------------------------------------------------
             // Precedence Constraint
@@ -791,7 +813,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -803,7 +825,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -815,7 +837,7 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
                     if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
@@ -827,8 +849,9 @@ impl XcspRunner {
                             &*heights,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
+                        )
                     }
+                    panic!("Unexpected variant for cumulative constraint");
                 }
                 Some(ends) => {
                     if is_int_list(inner.lengths())
@@ -899,24 +922,98 @@ impl XcspRunner {
                             inner.operand().clone(),
                         )
                     }
+                    panic!("Unexpected variant for cumulative constraint");
                 }
             },
             //---------------------------------------------------------------------------------------------------
             // Element Constraint
             //---------------------------------------------------------------------------------------------------
-            XConstraintType::XElement(inner) => match inner.index() {
-                None => match inner.value() {
-                    XVarVal::IntVal(v) => {
-                        let scope = to_var_list(inner.scope(), inner.set());
-                        callback.on_constraint_element_v1(&*scope, *v);
-                    }
+            XConstraintType::XElement(inner) => {
+                if is_var_list(inner.scope()) {
+                    let scope = to_var_list(inner.scope(), inner.set());
+                    if let Some(index) = inner.index() {
+                        if let Some(value) = inner.value() {
+                            match value {
+                                XVarVal::IntVal(v) => callback.on_constraint_element_v4(
+                                    &*scope,
+                                    inner.start_index(),
+                                    index.to_string(),
+                                    *v,
+                                ),
+                                XVarVal::IntVar(v) => callback.on_constraint_element_v3(
+                                    &*scope,
+                                    inner.start_index(),
+                                    index.to_string(),
+                                    v.clone(),
+                                ),
+                                _ => panic!("Unexpected value for element constraint"),
+                            }
+                        } else {
+                            let (operand, operator) = inner
+                                .operand()
+                                .clone()
+                                .zip(*inner.operator())
+                                .expect("Missing condition for element constraint");
 
-                    _ => {
-                        panic!("Unexpected variant in value")
+                            callback.on_constraint_element_v5(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                operator,
+                                operand.clone(),
+                            );
+                        }
+                    } else {
+                        let Some(value) = inner.value() else {
+                            panic!("Wanted a value or an index in element constraint")
+                        };
+                        match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_v1(&*scope, *v),
+                            XVarVal::IntVar(v) => {
+                                callback.on_constraint_element_v2(&*scope, v.clone())
+                            }
+                            (_) => panic!("Unexpected value for element constraint"),
+                        }
                     }
-                },
-                Some(index) => {}
-            },
+                }
+                if is_int_list(inner.scope()) {
+                    let scope = to_int_list(inner.scope());
+                    let Some(index) = inner.index() else {
+                        panic!("Wanted an index element constraint with int list")
+                    };
+                    match inner.value() {
+                        None => {
+                            let (operand, operator) = inner
+                                .operand()
+                                .clone()
+                                .zip(*inner.operator())
+                                .expect("Missing condition for element constraint");
+                            callback.on_constraint_element_v8(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                operator,
+                                operand.clone(),
+                            )
+                        }
+                        Some(value) => match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_v7(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                *v,
+                            ),
+                            XVarVal::IntVar(v) => callback.on_constraint_element_v6(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Unexpected value for element constraint"),
+                        },
+                    }
+                }
+            }
 
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint
@@ -932,7 +1029,9 @@ impl XcspRunner {
                         let tmp = to_var_list(&inner.lengths(), inner.set());
                         callback.on_constraint_no_overlap_v2(&*scope, &*tmp, inner.zero_ignored())
                     }
-                    _ => {}
+                    _ => {
+                        panic!("Unexpected variant for nooverlap constraint");
+                    }
                 }
             }
             XConstraintType::XNoOverlapKDim(inner) => {

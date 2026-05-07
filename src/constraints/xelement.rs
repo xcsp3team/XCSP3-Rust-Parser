@@ -1,7 +1,10 @@
 /*=============================================================================
-* parser for CSP instances represented in XCSP3 Format
+* RUST parser for CSP instances represented in XCSP3 Format
 *
-* Copyright (c) 2023 xcsp.org (contact @ xcsp.org)
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +26,15 @@
 *=============================================================================
 */
 
-/*
-* <p>@project_name: xcsp3-rust
-* </p>
-* <p>@author: luhan zhen
-* </p>
-* <p>@date:  2023/7/23 00:59
-* </p>
-* <p>@email: zhenlh20@mails.jlu.edu.cn
-* </p>
-* <p>@version: 1.0
-* </p>
- * <p>@description: 1.0
-* </p>
- */
-
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
         inject_parameters_in_list, inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
+    use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+    use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -53,21 +43,24 @@ pub mod xcsp3_core {
     pub struct XElement<'a> {
         scope: Vec<XVarVal>,
         set: &'a XVariableSet,
-        value: XVarVal,
+        value: Option<XVarVal>,
         index: Option<XVarVal>,
         start_index: Option<i32>,
+        operator: Option<Operator>,
+        operand: Option<Operand>,
     }
 
     impl XConstraintUnfold for XElement<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
             self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            self.value = inject_parameters_in_var_val(self.value.clone(), arg);
+            // self.value = inject_parameters_in_var_val(self.value.clone(), arg);
         }
         fn max_args_used(&mut self) -> i32 {
-            let mut s = Vec::new();
-            s.push(self.value.clone());
-            max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+            //let mut s = Vec::new();
+            //s.push(self.value.clone());
+            //max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))
+            -1
         }
     }
 
@@ -77,18 +70,15 @@ pub mod xcsp3_core {
             value_str: &str,
             index_str: &str,
             start_index_str: &str,
+            condition: &str,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
             // println!("{start_index_str}");
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => {
                     let value = match XVarVal::from_string(value_str) {
-                        None => {
-                            return Err(Xcsp3Error::get_constraint_sum_error(
-                                "parse element constraint value error, ",
-                            ));
-                        }
-                        Some(v) => v,
+                        None => None,
+                        Some(v) => Some(v),
                     };
                     let index = if index_str.is_empty() {
                         None
@@ -114,8 +104,23 @@ pub mod xcsp3_core {
                     } else {
                         None
                     };
-
-                    Ok(XElement::new(scope_vec_str, set, value, index, start_index))
+                    let (operator, operand) = if condition.is_empty() {
+                        (None, None)
+                    } else {
+                        match extract_operator(&condition) {
+                            Ok((op, val)) => (Some(op), Some(val)),
+                            Err(_) => panic!("condition in binpacking is wrong: {}", condition),
+                        }
+                    };
+                    Ok(XElement::new(
+                        scope_vec_str,
+                        set,
+                        value,
+                        index,
+                        start_index,
+                        operator,
+                        operand,
+                    ))
                 }
 
                 Err(e) => Err(e),
@@ -125,9 +130,11 @@ pub mod xcsp3_core {
         pub fn new(
             scope: Vec<XVarVal>,
             set: &'a XVariableSet,
-            value: XVarVal,
+            value: Option<XVarVal>,
             index: Option<XVarVal>,
             start_index: Option<i32>,
+            operator: Option<Operator>,
+            operand: Option<Operand>,
         ) -> Self {
             Self {
                 scope,
@@ -135,6 +142,8 @@ pub mod xcsp3_core {
                 value,
                 index,
                 start_index,
+                operator,
+                operand,
             }
         }
 
@@ -146,7 +155,7 @@ pub mod xcsp3_core {
             self.set
         }
 
-        pub fn value(&self) -> &XVarVal {
+        pub fn value(&self) -> &Option<XVarVal> {
             &self.value
         }
 
@@ -154,8 +163,16 @@ pub mod xcsp3_core {
             &self.index
         }
 
-        pub fn start_index(&self) -> Option<i32> {
-            self.start_index
+        pub fn start_index(&self) -> i32 {
+            self.start_index.unwrap_or(0)
+        }
+
+        pub fn operator(&self) -> &Option<Operator> {
+            &self.operator
+        }
+
+        pub fn operand(&self) -> &Option<Operand> {
+            &self.operand
         }
     }
 }

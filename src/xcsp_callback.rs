@@ -1,18 +1,30 @@
-/*
- * xcsp_callback.rs
- *
- * Définissez votre propre solveur en implémentant ce trait.
- * Toutes les méthodes ont une implémentation vide par défaut :
- * vous n'implémentez que ce dont vous avez besoin.
- *
- * Exemple d'utilisation :
- *   struct MonSolveur { ... }
- *   impl XcspCallback for MonSolveur {
- *       fn on_variable_int(&mut self, var: &XVariableInt) { ... }
- *       fn on_constraint_all_different(&mut self, c: &XAllDifferent) { ... }
- *   }
- *   XcspRunner::run("mon_fichier.xml", &mut MonSolveur { ... }).unwrap();
- */
+/*=============================================================================
+* RUST parser for CSP instances represented in XCSP3 Format
+*
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*=============================================================================
+*/
 use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -1111,7 +1123,8 @@ pub trait XcspCallback {
      * @param origins the vector of origins
      * @param lengths the vector of lenghts (here ints)
      * @param heights the vector of heights (here ints)
-     * @param xc the condition (see XCondition)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
      */
     fn on_constraint_cumulative_v1(
         &mut self,
@@ -1360,6 +1373,191 @@ pub trait XcspCallback {
      */
     fn on_constraint_element_v1(&mut self, _scope: &[String], _value: i32) {
         println!("c Element Variant 1 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+    /**
+     * The callback function related to a element constraint with var value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[] </list>
+     *    <value> v </value>
+     * </element>
+     *
+     * @param scope the scope of the constraint
+     * @param value the value (here a variable)
+     */
+    fn on_constraint_element_v2(&mut self, _scope: &[String], _value: String) {
+        println!("c Element Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a variable)
+     */
+    fn on_constraint_element_v3(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _value: String,
+    ) {
+        println!("c Element Variant 3 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <value> 3 </value>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a int)
+     */
+    fn on_constraint_element_v4(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _value: i32,
+    ) {
+        println!("c Element Variant 4 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint with index and condition
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> y[]  </list>
+     *    <index> x </index>
+     *    <condition> (le,3) </condition>
+     * </element>
+     * </element>
+     *
+     * @param list the list of vars
+     * @param start_index the start index
+     * @param index the index (here a int)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
+     */
+    fn on_constraint_element_v5(
+        &mut self,
+        _list: &[String],
+        _start_index: i32,
+        _index: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Variant 5 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element with int in list constraint with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 4 5   </list>
+     *    <index> x </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param list the list of int
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a variable)
+     */
+    fn on_constraint_element_v6(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _value: String,
+    ) {
+        println!("c Element Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint list of int with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 3 6   </list>
+     *    <index> x </index>
+     *    <value> 3 </value>
+     * </element>
+     *
+     * @param list the list of int
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a int)
+     */
+    fn on_constraint_element_v7(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _value: i32,
+    ) {
+        println!("c Element Variant 7 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element with int in list constraint with index and condition
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 5O 230  </list>
+     *    <index> x </index>
+     *    <condition> (le,3) </condition>
+     * </element>
+     * </element>
+     *
+     * @param list the list of int
+     * @param start_index the start index
+     * @param index the index (here a int)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
+     */
+    fn on_constraint_element_v8(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Variant 8 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 

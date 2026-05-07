@@ -1,9 +1,30 @@
-/*
- * example_callback.rs
- *
- * Exemple concret d'implémentation du trait XcspCallback.
- * Définit PrintingSolver, un solveur qui affiche et compte chaque élément parsé.
- */
+/*=============================================================================
+* RUST parser for CSP instances represented in XCSP3 Format
+*
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*=============================================================================
+*/
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
@@ -477,14 +498,94 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
-    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
-        println!("  [Element V1] {:?} value={}", scope, value);
-    }
-
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
+    fn on_constraint_element_v2(&mut self, scope: &[String], value: String) {
+        println!("  [Element V2] {:?} value={}", scope, value);
+    }
+
+    fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        println!("  [Element V1] {:?} value={}", scope, value);
+    }
+    fn on_constraint_element_v3(
+        &mut self,
+        list: &[String],
+        start_index: i32,
+        index: String,
+        value: String,
+    ) {
+        println!(
+            "  [Element V3] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+    fn on_constraint_element_v4(
+        &mut self,
+        list: &[String],
+        start_index: i32,
+        index: String,
+        value: i32,
+    ) {
+        println!(
+            "  [Element V4] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+
+    fn on_constraint_element_v5(
+        &mut self,
+        list: &[String],
+        start_index: i32,
+        index: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Element V5] {:?} start={} index= {}  operator={:?}, operand={:?}",
+            list, start_index, index, operator, operand
+        );
+    }
+
+    fn on_constraint_element_v6(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        value: String,
+    ) {
+        println!(
+            "  [Element V6] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+    fn on_constraint_element_v7(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        value: i32,
+    ) {
+        println!(
+            "  [Element V7] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+
+    fn on_constraint_element_v8(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Element V8] {:?} start={} index= {}  operator={:?}, operand={:?}",
+            list, start_index, index, operator, operand
+        );
+    }
     fn on_constraint_nvalues_v2(
         &mut self,
         scope: &[String],

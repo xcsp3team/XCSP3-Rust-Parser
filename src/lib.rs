@@ -1,7 +1,10 @@
 /*=============================================================================
-* parser for CSP instances represented in XCSP3 Format
+* RUST parser for CSP instances represented in XCSP3 Format
 *
-* Copyright (c) 2023 xcsp.org (contact @ xcsp.org)
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +28,6 @@
 
 #![doc = include_str!("../README.md")]
 
-
-
 pub mod constraints;
 mod data_structs;
 mod errors;
@@ -36,7 +37,6 @@ pub mod variables;
 // pub mod xcsp3;
 pub mod xcsp_xml;
 
+pub mod example_callback;
 pub mod xcsp_callback;
 pub mod xcsp_runner;
-pub mod example_callback;
-

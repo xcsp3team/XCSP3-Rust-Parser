@@ -1,7 +1,10 @@
 /*=============================================================================
-* parser for CSP instances represented in XCSP3 Format
+* RUST parser for CSP instances represented in XCSP3 Format
 *
-* Copyright (c) 2023 xcsp.org (contact @ xcsp.org)
+* Copyright (c) 2026 xcsp.org (contact @ xcsp.org)
+*
+* Based on the original Rust parser proposed in https://github.com/luhanzhen/xcsp3-rust
+* by Luhan Zhen (zhenlh20@mails.jlu.edu.cn)
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +25,6 @@
 * THE SOFTWARE.
 *=============================================================================
 */
-
-/*
- * <p>@project_name: XCSP3-Rust
- * </p>
- * <p>@author: luhanzhen
- * </p>
- * <p>@date: 2023/7/7
- * </p>
- * <p>@time: 18:35
- * </p>
- * <p>@this_file_name:xcsp3constraint
- * </p>
- */
 
 pub mod xcsp3_core {
     use crate::constraints::xall_different::xcsp3_core::XAllDifferent;
@@ -235,8 +225,16 @@ pub mod xcsp3_core {
             values_str: &str,
             index_str: &str,
             start_index_str: &str,
+            condition: &str,
         ) {
-            match XElement::from_str(vars, values_str, index_str, start_index_str, self.set) {
+            match XElement::from_str(
+                vars,
+                values_str,
+                index_str,
+                start_index_str,
+                condition,
+                self.set,
+            ) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XElement(c));
                 }
