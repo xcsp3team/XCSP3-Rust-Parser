@@ -770,7 +770,9 @@ pub trait XcspCallback {
     }
 
     /// <slide> ... </slide>
-    fn on_constraint_slide(&mut self, _c: &XSlide) {}
+    fn on_constraint_slide(&mut self, _c: &XSlide) {
+        todo!("c Slide not yet implemented");
+    }
 
     /**
      * The callback function related to a count constraint with expressions
