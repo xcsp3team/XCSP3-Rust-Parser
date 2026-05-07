@@ -35,9 +35,14 @@ pub mod xcsp3_utils {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+    use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use crate::variables::xvariable_type::xcsp3_core::XVariableType;
+    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
+        XVariableArray, XVariableTree,
+    };
     // use std::str::FromStr;
 
-    pub fn extract_operator(condition: &str) -> Result<(Operator, Operand), Xcsp3Error> {
+    pub fn str_to_condition(condition: &str) -> Result<(Operator, Operand), Xcsp3Error> {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
         let ope: Operator = match Operator::get_operator_by_str(split[0]) {
@@ -58,6 +63,57 @@ pub mod xcsp3_utils {
             Some(r) => r,
         };
         Ok((ope, rand))
+    }
+
+    pub fn to_bool_option(string: &str) -> Option<bool> {
+        if !string.trim().is_empty() {
+            match string.trim().parse::<bool>() {
+                Ok(n) => Some(n),
+                Err(_) => panic!("parse bool error {}", string),
+            }
+        } else {
+            None
+        }
+    }
+
+    pub fn to_i32_option(string: &str) -> Option<i32> {
+        if !string.trim().is_empty() {
+            match string.trim().parse::<i32>() {
+                Ok(n) => Some(n),
+                Err(_) => panic!("parse i32 error {}", string),
+            }
+        } else {
+            None
+        }
+    }
+    pub fn to_matrix(list: &str, set: &XVariableSet) -> Vec<Vec<XVarVal>> {
+        if list.contains("[][]") {
+            let name = list.split('[').next().unwrap_or(list);
+            let vartype = set.find_variable(name);
+            let var = match vartype {
+                Err(e) => panic!("Variable not found {}", name),
+                Ok(v) => v.clone(),
+            };
+            let size = match var {
+                XVariableArray(v) => v.sizes[0],
+                XVariableTree(v) => v.sizes[0],
+                _ => 0,
+            };
+            let mut matrix: Vec<Vec<XVarVal>> = Vec::with_capacity(size);
+            for i in 0..size {
+                matrix.push(vec![]);
+                for j in 0..size {
+                    matrix[i].push(XVarVal::IntVar(format!("{}[{}][{}]", name, i, j)));
+                }
+            }
+            matrix
+        } else {
+            let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
+                .iter()
+                .map(|line| line.iter().map(|e| XVarVal::IntVar(e.clone())).collect())
+                .collect();
+            matrix
+        }
     }
 
     pub fn list_to_vec_var_val(list: &str) -> Result<Vec<XVarVal>, Xcsp3Error> {

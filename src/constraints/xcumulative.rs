@@ -34,7 +34,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -43,13 +43,11 @@ pub mod xcsp3_core {
     #[derive(Clone)]
     pub struct XCumulative<'a> {
         scope: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         lengths: Vec<XVarVal>,
         heights: Vec<XVarVal>,
         ends: Option<Vec<XVarVal>>,
         machines: Option<Vec<XVarVal>>,
-        // condition
         operator: Operator,
         operand: Operand,
         star_index: Option<i32>,
@@ -108,7 +106,7 @@ pub mod xcsp3_core {
                 }
             };
             let binding = condition_str.replace(['(', ')', ','], " ");
-            let (ope, rand) = match extract_operator(condition_str) {
+            let (ope, rand) = match str_to_condition(condition_str) {
                 Ok(value) => value,
                 Err(e) => return Err(e),
             };
@@ -172,7 +170,6 @@ pub mod xcsp3_core {
         ) -> Self {
             Self {
                 scope,
-                map: Default::default(),
                 set,
                 lengths,
                 heights,

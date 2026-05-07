@@ -34,7 +34,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -85,7 +85,7 @@ pub mod xcsp3_core {
             let (operator, operand) = if condition.is_empty() {
                 (None, None)
             } else {
-                match extract_operator(&condition) {
+                match str_to_condition(&condition) {
                     Ok((op, val)) => (Some(op), Some(val)),
                     Err(_) => panic!("condition in binpacking is wrong: {}", condition),
                 }

@@ -78,18 +78,7 @@ pub mod xcsp3_core {
             let sc2 = list_to_vec_var_val(list2)?;
             let start1 = start_index_str1.parse().unwrap();
             let start2 = start_index_str2.parse().unwrap();
-            let v = if value_str.is_empty() {
-                None
-            } else {
-                match XVarVal::from_string(value_str) {
-                    None => {
-                        return Err(Xcsp3Error::get_constraint_channel_error(
-                            "parse channel constraint value error, ",
-                        ));
-                    }
-                    Some(v) => Some(v),
-                }
-            };
+            let v = XVarVal::from_string(value_str);
             Ok(Self::new(sc1, start1, sc2, start2, v, set))
         }
 

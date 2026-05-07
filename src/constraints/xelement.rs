@@ -35,7 +35,9 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{
+        list_to_vec_var_val, str_to_condition, to_i32_option,
+    };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -94,38 +96,13 @@ pub mod xcsp3_core {
             // println!("{start_index_str}");
             match list_to_vec_var_val(list) {
                 Ok(scope_vec_str) => {
-                    let value = match XVarVal::from_string(value_str) {
-                        None => None,
-                        Some(v) => Some(v),
-                    };
-                    let index = if index_str.is_empty() {
-                        None
-                    } else {
-                        match XVarVal::from_string(index_str) {
-                            None => {
-                                return Err(Xcsp3Error::get_constraint_sum_error(
-                                    "parse element constraint index error, ",
-                                ));
-                            }
-                            Some(i) => Some(i),
-                        }
-                    };
-                    let start_index = if !start_index_str.is_empty() {
-                        match start_index_str.parse::<i32>() {
-                            Ok(n) => Some(n),
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_constraint_sum_error(
-                                    "parse element constraint start_index error, ",
-                                ));
-                            }
-                        }
-                    } else {
-                        None
-                    };
+                    let value = XVarVal::from_string(value_str);
+                    let index = XVarVal::from_string(index_str);
+                    let start_index = to_i32_option(start_index_str);
                     let (operator, operand) = if condition.is_empty() {
                         (None, None)
                     } else {
-                        match extract_operator(&condition) {
+                        match str_to_condition(&condition) {
                             Ok((op, val)) => (Some(op), Some(val)),
                             Err(_) => panic!("condition in binpacking is wrong: {}", condition),
                         }

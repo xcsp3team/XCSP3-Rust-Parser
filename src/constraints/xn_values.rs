@@ -34,7 +34,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -83,7 +83,7 @@ pub mod xcsp3_core {
                             Err(e) => return Err(e),
                         }
                     };
-                    let (ope, rand) = match extract_operator(condition) {
+                    let (ope, rand) = match str_to_condition(condition) {
                         Ok(value) => value,
                         Err(e) => return Err(e),
                     };

@@ -28,7 +28,7 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::fmt::{Display, Formatter};
 
@@ -75,18 +75,7 @@ pub mod xcsp3_core {
                 }
                 le
             };
-            let zero_ignored = if !zero_ignored_str.is_empty() {
-                match zero_ignored_str.parse::<bool>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_no_overlap_error(
-                            "parse XNoOverlap constraint zero_ignored error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
+            let zero_ignored = to_bool_option(zero_ignored_str);
             Ok(Self::new(scope, lengths, set, zero_ignored))
         }
         pub fn new(

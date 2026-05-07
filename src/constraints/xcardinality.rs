@@ -31,7 +31,7 @@ pub mod xcsp3_core {
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -83,18 +83,7 @@ pub mod xcsp3_core {
                 Ok(s) => s,
                 Err(e) => return Err(e),
             };
-            let closed = if !closed_str.is_empty() {
-                match closed_str.parse::<bool>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_cardinality_error(
-                            "parse cardinality  constraint closed error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
+            let closed = to_bool_option(closed_str);
             Ok(Self::new(scope, value, occurs, set, closed))
         }
 
