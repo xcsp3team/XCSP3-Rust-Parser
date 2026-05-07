@@ -547,6 +547,45 @@ impl XcspCallback for PrintingSolver {
             list, start_index, index, operator, operand
         );
     }
+
+    fn on_constraint_element_v6(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        value: String,
+    ) {
+        println!(
+            "  [Element V6] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+    fn on_constraint_element_v7(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        value: i32,
+    ) {
+        println!(
+            "  [Element V7] {:?} start={} index= {} value={}",
+            list, start_index, index, value
+        );
+    }
+
+    fn on_constraint_element_v8(
+        &mut self,
+        list: &[i32],
+        start_index: i32,
+        index: String,
+        operator: Operator,
+        operand: Operand,
+    ) {
+        println!(
+            "  [Element V8] {:?} start={} index= {}  operator={:?}, operand={:?}",
+            list, start_index, index, operator, operand
+        );
+    }
     fn on_constraint_nvalues_v2(
         &mut self,
         scope: &[String],

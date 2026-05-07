@@ -978,6 +978,40 @@ impl XcspRunner {
                 }
                 if is_int_list(inner.scope()) {
                     let scope = to_int_list(inner.scope());
+                    let Some(index) = inner.index() else {
+                        panic!("Wanted an index element constraint with int list")
+                    };
+                    match inner.value() {
+                        None => {
+                            let (operand, operator) = inner
+                                .operand()
+                                .clone()
+                                .zip(*inner.operator())
+                                .expect("Missing condition for element constraint");
+                            callback.on_constraint_element_v8(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                operator,
+                                operand.clone(),
+                            )
+                        }
+                        Some(value) => match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_v7(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                *v,
+                            ),
+                            XVarVal::IntVar(v) => callback.on_constraint_element_v6(
+                                &*scope,
+                                inner.start_index(),
+                                index.to_string(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Unexpected value for element constraint"),
+                        },
+                    }
                 }
             }
 

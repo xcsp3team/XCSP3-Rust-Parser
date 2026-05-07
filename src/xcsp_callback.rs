@@ -1478,6 +1478,90 @@ pub trait XcspCallback {
     }
 
     /**
+     * The callback function related to a element with int in list constraint with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 4 5   </list>
+     *    <index> x </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param list the list of int
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a variable)
+     */
+    fn on_constraint_element_v6(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _value: String,
+    ) {
+        println!("c Element Variant 6 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element constraint list of int with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 3 6   </list>
+     *    <index> x </index>
+     *    <value> 3 </value>
+     * </element>
+     *
+     * @param list the list of int
+     * @param value the value (here an integer)
+     * @param start_index the start index
+     * @param index the index (here a int)
+     */
+    fn on_constraint_element_v7(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _value: i32,
+    ) {
+        println!("c Element Variant 7 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to a element with int in list constraint with index and condition
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:
+     * <element>
+     *    <list> 1 2 5O 230  </list>
+     *    <index> x </index>
+     *    <condition> (le,3) </condition>
+     * </element>
+     * </element>
+     *
+     * @param list the list of int
+     * @param start_index the start index
+     * @param index the index (here a int)
+     * @param _operator the operator,
+     * @param _operand: the operand (int, var...),
+     */
+    fn on_constraint_element_v8(
+        &mut self,
+        _list: &[i32],
+        _start_index: i32,
+        _index: String,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Variant 8 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
      * The callback function related to a channel constraint
      * See http://xcsp.org/specifications/channel
      *
