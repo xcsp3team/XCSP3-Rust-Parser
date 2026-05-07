@@ -62,6 +62,7 @@ pub mod xconstraint_trait;
 pub mod xcount;
 pub mod xcumulative;
 pub mod xelement;
+pub mod xelement_matrix;
 pub mod xgroup;
 pub mod xintension;
 pub mod xknapsack;

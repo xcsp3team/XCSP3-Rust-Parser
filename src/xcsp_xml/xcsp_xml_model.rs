@@ -364,7 +364,21 @@ pub mod xcsp3_xml {
                     value,
                     index,
                     condition,
-                } => set.build_element(&vars.value, value, index, &vars.start_index, condition),
+                    matrix,
+                } => {
+                    if matrix.value.is_empty() {
+                        set.build_element(&vars.value, value, index, &vars.start_index, condition)
+                    } else {
+                        set.build_element_matrix(
+                            &*matrix.value,
+                            value,
+                            index,
+                            &*matrix.row_index,
+                            &*matrix.col_index,
+                            condition,
+                        )
+                    }
+                }
 
                 ConstraintType::Stretch {
                     vars,

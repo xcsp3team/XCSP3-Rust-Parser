@@ -41,6 +41,7 @@ pub mod xcsp3_core {
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
     use crate::constraints::xelement::xcsp3_core::XElement;
+    use crate::constraints::xelement_matrix::xcsp3_core::XElementMatrix;
     use crate::constraints::xextension::xcsp3_core::XExtension;
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
@@ -84,6 +85,7 @@ pub mod xcsp3_core {
         XMaximumArg(XMaxMinArg<'a>),
         XMinimumArg(XMaxMinArg<'a>),
         XElement(XElement<'a>),
+        XElementMatrix(XElementMatrix<'a>),
         XSlide(XSlide<'a>),
         XCount(XCount<'a>),
         XNValues(XNValues<'a>),

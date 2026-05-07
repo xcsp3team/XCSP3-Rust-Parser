@@ -80,4 +80,14 @@ pub mod xcsp3_xml {
         #[serde(rename = "@covered", default)]
         pub covered: String,
     }
+
+    #[derive(Deserialize, Debug, Default)]
+    pub struct Matrix {
+        #[serde(rename = "$value", default)]
+        pub value: String,
+        #[serde(rename = "@rowIndex", default)]
+        pub row_index: String,
+        #[serde(rename = "@colIndex", default)]
+        pub col_index: String,
+    }
 }

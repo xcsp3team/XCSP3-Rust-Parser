@@ -28,7 +28,7 @@
 
 pub mod xcsp3_xml {
     use crate::xcsp_xml::constraint::xcsp3_xml::{
-        ListWithClosed, ListWithCovered, ListWithOffset, ListWithStartIndex,
+        ListWithClosed, ListWithCovered, ListWithOffset, ListWithStartIndex, Matrix,
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
@@ -623,6 +623,8 @@ pub mod xcsp3_xml {
             index: String,
             #[serde(rename = "condition", default)]
             condition: String,
+            #[serde(rename = "matrix", default)]
+            matrix: Matrix,
         },
 
         /**

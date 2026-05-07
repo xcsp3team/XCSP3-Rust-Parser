@@ -41,6 +41,7 @@ pub mod xcsp3_core {
     use crate::constraints::xcount::xcsp3_core::XCount;
     use crate::constraints::xcumulative::xcsp3_core::XCumulative;
     use crate::constraints::xelement::xcsp3_core::XElement;
+    use crate::constraints::xelement_matrix::xcsp3_core::XElementMatrix;
     use crate::constraints::xextension::xcsp3_core::XExtension;
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
@@ -237,6 +238,31 @@ pub mod xcsp3_core {
             ) {
                 Ok(c) => {
                     self.constraints.push(XConstraintType::XElement(c));
+                }
+                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
+            }
+        }
+
+        pub fn build_element_matrix(
+            &mut self,
+            matrix: &str,
+            values_str: &str,
+            index_str: &str,
+            row_index_str: &str,
+            col_index_str: &str,
+            condition: &str,
+        ) {
+            match XElementMatrix::from_str(
+                matrix,
+                values_str,
+                index_str,
+                row_index_str,
+                col_index_str,
+                condition,
+                self.set,
+            ) {
+                Ok(c) => {
+                    self.constraints.push(XConstraintType::XElementMatrix(c));
                 }
                 Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
             }
