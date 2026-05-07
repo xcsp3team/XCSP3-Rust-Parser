@@ -1562,6 +1562,186 @@ pub trait XcspCallback {
     }
 
     /**
+     * The callback function related to a element constraint matrix with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (x1 x2 x3)(y1 y2 y3) </matrix>
+     *    <index> t v </index>
+     *    <value> 2 </value>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param startColIndex the start index for cols
+     * @param value the value (here a variable)
+     */
+    fn on_constraint_element_matrix_v1(
+        &mut self,
+        _matrix: &Vec<Vec<String>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _value: i32,
+    ) {
+        println!("c Element Matrix Variant 2 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a element constraint matrix with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (x1 x2 x3)(y1 y2 y3) </matrix>
+     *    <index> t v </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param startColIndex the start index for cols
+     * @param value the value (here a variable)
+     */
+    fn on_constraint_element_matrix_v2(
+        &mut self,
+        _matrix: &Vec<Vec<String>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _value: String,
+    ) {
+        println!("c Element Matrix Variant 2 not yet implemented");
+    }
+    /**
+     * The callback function related to a element constraint matrix with index and variable value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (x1 x2 x3)(y1 y2 y3) </matrix>
+     *    <index> t v </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param operand
+     * @param operator
+     */
+    fn on_constraint_element_matrix_v3(
+        &mut self,
+        _matrix: &Vec<Vec<String>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Matrix Variant 3 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a element constraint matrix of int with index and condition
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (1 2 3 )(4 5 6) </matrix>
+     *    <index> t v </index>
+     *    <condition> (eq,3) </condition>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param operand
+     * @param operator
+     */
+    fn on_constraint_element_matrix_v4(
+        &mut self,
+        _matrix: &Vec<Vec<i32>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Element Matrix Variant 4 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a element constraint matrix of int with index and int value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (1 2 3 )(4 5 6) </matrix>
+     *    <index> t v </index>
+     *    <value> 3 </value>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param operand
+     * @param operator
+     */
+    fn on_constraint_element_matrix_v5(
+        &mut self,
+        _matrix: &Vec<Vec<i32>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _value: i32,
+    ) {
+        println!("c Element Matrix Variant 5 not yet implemented");
+    }
+
+    /**
+     * The callback function related to a element constraint matrix of int with index and var value
+     * See http://xcsp.org/specifications/element
+     *
+     * Example:  matrix[t][v] = z
+     * <element>
+     *    <matrix> (1 2 3 )(4 5 6) </matrix>
+     *    <index> t v </index>
+     *    <value> z </value>
+     * </element>
+     *
+     * @param matrix the matrix (of variables)
+     * @param rowIndex the row index
+     * @param colIndex the col index
+     * @param startRowIndex the start index for rows
+     * @param operand
+     * @param operator
+     */
+    fn on_constraint_element_matrix_v6(
+        &mut self,
+        _matrix: &Vec<Vec<i32>>,
+        _rowIndex: String,
+        _colIndex: String,
+        _startRowIndex: i32,
+        _startColIndex: i32,
+        _value: String,
+    ) {
+        println!("c Element Matrix Variant 5 not yet implemented");
+    }
+    /**
      * The callback function related to a channel constraint
      * See http://xcsp.org/specifications/channel
      *

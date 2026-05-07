@@ -50,8 +50,10 @@ pub mod xcsp3_core {
         matrix: Vec<Vec<XVarVal>>,
         set: &'a XVariableSet,
         value: Option<XVarVal>,
-        index: Option<XVarVal>,
-        start_index: Option<i32>,
+        row_index: XVarVal,
+        col_index: XVarVal,
+        start_row_index: Option<i32>,
+        start_col_index: Option<i32>,
         operator: Option<Operator>,
         operand: Option<Operand>,
     }
@@ -92,7 +94,8 @@ pub mod xcsp3_core {
             list: &str,
             value_str: &str,
             index_str: &str,
-            start_index_str: &str,
+            start_row_index_str: &str,
+            start_col_index_str: &str,
             condition: &str,
             set: &'a XVariableSet,
         ) -> Result<Self, Xcsp3Error> {
@@ -100,24 +103,38 @@ pub mod xcsp3_core {
                 None => None,
                 Some(v) => Some(v),
             };
-            let index = if index_str.is_empty() {
-                None
+            let (row_index, col_index) = if index_str.is_empty() {
+                panic!("index in element matrix constraint must be specified");
             } else {
-                match XVarVal::from_string(index_str) {
-                    None => {
-                        return Err(Xcsp3Error::get_constraint_sum_error(
-                            "parse element constraint index error, ",
-                        ));
+                match list_to_vec_var_val(index_str) {
+                    Ok(tmp) => {
+                        if tmp.len() != 2 {
+                            panic!("index in element matrix constraint must be of length 2");
+                        }
+                        (tmp[0].clone(), tmp[1].clone())
                     }
-                    Some(i) => Some(i),
+                    Err(_) => panic!("index in element matrix constraint must be of length 2"),
                 }
             };
-            let start_index = if !start_index_str.is_empty() {
-                match start_index_str.parse::<i32>() {
+
+            let start_row_index = if !start_row_index_str.is_empty() {
+                match start_row_index_str.parse::<i32>() {
                     Ok(n) => Some(n),
                     Err(_) => {
                         return Err(Xcsp3Error::get_constraint_sum_error(
-                            "parse element constraint start_index error, ",
+                            "parse element constraint row_index error, ",
+                        ));
+                    }
+                }
+            } else {
+                None
+            };
+            let start_col_index = if !start_col_index_str.is_empty() {
+                match start_col_index_str.parse::<i32>() {
+                    Ok(n) => Some(n),
+                    Err(_) => {
+                        return Err(Xcsp3Error::get_constraint_sum_error(
+                            "parse element constraint col_index error, ",
                         ));
                     }
                 }
@@ -151,8 +168,10 @@ pub mod xcsp3_core {
                     matrix,
                     set,
                     value,
-                    index,
-                    start_index,
+                    row_index,
+                    col_index,
+                    start_row_index,
+                    start_col_index,
                     operator,
                     operand,
                 ))
@@ -165,8 +184,10 @@ pub mod xcsp3_core {
                     matrix,
                     set,
                     value,
-                    index,
-                    start_index,
+                    row_index,
+                    col_index,
+                    start_row_index,
+                    start_col_index,
                     operator,
                     operand,
                 ))
@@ -177,8 +198,10 @@ pub mod xcsp3_core {
             matrix: Vec<Vec<XVarVal>>,
             set: &'a XVariableSet,
             value: Option<XVarVal>,
-            index: Option<XVarVal>,
-            start_index: Option<i32>,
+            row_index: XVarVal,
+            col_index: XVarVal,
+            start_row_index: Option<i32>,
+            start_col_index: Option<i32>,
             operator: Option<Operator>,
             operand: Option<Operand>,
         ) -> Self {
@@ -186,8 +209,10 @@ pub mod xcsp3_core {
                 matrix,
                 set,
                 value,
-                index,
-                start_index,
+                row_index,
+                col_index,
+                start_row_index,
+                start_col_index,
                 operator,
                 operand,
             }
@@ -205,20 +230,28 @@ pub mod xcsp3_core {
             &self.value
         }
 
-        pub fn index(&self) -> &Option<XVarVal> {
-            &self.index
-        }
-
-        pub fn start_index(&self) -> i32 {
-            self.start_index.unwrap_or(0)
-        }
-
         pub fn operator(&self) -> &Option<Operator> {
             &self.operator
         }
 
         pub fn operand(&self) -> &Option<Operand> {
             &self.operand
+        }
+
+        pub fn start_row_index(&self) -> i32 {
+            self.start_row_index.unwrap_or(0)
+        }
+
+        pub fn start_col_index(&self) -> i32 {
+            self.start_col_index.unwrap_or(0)
+        }
+
+        pub fn row_index(&self) -> &XVarVal {
+            &self.row_index
+        }
+
+        pub fn col_index(&self) -> &XVarVal {
+            &self.col_index
         }
     }
 }

@@ -1017,7 +1017,92 @@ impl XcspRunner {
             //---------------------------------------------------------------------------------------------------
             // Element Matrix Constraint
             //---------------------------------------------------------------------------------------------------
+            XConstraintType::XElementMatrix(inner) => {
+                if is_var_list(&*inner.matrix()[0]) {
+                    let matrix: Vec<_> = inner
+                        .matrix()
+                        .iter()
+                        .map(|e| to_var_list(e, inner.set()))
+                        .collect();
+                    if let Some(value) = inner.value() {
+                        match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_matrix_v1(
+                                &matrix,
+                                inner.row_index().to_string(),
+                                inner.col_index().to_string(),
+                                inner.start_row_index(),
+                                inner.start_col_index(),
+                                *v,
+                            ),
+                            XVarVal::IntVar(v) => callback.on_constraint_element_matrix_v2(
+                                &matrix,
+                                inner.row_index().to_string(),
+                                inner.col_index().to_string(),
+                                inner.start_row_index(),
+                                inner.start_col_index(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Unexpected value for element constraint"),
+                        }
+                    } else {
+                        let (operand, operator) = inner
+                            .operand()
+                            .clone()
+                            .zip(*inner.operator())
+                            .expect("Missing condition for element constraint");
+                        callback.on_constraint_element_matrix_v3(
+                            &matrix,
+                            inner.row_index().to_string(),
+                            inner.col_index().to_string(),
+                            inner.start_row_index(),
+                            inner.start_col_index(),
+                            operator,
+                            operand,
+                        )
+                    }
+                }
+                if is_int_list(&*inner.matrix()[0]) {
+                    let matrix: Vec<_> = inner.matrix().iter().map(|e| to_int_list(e)).collect();
 
+                    match inner.value() {
+                        None => {
+                            let (operand, operator) = inner
+                                .operand()
+                                .clone()
+                                .zip(*inner.operator())
+                                .expect("Missing condition for element constraint");
+                            callback.on_constraint_element_matrix_v4(
+                                &matrix,
+                                inner.row_index().to_string(),
+                                inner.col_index().to_string(),
+                                inner.start_row_index(),
+                                inner.start_col_index(),
+                                operator,
+                                operand,
+                            )
+                        }
+                        Some(value) => match value {
+                            XVarVal::IntVal(v) => callback.on_constraint_element_matrix_v5(
+                                &matrix,
+                                inner.row_index().to_string(),
+                                inner.col_index().to_string(),
+                                inner.start_row_index(),
+                                inner.start_col_index(),
+                                *v,
+                            ),
+                            XVarVal::IntVar(v) => callback.on_constraint_element_matrix_v6(
+                                &matrix,
+                                inner.row_index().to_string(),
+                                inner.col_index().to_string(),
+                                inner.start_row_index(),
+                                inner.start_col_index(),
+                                v.clone(),
+                            ),
+                            _ => panic!("Unexpected value for element constraint"),
+                        },
+                    }
+                }
+            }
             //---------------------------------------------------------------------------------------------------
             // NoOverlap Constraint
             //---------------------------------------------------------------------------------------------------

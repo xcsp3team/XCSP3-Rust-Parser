@@ -248,14 +248,16 @@ pub mod xcsp3_core {
             matrix: &str,
             values_str: &str,
             index_str: &str,
-            start_index_str: &str,
+            row_index_str: &str,
+            col_index_str: &str,
             condition: &str,
         ) {
             match XElementMatrix::from_str(
                 matrix,
                 values_str,
                 index_str,
-                start_index_str,
+                row_index_str,
+                col_index_str,
                 condition,
                 self.set,
             ) {
