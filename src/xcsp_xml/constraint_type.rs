@@ -623,6 +623,8 @@ pub mod xcsp3_xml {
             index: String,
             #[serde(rename = "condition", default)]
             condition: String,
+            #[serde(rename = "matrix", default)]
+            matrix: String,
         },
 
         /**

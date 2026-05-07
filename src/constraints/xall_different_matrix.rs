@@ -44,7 +44,6 @@ pub mod xcsp3_core {
 
     impl<'a> XAllDifferentMatrix<'a> {
         pub fn from_str(list: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
-            println!("list: {}", list);
             if list.contains("[][]") {
                 let name = list.split('[').next().unwrap_or(list);
                 let vartype = set.find_variable(name)?;
