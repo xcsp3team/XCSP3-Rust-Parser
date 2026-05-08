@@ -127,7 +127,7 @@ pub mod xcsp3_core {
             operator: Option<Operator>,
             operand: Option<Operand>,
         ) ->
-            Self {
+            XElement {
             scope,
             set,
             value,

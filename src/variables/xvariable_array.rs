@@ -66,22 +66,6 @@ pub mod xcsp3_core {
         }
     }
 
-    // impl XVariableTrait for XVariableArray {
-    //     fn to_string(&self) -> String {
-    //         let mut ret: String = String::from("XVariableArray: id = ");
-    //         ret.push_str(self.id.as_str());
-    //         ret.push_str("  size = ");
-    //         for e in self.sizes.iter() {
-    //             ret.push('[');
-    //             ret.push_str(e.to_string().as_str());
-    //             ret.push(']');
-    //         }
-    //         ret.push_str(" domain = ");
-    //         ret.push_str(self.domain.to_string().as_str());
-    //         ret
-    //     }
-    // }
-
     impl XVariableArray {
         pub fn find_variable(
             &self,

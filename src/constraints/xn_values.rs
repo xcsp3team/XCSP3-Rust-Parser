@@ -78,7 +78,7 @@ pub mod xcsp3_core {
             let except: Option<Vec<XVarVal>> = if except_str.is_empty() {
                 None
             } else {
-                list_to_vec_var_val(except_str)
+                Some(list_to_vec_var_val(except_str))
             };
             let (ope, rand) = str_to_condition(condition);
             Self::new(scope, set, ope, rand, except)

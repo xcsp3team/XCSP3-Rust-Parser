@@ -76,7 +76,7 @@ pub mod xcsp3_core {
                 le
             };
             let zero_ignored = to_bool_option(zero_ignored_str);
-            Ok(Self::new(scope, lengths, set, zero_ignored))
+            Self::new(scope, lengths, set, zero_ignored)
         }
         pub fn new(
             scope: Vec<Vec<XVarVal>>,

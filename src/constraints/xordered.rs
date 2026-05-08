@@ -74,9 +74,7 @@ pub mod xcsp3_core {
                         None => Err(Xcsp3Error::get_constraint_list_of_values_error(
                             "parse the list of values error. ",
                         )),
-                        Some(ope) => {
-                            Ok(XOrdered::new(scope_vec_str, set, Some(length_vec_str), ope))
-                        }
+                        Some(ope) => XOrdered::new(scope_vec_str, set, Some(length_vec_str), ope),
                     },
                     Err(e) => Err(e),
                 },

@@ -155,7 +155,7 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn find_variable(&self, id: &str) -> Result<&XVariableType, Xcsp3Error> {
+        pub fn find_variable(&self, id: &str) -> Result<&XVariableType,> {
             let name = match id.find('[') {
                 None => id,
                 Some(n) => &id[..n],

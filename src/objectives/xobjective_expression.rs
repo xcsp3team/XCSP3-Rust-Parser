@@ -48,31 +48,14 @@ pub mod xcsp3_core {
             &self.expression
         }
 
-        pub fn from_expr(
-            expr: &str,
-            is_maximize: bool,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        pub fn from_expr(expr: &str, is_maximize: bool, set: &'a XVariableSet) -> Self {
             match ExpressionTree::from_string(expr) {
                 Ok(tree) => {
-                    // let mut scope: Vec<XVarVal> = vec![];
                     let scope: Vec<XVarVal> = tree.get(set);
-                    // for e in tree.get() {
-                    // match set.find_variable(&e) {
-                    //     Ok(_) => {
-                    //         // println!("{}", r);
-                    //         scope.push(XVarVal::IntVar(e))
-                    //     }
-                    //     Err(err) => {
-                    //         return Err(err);
-                    //     }
-                    // }
-                    // }
-                    // Ok(Self::new(scope, set, tree))
-                    Ok(Self::new(tree, scope, is_maximize, set))
+                    Self::new(tree, scope, is_maximize, set)
                 }
 
-                Err(e) => Err(e),
+                Err(e) => panic!("Error parsing objective expression: {}", expr),
             }
         }
         pub fn new(

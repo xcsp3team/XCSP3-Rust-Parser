@@ -30,7 +30,9 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option, to_i32_option};
+    use crate::utils::utils_functions::xcsp3_utils::{
+        list_to_vec_var_val, to_bool_option, to_i32_option,
+    };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     #[derive(Clone)]
@@ -68,31 +70,23 @@ pub mod xcsp3_core {
             let scope_vec_str = list_to_vec_var_val(arg_str);
             let offset = to_i32_option(offset_str).unwrap_or(0);
             let circular = to_bool_option(circular_str).unwrap_or(false);
-            Self::new(
-                scope_vec_str,
-                set,
-                offset,
-                circular,
-                Box::new(cc),
-            )
+            Self::new(scope_vec_str, set, offset, circular, Box::new(cc))
         }
-    }
 
-    pub fn new(
-        args: Vec<XVarVal>,
-        set: &'a XVariableSet,
-        offset: i32,
-        circular: bool,
-        template: Box<XConstraintType<'a>>,
-    ) -> Self {
-        Self {
-            args,
-            map: Default::default(),
-            set,
-            template,
-            circular,
-            offset,
+        pub fn new(
+            args: Vec<XVarVal>,
+            set: &'a XVariableSet,
+            offset: i32,
+            circular: bool,
+            template: Box<XConstraintType<'a>>,
+        ) -> Self {
+            XSlide {
+                args,
+                set,
+                template,
+                circular,
+                offset,
+            }
         }
     }
-}
 }

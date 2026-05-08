@@ -81,14 +81,8 @@ pub mod xcsp3_core {
             let scope = list_to_vec_var_val(list);
             let weights = list_to_vec_var_val(weights);
             let profits = list_to_vec_var_val(profits);
-            let (weight_operator, weight_operand) = match str_to_condition(&*conditions[0]) {
-                Ok(value) => value,
-                Err(_e) => panic!("Error on condition: {}", conditions[0]),
-            };
-            let (profit_operator, profit_operand) = match str_to_condition(&*conditions[1]) {
-                Ok(value) => value,
-                Err(_e) => panic!("Error on condition: {}", conditions[1]),
-            };
+            let (weight_operator, weight_operand) = str_to_condition(&*conditions[0]);
+            let (profit_operator, profit_operand) = str_to_condition(&*conditions[1]);
             Self::new(
                 scope,
                 weights,
