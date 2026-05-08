@@ -627,8 +627,7 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
-                }
-                if is_int_list(inner.values()) && is_var_list(inner.occurs()) {
+                } else if is_int_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
                     let occurs = to_var_list(inner.occurs(), inner.set());
                     callback.on_constraint_cardinality_v2(
@@ -637,8 +636,7 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
-                }
-                if is_int_list(inner.values()) && is_interval_list(inner.occurs()) {
+                } else if is_int_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_int_list(inner.values());
                     let occurs = to_interval_list(inner.occurs());
                     callback.on_constraint_cardinality_v3(
@@ -647,8 +645,7 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
-                }
-                if is_var_list(inner.values()) && is_int_list(inner.occurs()) {
+                } else if is_var_list(inner.values()) && is_int_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_int_list(inner.occurs());
                     callback.on_constraint_cardinality_v4(
@@ -657,8 +654,7 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
-                }
-                if is_var_list(inner.values()) && is_var_list(inner.occurs()) {
+                } else if is_var_list(inner.values()) && is_var_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_var_list(inner.occurs(), inner.set());
                     callback.on_constraint_cardinality_v5(
@@ -667,8 +663,7 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
-                }
-                if is_var_list(inner.values()) && is_interval_list(inner.occurs()) {
+                } else if is_var_list(inner.values()) && is_interval_list(inner.occurs()) {
                     let values = to_var_list(inner.values(), inner.set());
                     let occurs = to_interval_list(inner.occurs());
                     callback.on_constraint_cardinality_v6(
@@ -677,8 +672,9 @@ impl XcspRunner {
                         &*occurs,
                         inner.closed(),
                     )
+                } else {
+                    panic!("Unexpected variant for cardinality constraint");
                 }
-                panic!("Unexpected variant for cardinality constraint");
             }
             //---------------------------------------------------------------------------------------------------
             // Precedence Constraint
@@ -965,8 +961,7 @@ impl XcspRunner {
                             _ => panic!("Unexpected value for element constraint"),
                         }
                     }
-                }
-                if is_int_list(inner.scope()) {
+                } else if is_int_list(inner.scope()) {
                     let scope = to_int_list(inner.scope());
                     let Some(index) = inner.index() else {
                         panic!("Wanted an index element constraint with int list")
