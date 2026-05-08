@@ -170,7 +170,11 @@ impl XcspCallback for PrintingSolver {
             "  [Extension] scope={:?} is_support={} has_star={}",
             scope, is_support, has_star
         );
-        println!("           tuples: {:?}", tuples);
+        if tuples.len() > 10 {
+            println!("           too many tuples. nb tuples: {}", tuples.len());
+        } else {
+            println!("           tuples: {:?}", tuples);
+        }
         println!("           address = {:X}", tuples.as_ptr() as usize);
     }
     fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
