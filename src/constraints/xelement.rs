@@ -35,7 +35,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, str_to_condition, to_i32_option,
+        list_to_vec_var_val, str_to_condition, str_to_condition_option, to_i32_option,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -97,12 +97,7 @@ pub mod xcsp3_core {
             let value = XVarVal::from_string(value_str);
             let index = XVarVal::from_string(index_str);
             let start_index = to_i32_option(start_index_str);
-            let (operator, operand) = if condition.is_empty() {
-                (None, None)
-            } else {
-                let tmp = str_to_condition(&condition);
-                (Some(tmp.0), Some(tmp.1))
-            };
+            let (operator, operand) = str_to_condition_option(condition);
 
             XElement::new(
                 scope_vec_str,

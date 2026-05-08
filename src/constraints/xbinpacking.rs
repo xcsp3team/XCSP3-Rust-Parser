@@ -33,7 +33,9 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
+    use crate::utils::utils_functions::xcsp3_utils::{
+        list_to_vec_var_val, str_to_condition, str_to_condition_option,
+    };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -81,19 +83,12 @@ pub mod xcsp3_core {
         ) -> Self {
             let scope = list_to_vec_var_val(list);
             let sizes = list_to_vec_var_val(sizes);
-            let (operator, operand) = if condition.is_empty() {
-                (None, None)
-            } else {
-                let tmp = str_to_condition(&condition);
-                (Some(tmp.0), Some(tmp.1))
-            };
+            let (operator, operand) = str_to_condition_option(condition);
             let limits = list_to_vec_var_val(limits);
             let loads = list_to_vec_var_val(loads);
-
             if operator.is_none() && limits.len() == 0 && loads.len() == 0 {
                 panic!("binPacking requires a condition, limits, or loads,");
             }
-
             Self::new(scope, sizes, operator, operand, limits, loads, set)
         }
 

@@ -33,7 +33,6 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::fmt::{Display, Formatter};
 
     // #[derive(Clone)]
     #[derive(Clone)]
@@ -49,17 +48,6 @@ pub mod xcsp3_core {
         }
         fn max_args_used(&mut self) -> i32 {
             -1
-        }
-    }
-    impl Display for XAllEqual<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            write!(f, "XAllEqual: list =  {}", ret)
         }
     }
 

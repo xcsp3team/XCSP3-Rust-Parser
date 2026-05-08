@@ -51,6 +51,15 @@ pub mod xcsp3_utils {
         (ope, rand)
     }
 
+    pub fn str_to_condition_option(condition: &str) -> (Option<Operator>, Option<Operand>) {
+        if condition.is_empty() {
+            (None, None)
+        } else {
+            let tmp = str_to_condition(&condition);
+            (Some(tmp.0), Some(tmp.1))
+        }
+    }
+
     pub fn to_bool_option(string: &str) -> Option<bool> {
         if !string.trim().is_empty() {
             match string.trim().parse::<bool>() {
