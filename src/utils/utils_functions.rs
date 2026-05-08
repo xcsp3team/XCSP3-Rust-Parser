@@ -111,10 +111,19 @@ pub mod xcsp3_utils {
         let mut ret: Vec<XVarVal> = vec![];
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
-            match XVarVal::from_string(e) {
-                None => panic!("parseing  list membererror {}", e),
-                Some(vv) => {
-                    ret.push(vv);
+            if e.trim().starts_with(|c: char| c.is_ascii_digit()) && e.contains("x") {
+                // Deal with compressed coefficient
+                if let Some((value_str, count_str)) = e.trim().split_once('x') {
+                    let count: usize = count_str.parse().expect("invalid count");
+                    let value: i32 = value_str.parse().expect("invalid value");
+                    ret.extend(std::iter::repeat(XVarVal::IntVal(value)).take(count));
+                }
+            } else {
+                match XVarVal::from_string(e) {
+                    None => panic!("parseing  list membererror {}", e),
+                    Some(vv) => {
+                        ret.push(vv);
+                    }
                 }
             }
         }

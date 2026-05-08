@@ -9,7 +9,9 @@
         <allDifferent>y[]</allDifferent>
     </constraints>
     <objectives>
-        <minimize>z</minimize>
-        <maximize>add(y[0],3)</maximize>
+        <minimize type="sum">
+            <list>a[]</list>
+            <coeffs>20135610 14190x1419 1x1419</coeffs>
+        </minimize>
     </objectives>
 </instance>
