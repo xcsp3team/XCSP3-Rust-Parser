@@ -65,7 +65,6 @@ pub mod xcsp3_core {
                 XVariableType::XVariableArray(v) => v.id.clone(),
                 XVariableType::XVariableInt(v) => v.id.clone(),
                 XVariableType::XVariableTree(v) => v.id.clone(),
-                _ => String::default(),
             }
         }
     }
@@ -79,11 +78,6 @@ pub mod xcsp3_core {
                     XVariableType::XVariableArray(a) => a.to_string(),
                     XVariableType::XVariableInt(i) => i.to_string(),
                     XVariableType::XVariableTree(t) => t.to_string(),
-                    _ => {
-                        String::from(
-                            "XVariableNone: there must be an error when parse this variable.",
-                        )
-                    }
                 }
             )
         }

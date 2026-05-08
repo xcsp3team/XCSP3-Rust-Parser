@@ -52,8 +52,6 @@ pub mod xcsp3_xml {
     pub struct ConstraintGroup {
         #[serde(rename = "@class", default)]
         pub class: String,
-        #[serde(rename = "@id", default)]
-        pub id: String,
         #[serde(rename = "$value", default)]
         pub constraints: Box<ConstraintType>,
         #[serde(rename = "args", default)]

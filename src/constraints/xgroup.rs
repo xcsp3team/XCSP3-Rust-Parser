@@ -29,13 +29,11 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XGroup<'a> {
         args: Vec<Vec<XVarVal>>,
-        set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
     }
 
@@ -48,29 +46,17 @@ pub mod xcsp3_core {
             &self.template
         }
 
-        pub fn from_str(
-            cc: XConstraintType<'a>,
-            arg_str: &[String],
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(cc: XConstraintType<'a>, arg_str: &[String]) -> Self {
             let mut args: Vec<Vec<XVarVal>> = vec![];
             args.reserve(arg_str.len());
             for a in arg_str.iter() {
                 args.push(list_to_vec_var_val(a));
             }
-            XGroup::new(args, set, Box::new(cc))
+            XGroup::new(args, Box::new(cc))
         }
 
-        pub fn new(
-            args: Vec<Vec<XVarVal>>,
-            set: &'a XVariableSet,
-            template: Box<XConstraintType<'a>>,
-        ) -> Self {
-            Self {
-                args,
-                set,
-                template,
-            }
+        pub fn new(args: Vec<Vec<XVarVal>>, template: Box<XConstraintType<'a>>) -> Self {
+            Self { args, template }
         }
     }
 }

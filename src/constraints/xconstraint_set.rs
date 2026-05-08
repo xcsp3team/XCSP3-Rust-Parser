@@ -225,7 +225,7 @@ pub mod xcsp3_core {
             self.constraints.push(XConstraintType::XSlide(c));
         }
         pub fn build_group(&mut self, cc: XConstraintType<'a>, args: &[String]) {
-            let c = XGroup::from_str(cc, args, self.set);
+            let c = XGroup::from_str(cc, args);
             self.constraints.push(XConstraintType::XGroup(c));
         }
 

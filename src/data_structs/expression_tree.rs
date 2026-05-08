@@ -162,7 +162,7 @@ pub mod xcsp3_utils {
             let mut scope: Vec<XVarVal> = vec![];
             for e in self.first_order_iter() {
                 if let TreeNode::Variable(v) = e {
-                    let r = set.find_variable(v);
+                    let _ = set.find_variable(v);
                     scope.push(XVarVal::IntVar(v.to_string()))
                 }
             }

@@ -46,7 +46,7 @@ pub mod xcsp3_core {
 
     impl XVariableTree {
         /// return which node the variable belongs to
-        pub(crate) fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
+        fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
             for e in self.nodes.iter() {
                 if e.belongs_to_this_node(v) {
                     return e;

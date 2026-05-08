@@ -965,7 +965,7 @@ impl XcspRunner {
                             XVarVal::IntVar(v) => {
                                 callback.on_constraint_element_v2(&*scope, v.clone())
                             }
-                            (_) => panic!("Unexpected value for element constraint"),
+                            _ => panic!("Unexpected value for element constraint"),
                         }
                     }
                 }

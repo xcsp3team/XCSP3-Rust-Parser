@@ -56,13 +56,7 @@ pub mod xcsp3_xml {
      */
     #[derive(Deserialize, Debug)]
     pub struct ConstraintBlock {
-        #[serde(rename = "@id", default)]
-        pub id: String,
-        #[serde(rename = "@note", default)]
-        pub note: String,
         #[serde(rename = "@class", default)]
-        pub r#type: String,
-        #[serde(rename = "$value", default)]
         pub constraints: Vec<ConstraintType>,
     }
 }

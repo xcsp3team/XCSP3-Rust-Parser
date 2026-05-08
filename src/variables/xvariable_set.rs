@@ -152,7 +152,6 @@ pub mod xcsp3_core {
                             ret.push((e1.to_string(), e2));
                         }
                     }
-                    (_) => panic!("Variable {} unknown", e),
                 }
             }
             ret
