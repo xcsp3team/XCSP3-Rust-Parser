@@ -52,7 +52,6 @@ pub mod xcsp3_core {
         operand: Option<Operand>,
     }
 
-
     impl XConstraintUnfold for XElement<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
@@ -101,22 +100,20 @@ pub mod xcsp3_core {
             let (operator, operand) = if condition.is_empty() {
                 (None, None)
             } else {
-                match str_to_condition(&condition) {
-                    Ok((op, val)) => (Some(op), Some(val)),
-                    Err(_) => panic!("condition in binpacking is wrong: {}", condition),
-                }
+                let tmp = str_to_condition(&condition);
+                (Some(tmp.0), Some(tmp.1))
             };
 
-            XElement::new(scope_vec_str,
-                          set,
-                          value,
-                          index,
-                          start_index,
-                          operator,
-                          operand,
+            XElement::new(
+                scope_vec_str,
+                set,
+                value,
+                index,
+                start_index,
+                operator,
+                operand,
             )
         }
-
 
         pub fn new(
             scope: Vec<XVarVal>,
@@ -126,17 +123,17 @@ pub mod xcsp3_core {
             start_index: Option<i32>,
             operator: Option<Operator>,
             operand: Option<Operand>,
-        ) ->
+        ) -> Self {
             XElement {
-            scope,
-            set,
-            value,
-            index,
-            start_index,
-            operator,
-            operand,
+                scope,
+                set,
+                value,
+                index,
+                start_index,
+                operator,
+                operand,
+            }
         }
-
 
         pub fn scope(&self) -> &Vec<XVarVal> {
             &self.scope

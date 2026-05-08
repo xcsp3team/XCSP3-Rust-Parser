@@ -40,12 +40,7 @@ pub mod xcsp3_core {
 
     impl<'a> XLexMatrix<'a> {
         pub fn from_str(list: &str, operator: &str, set: &'a XVariableSet) -> Self {
-            let operator = match Operator::get_operator_by_str(operator) {
-                Some(operator) => operator,
-                None => {
-                    panic!("Error on operator: {}", operator);
-                }
-            };
+            let operator = Operator::get_operator_by_str(operator);
             let matrix = to_matrix(list, set);
             Self::new(matrix, operator, set)
         }

@@ -56,10 +56,7 @@ pub mod xcsp3_core {
             Self::new(expression.to_string(), set)
         }
         pub fn to_tree(&self) -> ExpressionTree {
-            match ExpressionTree::from_string(&*self.expression) {
-                Ok(tree) => tree,
-                Err(e) => panic!("{:?}", e),
-            }
+            ExpressionTree::from_string(&*self.expression)
         }
         pub fn new(expression: String, set: &'a XVariableSet) -> Self {
             Self { expression, set }

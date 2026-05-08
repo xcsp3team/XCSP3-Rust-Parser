@@ -95,15 +95,11 @@ pub mod xcsp3_core {
             let (row_index, col_index) = if index_str.is_empty() {
                 panic!("index in element matrix constraint must be specified");
             } else {
-                match list_to_vec_var_val(index_str) {
-                    Ok(tmp) => {
-                        if tmp.len() != 2 {
-                            panic!("index in element matrix constraint must be of length 2");
-                        }
-                        (tmp[0].clone(), tmp[1].clone())
-                    }
-                    Err(_) => panic!("index in element matrix constraint must be of length 2"),
+                let tmp = list_to_vec_var_val(index_str);
+                if tmp.len() != 2 {
+                    panic!("index in element matrix constraint must be of length 2");
                 }
+                (tmp[0].clone(), tmp[1].clone())
             };
 
             let start_row_index = to_i32_option(start_row_index_str);
@@ -111,13 +107,12 @@ pub mod xcsp3_core {
             let (operator, operand) = if condition.is_empty() {
                 (None, None)
             } else {
-                match str_to_condition(&condition) {
-                    Ok((op, val)) => (Some(op), Some(val)),
-                    Err(_) => panic!("condition in element matrix is wrong: {}", condition),
-                }
+                let tmp = str_to_condition(&condition);
+                (Some(tmp.0), Some(tmp.1))
             };
+
             let matrix = to_matrix(list, set);
-            Ok(Self::new(
+            Self::new(
                 matrix,
                 set,
                 value,
@@ -127,7 +122,7 @@ pub mod xcsp3_core {
                 start_col_index,
                 operator,
                 operand,
-            ))
+            )
         }
 
         pub fn new(

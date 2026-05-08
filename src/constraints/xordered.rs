@@ -68,30 +68,16 @@ pub mod xcsp3_core {
             operator: &str,
             set: &'a XVariableSet,
         ) -> Self {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match list_to_vec_var_val(lengths_str) {
-                    Ok(length_vec_str) => match Operator::get_operator_by_str(operator) {
-                        None => Err(Xcsp3Error::get_constraint_list_of_values_error(
-                            "parse the list of values error. ",
-                        )),
-                        Some(ope) => XOrdered::new(scope_vec_str, set, Some(length_vec_str), ope),
-                    },
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            }
+            let scope = list_to_vec_var_val(list);
+            let length_vec_str = list_to_vec_var_val(lengths_str);
+            let ope = Operator::get_operator_by_str(operator);
+            XOrdered::new(scope, set, Some(length_vec_str), ope)
         }
 
         pub fn from_str_without_lengths(list: &str, operator: &str, set: &'a XVariableSet) -> Self {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match Operator::get_operator_by_str(operator) {
-                    None => Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse the list of values error. ",
-                    )),
-                    Some(ope) => Ok(XOrdered::new(scope_vec_str, set, None, ope)),
-                },
-                Err(e) => Err(e),
-            }
+            let scope = list_to_vec_var_val(list);
+            let ope = Operator::get_operator_by_str(operator);
+            XOrdered::new(scope, set, None, ope)
         }
 
         pub fn new(

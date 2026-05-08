@@ -46,10 +46,8 @@ pub mod xcsp3_core {
         }
 
         pub fn new_array(id: &str, sizes: &str, domain: XDomainInteger) -> XVariableType {
-            match XVariableArray::new(id, sizes, domain) {
-                Ok(array) => XVariableType::XVariableArray(array),
-                Err(e) => panic!("parse variable array error: {}", id),
-            }
+            let array = XVariableArray::new(id, sizes, domain);
+            XVariableType::XVariableArray(array)
         }
 
         pub fn new_tree(
@@ -57,11 +55,9 @@ pub mod xcsp3_core {
             sizes: &str,
             domain_for: Vec<&String>,
             domain_value: Vec<&String>,
-        ) -> Result<Self, Xcsp3Error> {
-            match XVariableTree::new(id, sizes, domain_for, domain_value) {
-                Ok(t) => Ok(XVariableType::XVariableTree(t)),
-                Err(e) => Err(e),
-            }
+        ) -> Self {
+            let tmp = XVariableTree::new(id, sizes, domain_for, domain_value);
+            XVariableType::XVariableTree(tmp)
         }
 
         pub fn get_id(&self) -> String {

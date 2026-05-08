@@ -89,7 +89,6 @@ pub mod xcsp3_core {
             let scope = list_to_vec_var_val(origins_str);
             let lengths = list_to_vec_var_val(lengths_str);
             let heights = list_to_vec_var_val(heights_str);
-            let binding = condition_str.replace(['(', ')', ','], " ");
             let (ope, rand) = str_to_condition(condition_str);
             let ends = if ends_str.is_empty() {
                 None

@@ -67,41 +67,30 @@ pub mod xcsp3_core {
     }
 
     impl XVariableArray {
-        pub fn find_variable(
-            &self,
-            id: &str,
-        ) -> Result<Vec<(String, &XDomainInteger)>, Xcsp3Error> {
+        pub fn find_variable(&self, id: &str) -> Vec<(String, &XDomainInteger)> {
             let mut ret: Vec<(String, &XDomainInteger)> = vec![];
             match id.find('[') {
-                None => {
-                    return Err(Xcsp3Error::get_variable_size_invalid_error(
-                        "find_variable in XVariableArray error",
-                    ));
-                }
-                Some(v) => match sizes_to_double_vec(&id[v..]) {
-                    Ok((mut lower, mut upper)) => {
-                        for i in 0..lower.len() {
-                            if lower[i] == usize::MAX && upper[i] == usize::MAX {
-                                lower[i] = 0;
-                                upper[i] = self.sizes[i] - 1;
-                            }
-                            if lower[i] > upper[i] || upper[i] >= self.sizes[i] {
-                                return Err(Xcsp3Error::get_variable_size_invalid_error(
-                                    "find_variable in XVariableArray error",
-                                ));
-                            }
+                None => panic!("find_variable in XVariableArray error {}", id),
+                Some(v) => {
+                    let (mut lower, mut upper) = sizes_to_double_vec(&id[v..]);
+                    for i in 0..lower.len() {
+                        if lower[i] == usize::MAX && upper[i] == usize::MAX {
+                            lower[i] = 0;
+                            upper[i] = self.sizes[i] - 1;
                         }
-                        let all_variable = get_all_variables_between_lower_and_upper(lower, upper);
-                        for size_vec in all_variable.iter() {
-                            ret.push((size_to_string(&id[..v], size_vec), &self.domain));
+                        if lower[i] > upper[i] || upper[i] >= self.sizes[i] {
+                            panic!("find_variable in XVariableArray error {}", id);
                         }
                     }
-                    Err(e) => return Err(e),
-                },
+                    // moved outside the loop — lower/upper are now fully initialized
+                    let all_variable = get_all_variables_between_lower_and_upper(lower, upper);
+                    for size_vec in all_variable.iter() {
+                        ret.push((size_to_string(&id[..v], size_vec), &self.domain));
+                    }
+                    ret
+                }
             }
-            Ok(ret)
         }
-
         pub fn associated_variables(id: &str, sizes: &[usize]) -> Vec<String> {
             let lower = vec![0; sizes.len()];
             let upper: Vec<usize> = sizes.iter().map(|size| size - 1).collect();
@@ -112,16 +101,13 @@ pub mod xcsp3_core {
             }
             result
         }
-        pub fn new(id: &str, sizes: &str, domain: XDomainInteger) -> Result<Self, Xcsp3Error> {
-            let result = sizes_to_vec(sizes);
-            match result {
-                Ok((size_vec, _)) => Ok(XVariableArray {
-                    id: id.to_string(),
-                    sizes: size_vec.clone(),
-                    domain,
-                    variables: Self::associated_variables(id, &size_vec),
-                }),
-                Err(e) => Err(e),
+        pub fn new(id: &str, sizes: &str, domain: XDomainInteger) -> Self {
+            let (size_vec, _) = sizes_to_vec(sizes);
+            XVariableArray {
+                id: id.to_string(),
+                sizes: size_vec.clone(),
+                domain,
+                variables: Self::associated_variables(id, &size_vec),
             }
         }
     }

@@ -65,7 +65,6 @@ pub mod xcsp3_core {
 
     #[derive(Clone)]
     pub enum XConstraintType<'a> {
-        XConstraintNone(),
         XExtension(XExtension<'a>),
         XAllDifferent(XAllDifferent<'a>),
         XAllDifferentList(XAllDifferentList<'a>),
@@ -109,9 +108,6 @@ pub mod xcsp3_core {
             ($($variant:ident),* $(,)?) => {
                 match self {
                     $(XConstraintType::$variant(inner) => inner.extract_parameters(arg),)*
-                    XConstraintType::XConstraintNone(_) => {
-                        // Nothing to extract from an error state
-                    },
                     _ => todo!()
                 }
             };
@@ -153,9 +149,6 @@ pub mod xcsp3_core {
             ($($variant:ident),* $(,)?) => {
                 match self {
                     $(XConstraintType::$variant(inner) => inner.max_args_used(),)*
-                    XConstraintType::XConstraintNone(_) => {
-                        -1
-                    },
                     _ => todo!()
                 }
             }

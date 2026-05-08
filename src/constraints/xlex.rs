@@ -60,12 +60,7 @@ pub mod xcsp3_core {
     }
     impl<'a> XLex<'a> {
         pub fn from_str(list_strings: &[String], operator: &str, set: &'a XVariableSet) -> Self {
-            let operator = match Operator::get_operator_by_str(operator) {
-                Some(operator) => operator,
-                None => {
-                    panic!("Error on operator: {}", operator);
-                }
-            };
+            let operator = Operator::get_operator_by_str(operator);
             let mut lists = Vec::with_capacity(list_strings.len());
             for list in list_strings {
                 lists.push(list_to_vec_var_val(list));

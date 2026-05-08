@@ -49,15 +49,11 @@ pub mod xcsp3_core {
         }
 
         pub fn from_expr(expr: &str, is_maximize: bool, set: &'a XVariableSet) -> Self {
-            match ExpressionTree::from_string(expr) {
-                Ok(tree) => {
-                    let scope: Vec<XVarVal> = tree.get(set);
-                    Self::new(tree, scope, is_maximize, set)
-                }
-
-                Err(e) => panic!("Error parsing objective expression: {}", expr),
-            }
+            let tree = ExpressionTree::from_string(expr);
+            let scope: Vec<XVarVal> = tree.get(set);
+            Self::new(tree, scope, is_maximize, set)
         }
+
         pub fn new(
             expression: ExpressionTree,
             scope: Vec<XVarVal>,

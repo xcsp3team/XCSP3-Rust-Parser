@@ -42,10 +42,7 @@ pub mod xcsp3_utils {
     pub fn str_to_condition(condition: &str) -> (Operator, Operand) {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
-        let ope: Operator = match Operator::get_operator_by_str(split[0]) {
-            None => panic!("parse condition  error, {}", condition),
-            Some(o) => o,
-        };
+        let ope = Operator::get_operator_by_str(split[0]);
 
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
             None => panic!("parse condition  error, {}", condition),
@@ -78,11 +75,7 @@ pub mod xcsp3_utils {
     pub fn to_matrix(list: &str, set: &XVariableSet) -> Vec<Vec<XVarVal>> {
         if list.contains("[][]") {
             let name = list.split('[').next().unwrap_or(list);
-            let vartype = set.find_variable(name);
-            let var = match vartype {
-                Err(e) => panic!("Variable not found {}", name),
-                Ok(v) => v.clone(),
-            };
+            let var = set.find_variable(name);
             let size = match var {
                 XVariableArray(v) => v.sizes[0],
                 XVariableTree(v) => v.sizes[0],
@@ -450,10 +443,10 @@ pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
     the_list
         .iter()
         .filter_map(|e| match e {
-            XVarVal::IntVar(s) => match set.construct_scope(&[&s]) {
-                Ok(s) => Some(s),
-                Err(_) => panic!("Variable {} unknown", s),
-            },
+            XVarVal::IntVar(s) => {
+                let tmp = set.construct_scope(&[&s]);
+                Some(tmp)
+            }
             _ => {
                 panic!("Only vars in this list are allowed: {}", e)
             }
@@ -481,10 +474,10 @@ pub fn to_expression_list(the_list: &[XVarVal], _set: &XVariableSet) -> Vec<Expr
 
     for v in the_list {
         match v {
-            XVarVal::IntVar(expr) => match ExpressionTree::from_string(expr) {
-                Ok(tree) => trees.push(tree),
-                Err(_) => panic!("Invalid expression tree: {}", expr),
-            },
+            XVarVal::IntVar(expr) => {
+                let tree = ExpressionTree::from_string(expr);
+                trees.push(tree);
+            }
             _ => panic!("Only IntVar expressions are allowed in this list"),
         }
     }

@@ -52,12 +52,8 @@ pub mod xcsp3_core {
                 let binding = list.replace(")(", "@").replace(['(', ',', ')'], " ");
                 let spilt: Vec<&str> = binding.split("@").collect();
                 for e in spilt.iter() {
-                    sc.push(match list_to_vec_var_val(e) {
-                        Ok(n) => n,
-                        Err(e) => {
-                            return Err(e);
-                        }
-                    })
+                    let tmp = list_to_vec_var_val(e);
+                    sc.push(tmp);
                 }
                 sc
             };
@@ -66,12 +62,8 @@ pub mod xcsp3_core {
                 let binding = lengths_str.replace(")(", "@").replace(['(', ',', ')'], " ");
                 let spilt: Vec<&str> = binding.split("@").collect();
                 for e in spilt.iter() {
-                    le.push(match list_to_vec_var_val(e) {
-                        Ok(n) => n,
-                        Err(e) => {
-                            return Err(e);
-                        }
-                    })
+                    let tmp = list_to_vec_var_val(e);
+                    le.push(tmp);
                 }
                 le
             };
