@@ -3,9 +3,21 @@
         <array id="y" size="[6]">0 2</array>
         <array id="t" size="[6]">0 2</array>
         <array id="a" size="[6]">0 2</array>
+        <array id="x" size="[30]">0 2</array>
 
     </variables>
     <constraints>
+        <allDifferent>x[20..23]</allDifferent>
+        <group>
+            <cumulative>
+                <origins>%0 %1 %2 %3</origins>
+                <lengths>%...</lengths>
+                <heights>1 1 1 1</heights>
+                <condition>(le,1)</condition>
+            </cumulative>
+            <args>x[2] x[5] x[11] x[13] 18 5 10 10</args>
+            <args>x[20..23] 16 110 16 16</args>
+        </group>
         <cumulative>
             <origins>t[]</origins>
             <lengths>a[]</lengths>

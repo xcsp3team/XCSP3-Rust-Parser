@@ -797,6 +797,7 @@ impl XcspRunner {
             XConstraintType::XCumulative(inner) => match inner.ends() {
                 None => {
                     if is_int_list(inner.lengths()) && is_int_list(inner.heights()) {
+                        println!("{:?}", inner.scope());
                         let tmp = to_var_list(inner.scope(), inner.set());
                         let lengths = to_int_list(inner.lengths());
                         let heights = to_int_list(inner.heights());
@@ -807,8 +808,7 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
-                    }
-                    if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
+                    } else if is_int_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
                         let lengths = to_int_list(inner.lengths());
                         let heights = to_var_list(inner.heights(), inner.set());
@@ -819,8 +819,7 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
-                    }
-                    if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
+                    } else if is_var_list(inner.lengths()) && is_int_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
                         let lengths = to_var_list(inner.lengths(), inner.set());
                         let heights = to_int_list(inner.heights());
@@ -831,8 +830,7 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
-                    }
-                    if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
+                    } else if is_var_list(inner.lengths()) && is_var_list(inner.heights()) {
                         let tmp = to_var_list(inner.scope(), inner.set());
                         let lengths = to_var_list(inner.lengths(), inner.set());
                         let heights = to_var_list(inner.heights(), inner.set());
@@ -843,8 +841,9 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
+                    } else {
+                        panic!("Unexpected variant for cumulative constraint");
                     }
-                    panic!("Unexpected variant for cumulative constraint");
                 }
                 Some(ends) => {
                     if is_int_list(inner.lengths())
@@ -862,9 +861,8 @@ impl XcspRunner {
                             &*to_ends,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
-                    }
-                    if is_int_list(inner.lengths())
+                        )
+                    } else if is_int_list(inner.lengths())
                         && is_var_list(inner.heights())
                         && is_var_list(ends)
                     {
@@ -879,9 +877,8 @@ impl XcspRunner {
                             &*to_ends,
                             *inner.operator(),
                             inner.operand().clone(),
-                        );
-                    }
-                    if is_var_list(inner.lengths())
+                        )
+                    } else if is_var_list(inner.lengths())
                         && is_int_list(inner.heights())
                         && is_var_list(ends)
                     {
@@ -897,8 +894,7 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
-                    }
-                    if is_var_list(inner.lengths())
+                    } else if is_var_list(inner.lengths())
                         && is_var_list(inner.heights())
                         && is_var_list(ends)
                     {
@@ -914,8 +910,9 @@ impl XcspRunner {
                             *inner.operator(),
                             inner.operand().clone(),
                         )
+                    } else {
+                        panic!("Unexpected variant for cumulative constraint");
                     }
-                    panic!("Unexpected variant for cumulative constraint");
                 }
             },
             //---------------------------------------------------------------------------------------------------
