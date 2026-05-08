@@ -10,8 +10,8 @@
     </constraints>
     <objectives>
         <minimize type="sum">
-            <list>a[]</list>
-            <coeffs>20135610 14190x1419 1x1419</coeffs>
+            <list>min(x[0],3) min(dist(x[1],y[2]),4)</list>
+            <coeffs>12 34</coeffs>
         </minimize>
     </objectives>
 </instance>
