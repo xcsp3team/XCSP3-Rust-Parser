@@ -30,7 +30,6 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::XConstraintUnfold;
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     // #[derive(Clone)]
@@ -53,14 +52,11 @@ pub mod xcsp3_core {
         }
     }
     impl<'a> XIntention<'a> {
-        pub fn create(expression: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
-            Ok(Self::new(expression.to_string(), set))
+        pub fn create(expression: &str, set: &'a XVariableSet) -> Self {
+            Self::new(expression.to_string(), set)
         }
         pub fn to_tree(&self) -> ExpressionTree {
-            match ExpressionTree::from_string(&*self.expression) {
-                Ok(tree) => tree,
-                Err(e) => panic!("{:?}", e),
-            }
+            ExpressionTree::from_string(&*self.expression)
         }
         pub fn new(expression: String, set: &'a XVariableSet) -> Self {
             Self { expression, set }

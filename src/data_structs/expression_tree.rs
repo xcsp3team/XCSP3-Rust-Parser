@@ -27,7 +27,7 @@
 */
 pub mod xcsp3_utils {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::fmt::{Display, Formatter};
     use std::str::FromStr;
@@ -127,29 +127,6 @@ pub mod xcsp3_utils {
         }
     }
 
-    // impl TreeNode {
-    //     pub(crate) fn replace_var_by_int(&mut self,var:&str,n:i32)->bool
-    //     {
-    //         if let TreeNode::Operator(_,ve) = self
-    //         {
-    //
-    //             for (i,e) in ve.iter().enumerate()
-    //             {
-    //                 if let TreeNode::Variable(v) = e
-    //                 {
-    //                     if v.eq(var)
-    //                     {
-    //                         let ele = &mut ve[i];
-    //                         *ele = TreeNode::Argument(n);
-    //                          return true
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         false
-    //     }
-    // }
-
     #[derive(Clone, Debug)]
     pub struct ExpressionTree {
         root: TreeNode,
@@ -181,41 +158,24 @@ pub mod xcsp3_utils {
             }
             scope
         }
-        // fn replace_var_by_int(&mut self,var:&str,n:i32)
-        // {
-        //
-        // }
         pub fn get(&self, set: &XVariableSet) -> Vec<XVarVal> {
             let mut scope: Vec<XVarVal> = vec![];
             for e in self.first_order_iter() {
                 if let TreeNode::Variable(v) = e {
-                    let r = set.find_variable(v);
-                    match r {
-                        Ok(_) => {
-                            // println!("{}", r);
-                            scope.push(XVarVal::IntVar(v.to_string()))
-                        }
-                        Err(_) => {
-
-                            // println!("{}, {}", e, err)
-                        }
-                    }
+                    let _ = set.find_variable(v);
+                    scope.push(XVarVal::IntVar(v.to_string()))
                 }
             }
             scope
         }
 
-        pub fn from_string(expression: &str) -> Result<Self, Xcsp3Error> {
-            match ExpressionTree::parse(expression) {
-                Ok(e) => Ok(ExpressionTree {
-                    root: e,
-                    // expression: expression.to_string(),
-                }),
-                Err(e) => Err(e),
+        pub fn from_string(expression: &str) -> Self {
+            ExpressionTree {
+                root: ExpressionTree::parse(expression),
             }
         }
 
-        fn operator(exp: &str, stack: &mut Vec<TreeNode>) -> Option<Xcsp3Error> {
+        fn operator(exp: &str, stack: &mut Vec<TreeNode>) {
             let expression: String = exp.chars().rev().collect();
             // expression = expression.replace("(", "").replace(")", "");
             match Operator::get_operator_by_str(&expression) {
@@ -223,11 +183,7 @@ pub mod xcsp3_utils {
                     if expression.contains('%') {
                         match i32::from_str(&expression[1..]) {
                             Ok(n) => stack.push(TreeNode::Argument(n)),
-                            Err(_) => {
-                                return Some(Xcsp3Error::get_constraint_expression_error(
-                                    "parse the expression error!!",
-                                ));
-                            }
+                            Err(_) => panic!("parse the expression error {}", expression),
                         }
                     } else {
                         match i32::from_str(&expression[..]) {
@@ -242,9 +198,7 @@ pub mod xcsp3_utils {
                         let top = stack.pop();
                         match top {
                             None => {
-                                return Some(Xcsp3Error::get_constraint_expression_error(
-                                    "parse the expression error!!",
-                                ));
+                                panic!("parse the expression error {}", expression);
                             }
                             Some(n) => match n {
                                 TreeNode::RightBracket => {
@@ -259,10 +213,9 @@ pub mod xcsp3_utils {
                     }
                 }
             }
-            None
         }
 
-        fn parse(expression: &str) -> Result<TreeNode, Xcsp3Error> {
+        fn parse(expression: &str) -> TreeNode {
             let mut stack: Vec<TreeNode> = vec![];
             let exp: String = expression.chars().filter(|c| !c.is_whitespace()).collect();
 
@@ -275,21 +228,14 @@ pub mod xcsp3_utils {
                     stack.push(TreeNode::RightBracket);
                     last = i;
                 } else if &rev_exp[i..i + 1] == "," || &rev_exp[i..i + 1] == "(" {
-                    if let Some(e) = ExpressionTree::operator(&rev_exp[last + 1..i], &mut stack) {
-                        return Err(e);
-                    }
+                    ExpressionTree::operator(&rev_exp[last + 1..i], &mut stack);
                     last = i;
                 } else if i == rev_exp.len() - 1 {
-                    if let Some(e) = ExpressionTree::operator(&rev_exp[last + 1..i + 1], &mut stack)
-                    {
-                        return Err(e);
-                    }
+                    ExpressionTree::operator(&rev_exp[last + 1..i + 1], &mut stack);
                 }
-
                 i += 1
             }
-
-            Ok(stack.pop().unwrap())
+            stack.pop().unwrap()
         }
         pub fn first_order_iter(&self) -> ExpressionFirstOrderIter<'_> {
             ExpressionFirstOrderIter {

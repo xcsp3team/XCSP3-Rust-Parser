@@ -27,7 +27,6 @@
 */
 
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_array::xcsp3_core::XVariableArray;
     use crate::variables::xvariable_int::xcsp3_core::XVariableInt;
@@ -36,7 +35,6 @@ pub mod xcsp3_core {
 
     #[derive(Clone)]
     pub enum XVariableType {
-        XVariableNone(Xcsp3Error),
         XVariableArray(XVariableArray),
         XVariableInt(XVariableInt),
         XVariableTree(XVariableTree),
@@ -48,10 +46,8 @@ pub mod xcsp3_core {
         }
 
         pub fn new_array(id: &str, sizes: &str, domain: XDomainInteger) -> XVariableType {
-            match XVariableArray::new(id, sizes, domain) {
-                Ok(array) => XVariableType::XVariableArray(array),
-                Err(e) => XVariableType::XVariableNone(e),
-            }
+            let array = XVariableArray::new(id, sizes, domain);
+            XVariableType::XVariableArray(array)
         }
 
         pub fn new_tree(
@@ -59,11 +55,9 @@ pub mod xcsp3_core {
             sizes: &str,
             domain_for: Vec<&String>,
             domain_value: Vec<&String>,
-        ) -> Result<Self, Xcsp3Error> {
-            match XVariableTree::new(id, sizes, domain_for, domain_value) {
-                Ok(t) => Ok(XVariableType::XVariableTree(t)),
-                Err(e) => Err(e),
-            }
+        ) -> Self {
+            let tmp = XVariableTree::new(id, sizes, domain_for, domain_value);
+            XVariableType::XVariableTree(tmp)
         }
 
         pub fn get_id(&self) -> String {
@@ -71,7 +65,6 @@ pub mod xcsp3_core {
                 XVariableType::XVariableArray(v) => v.id.clone(),
                 XVariableType::XVariableInt(v) => v.id.clone(),
                 XVariableType::XVariableTree(v) => v.id.clone(),
-                _ => String::default(),
             }
         }
     }
@@ -85,11 +78,6 @@ pub mod xcsp3_core {
                     XVariableType::XVariableArray(a) => a.to_string(),
                     XVariableType::XVariableInt(i) => i.to_string(),
                     XVariableType::XVariableTree(t) => t.to_string(),
-                    _ => {
-                        String::from(
-                            "XVariableNone: there must be an error when parse this variable.",
-                        )
-                    }
                 }
             )
         }

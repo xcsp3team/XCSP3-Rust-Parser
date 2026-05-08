@@ -1,4 +1,3 @@
-
 <h1 > <div style="text-align: center;"><b>xcsp3-rust </b></div>  </h1>
 
 [//]: # ([![Crate]&#40;https://img.shields.io/crates/v/quick-xml.svg&#41;]&#40;https://crates.io/crates/quick-xml&#41;)
@@ -9,14 +8,17 @@
 [![MSRV](https://img.shields.io/badge/rustc-1.70.0-90c541.svg)](https://blog.rust-lang.org/2023/06/01/Rust-1.70.0.html)
 [![License](https://img.shields.io/badge/License-_MIT-blue)](https://github.com/luhanzhen/xcsp3-rust/blob/main/LICENSE)
 
-
 ## Description
-### This lib is implemented by rust and is licensed under the MIT license. 
-### The purpose of this library is to read XCSP files into rust constraint programming solvers.
-### You can learn about the semantics of XCSP3 through this site http://xcsp.org/.
-### I will keep improving this code to support more constraints and fix possible bugs.
-### If you have something to tell me, feel free to contact me.
 
+### This lib is implemented by rust and is licensed under the MIT license.
+
+### The purpose of this library is to read XCSP files into rust constraint programming solvers.
+
+### You can learn about the semantics of XCSP3 through this site http://xcsp.org/.
+
+### I will keep improving this code to support more constraints and fix possible bugs.
+
+### If you have something to tell me, feel free to contact me.
 
 ## Usage
 
@@ -47,6 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 ## Architecture Graph
 
 ### main architecture
+
 ```mermaid
 graph BT
 A["XCSP(xml file)"] --serde--> B(XcspXmlModel)
@@ -58,7 +61,9 @@ D --reader--> F
 E --reader--> F
 
 ```
+
 ### XVariableSet
+
 ```mermaid
 graph LR
     C([XVariableSet]) -.->XVariableType(XVariableType)
@@ -74,7 +79,9 @@ graph LR
     XIntegerType -->XIntegerSymbolic(XIntegerSymbolic)
 
 ```
+
 ### XConstraintSet
+
 ```mermaid
 graph LR
     D([XConstraintSet]) -.-> XConstraintType(XConstraintType)
@@ -104,7 +111,9 @@ graph LR
     Scope -->IntVar(IntVar is a variable)
     Scope -->IntVal(IntVal is a value)
 ```
+
 ### XObjectivesSet
+
 ```mermaid
 graph LR
     E([XObjectivesSet]) -.-> T(XObjectivesType)
@@ -118,9 +127,11 @@ graph LR
 ```
 
 ## License
+
 > MIT License
 
 ## Author
+
 > luhan zhen
 
 > tip: Maybe my code is not the best, but I will keep improving it to better build our 'CP' community.

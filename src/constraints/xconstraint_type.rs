@@ -62,11 +62,9 @@ pub mod xcsp3_core {
     use crate::constraints::xstretch::xcsp3_core::XStretch;
     use crate::constraints::xsum::xcsp3_core::XSum;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 
     #[derive(Clone)]
     pub enum XConstraintType<'a> {
-        XConstraintNone(Xcsp3Error),
         XExtension(XExtension<'a>),
         XAllDifferent(XAllDifferent<'a>),
         XAllDifferentList(XAllDifferentList<'a>),
@@ -110,9 +108,6 @@ pub mod xcsp3_core {
             ($($variant:ident),* $(,)?) => {
                 match self {
                     $(XConstraintType::$variant(inner) => inner.extract_parameters(arg),)*
-                    XConstraintType::XConstraintNone(_) => {
-                        // Nothing to extract from an error state
-                    },
                     _ => todo!()
                 }
             };
@@ -154,9 +149,6 @@ pub mod xcsp3_core {
             ($($variant:ident),* $(,)?) => {
                 match self {
                     $(XConstraintType::$variant(inner) => inner.max_args_used(),)*
-                    XConstraintType::XConstraintNone(_) => {
-                        -1
-                    },
                     _ => todo!()
                 }
             }

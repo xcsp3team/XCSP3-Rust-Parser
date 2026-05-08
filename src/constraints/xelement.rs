@@ -34,8 +34,9 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{
+        list_to_vec_var_val, str_to_condition, to_i32_option,
+    };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -90,59 +91,28 @@ pub mod xcsp3_core {
             start_index_str: &str,
             condition: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
+        ) -> Self {
             // println!("{start_index_str}");
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let value = match XVarVal::from_string(value_str) {
-                        None => None,
-                        Some(v) => Some(v),
-                    };
-                    let index = if index_str.is_empty() {
-                        None
-                    } else {
-                        match XVarVal::from_string(index_str) {
-                            None => {
-                                return Err(Xcsp3Error::get_constraint_sum_error(
-                                    "parse element constraint index error, ",
-                                ));
-                            }
-                            Some(i) => Some(i),
-                        }
-                    };
-                    let start_index = if !start_index_str.is_empty() {
-                        match start_index_str.parse::<i32>() {
-                            Ok(n) => Some(n),
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_constraint_sum_error(
-                                    "parse element constraint start_index error, ",
-                                ));
-                            }
-                        }
-                    } else {
-                        None
-                    };
-                    let (operator, operand) = if condition.is_empty() {
-                        (None, None)
-                    } else {
-                        match extract_operator(&condition) {
-                            Ok((op, val)) => (Some(op), Some(val)),
-                            Err(_) => panic!("condition in binpacking is wrong: {}", condition),
-                        }
-                    };
-                    Ok(XElement::new(
-                        scope_vec_str,
-                        set,
-                        value,
-                        index,
-                        start_index,
-                        operator,
-                        operand,
-                    ))
-                }
+            let scope_vec_str = list_to_vec_var_val(list);
+            let value = XVarVal::from_string(value_str);
+            let index = XVarVal::from_string(index_str);
+            let start_index = to_i32_option(start_index_str);
+            let (operator, operand) = if condition.is_empty() {
+                (None, None)
+            } else {
+                let tmp = str_to_condition(&condition);
+                (Some(tmp.0), Some(tmp.1))
+            };
 
-                Err(e) => Err(e),
-            }
+            XElement::new(
+                scope_vec_str,
+                set,
+                value,
+                index,
+                start_index,
+                operator,
+                operand,
+            )
         }
 
         pub fn new(
@@ -154,7 +124,7 @@ pub mod xcsp3_core {
             operator: Option<Operator>,
             operand: Option<Operand>,
         ) -> Self {
-            Self {
+            XElement {
                 scope,
                 set,
                 value,

@@ -27,7 +27,6 @@
 */
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
@@ -39,7 +38,7 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XClause<'a> {
-        pub fn from_str(value: &str, set: &'a XVariableSet) -> Result<Self, Xcsp3Error> {
+        pub fn from_str(value: &str, set: &'a XVariableSet) -> Self {
             let mut positive_ones: Vec<String> = Vec::new();
             let mut negative_ones: Vec<String> = Vec::new();
 
@@ -52,7 +51,7 @@ pub mod xcsp3_core {
             }
             let pos = list_to_vec_var_val(&*positive_ones.join(" "));
             let neg = list_to_vec_var_val(&*negative_ones.join(" "));
-            Ok(Self::new(pos?, neg?, set))
+            Self::new(pos, neg, set)
         }
 
         pub fn new(

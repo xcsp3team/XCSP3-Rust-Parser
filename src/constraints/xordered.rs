@@ -31,7 +31,7 @@ pub mod xcsp3_core {
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
@@ -67,37 +67,17 @@ pub mod xcsp3_core {
             lengths_str: &str,
             operator: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match list_to_vec_var_val(lengths_str) {
-                    Ok(length_vec_str) => match Operator::get_operator_by_str(operator) {
-                        None => Err(Xcsp3Error::get_constraint_list_of_values_error(
-                            "parse the list of values error. ",
-                        )),
-                        Some(ope) => {
-                            Ok(XOrdered::new(scope_vec_str, set, Some(length_vec_str), ope))
-                        }
-                    },
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            }
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let length_vec_str = list_to_vec_var_val(lengths_str);
+            let ope = Operator::get_operator_by_str(operator);
+            XOrdered::new(scope, set, Some(length_vec_str), ope)
         }
 
-        pub fn from_str_without_lengths(
-            list: &str,
-            operator: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match Operator::get_operator_by_str(operator) {
-                    None => Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse the list of values error. ",
-                    )),
-                    Some(ope) => Ok(XOrdered::new(scope_vec_str, set, None, ope)),
-                },
-                Err(e) => Err(e),
-            }
+        pub fn from_str_without_lengths(list: &str, operator: &str, set: &'a XVariableSet) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let ope = Operator::get_operator_by_str(operator);
+            XOrdered::new(scope, set, None, ope)
         }
 
         pub fn new(

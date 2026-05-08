@@ -1,5 +1,4 @@
 pub mod xcsp3_core {
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use std::fmt::{Display, Formatter};
     use std::str::FromStr;
 
@@ -275,7 +274,7 @@ pub mod xcsp3_core {
             }
         }
 
-        pub fn from_string(domain: &str) -> Result<XDomainInteger, Xcsp3Error> {
+        pub fn from_string(domain: &str) -> XDomainInteger {
             let mut ret: XDomainInteger = XDomainInteger::new();
             let domains: Vec<&str> = domain.split_whitespace().collect();
 
@@ -290,35 +289,19 @@ pub mod xcsp3_core {
                                 Ok(r) => {
                                     ret.add_interval(l, r);
                                 }
-                                Err(_) => {
-                                    ret.values.push(XIntegerType::XIntegerNone);
-                                    return Err(Xcsp3Error::get_domain_interval_error(
-                                        "parse the domain error",
-                                    ));
-                                }
+                                Err(_) => panic!("parsing domain error: {}", d),
                             },
-                            Err(_) => {
-                                ret.values.push(XIntegerType::XIntegerNone);
-                                return Err(Xcsp3Error::get_domain_interval_error(
-                                    "parse the domain error",
-                                ));
-                            }
+                            Err(_) => panic!("parsing domain error: {}", d),
                         }
                     }
                 } else {
                     match i32::from_str(d) {
                         Ok(v) => ret.add_value(v),
-                        Err(_) => {
-                            ret.values.push(XIntegerType::XIntegerNone);
-                            return Err(Xcsp3Error::get_domain_integer_error(
-                                "parse the domain error",
-                            ));
-                        }
+                        Err(_) => panic!("parsing domain error: {}", d),
                     };
                 }
             }
-
-            Ok(ret)
+            ret
         }
 
         fn add_entity(&mut self, entity: XIntegerType) {

@@ -28,7 +28,6 @@
 
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
@@ -45,15 +44,15 @@ pub mod xcsp3_core {
     }
 
     impl XElementOperator {
-        pub fn get_objectives_operator_by_str(op: &str) -> Option<Self> {
+        pub fn get_objectives_operator_by_str(op: &str) -> Self {
             match op {
-                "sum" => Some(Self::Sum),
-                "product" => Some(Self::Product),
-                "minimum" => Some(Self::Minimum),
-                "maximum" => Some(Self::Maximum),
-                "nValues" => Some(Self::NValues),
-                "lex" => Some(Self::Lex),
-                _ => None,
+                "sum" => Self::Sum,
+                "product" => Self::Product,
+                "minimum" => Self::Minimum,
+                "maximum" => Self::Maximum,
+                "nValues" => Self::NValues,
+                "lex" => Self::Lex,
+                _ => panic!("objective operator {} is not supported", op),
             }
         }
     }
@@ -94,24 +93,11 @@ pub mod xcsp3_core {
             ope_str: &str,
             is_maximize: bool,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list_str) {
-                Ok(scope_vec_str) => match list_to_vec_var_val(coeffs_str) {
-                    Ok(coef_vec_str) => {
-                        match XElementOperator::get_objectives_operator_by_str(ope_str) {
-                            None => Err(Xcsp3Error::get_objective_target_error(
-                                "parse objective type error, ",
-                            )),
-                            Some(v) => {
-                                Ok(Self::new(v, scope_vec_str, coef_vec_str, is_maximize, set))
-                            }
-                        }
-                    }
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            }
-            // Err(Xcsp3Error::get_objective_target_error("e"))
+        ) -> Self {
+            let scope = list_to_vec_var_val(list_str);
+            let coeffs = list_to_vec_var_val(coeffs_str);
+            let v = XElementOperator::get_objectives_operator_by_str(ope_str);
+            Self::new(v, scope, coeffs, is_maximize, set)
         }
 
         pub fn operator(&self) -> &XElementOperator {

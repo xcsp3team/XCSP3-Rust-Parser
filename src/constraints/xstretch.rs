@@ -27,7 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     #[derive(Clone)]
@@ -46,36 +46,16 @@ pub mod xcsp3_core {
             widths_str: &str,
             patterns_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = match list_to_vec_var_val(list) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let value = match list_to_vec_var_val(value_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let widths = match list_to_vec_var_val(widths_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let value = list_to_vec_var_val(value_str);
+            let widths = list_to_vec_var_val(widths_str);
             let patterns = if patterns_str.is_empty() {
                 None
             } else {
-                match list_to_vec_var_val(patterns_str) {
-                    Ok(n) => Some(n),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                }
+                Some(list_to_vec_var_val(patterns_str))
             };
-            Ok(Self::new(scope, set, value, widths, patterns))
+            Self::new(scope, set, value, widths, patterns)
         }
 
         pub fn new(

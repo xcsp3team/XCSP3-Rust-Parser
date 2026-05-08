@@ -47,23 +47,17 @@ pub mod xcsp3_core {
         ) {
             // println!("list {} coeffs {} expression {} type_str {}", list, coeffs, expression, type_str);
             if type_str.is_empty() {
-                match XObjectiveExpression::from_expr(expression, true, self.set) {
-                    Ok(xoe) => {
-                        self.objectives.push(XObjective::XObjectiveExpression(xoe));
-                    }
-                    Err(_e) => panic!("Objectives not recognized"),
-                }
+                let tmp = XObjectiveExpression::from_expr(expression, true, self.set);
+                self.objectives.push(XObjective::XObjectiveExpression(tmp));
             } else {
-                match XObjectiveElement::from_str(
+                let tmp = XObjectiveElement::from_str(
                     if !list.is_empty() { list } else { expression },
                     coeffs,
                     type_str,
                     true,
                     self.set,
-                ) {
-                    Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
-                    Err(_e) => panic!("Objectives not recognized"),
-                }
+                );
+                self.objectives.push(XObjective::XObjectiveElement(tmp));
             }
         }
 
@@ -76,26 +70,19 @@ pub mod xcsp3_core {
         ) {
             // println!("list {} coeffs {} expression {} type_str {}", list, coeffs, expression, type_str);
             if type_str.is_empty() {
-                match XObjectiveExpression::from_expr(expression, false, self.set) {
-                    Ok(xoe) => {
-                        self.objectives.push(XObjective::XObjectiveExpression(xoe));
-                    }
-                    Err(_e) => panic!("Objectives not recognized"),
-                }
+                let tmp = XObjectiveExpression::from_expr(expression, false, self.set);
+                self.objectives.push(XObjective::XObjectiveExpression(tmp));
             } else {
-                match XObjectiveElement::from_str(
+                let tmp = XObjectiveElement::from_str(
                     if !list.is_empty() { list } else { expression },
                     coeffs,
                     type_str,
                     false,
                     self.set,
-                ) {
-                    Ok(ele) => self.objectives.push(XObjective::XObjectiveElement(ele)),
-                    Err(_e) => panic!("Objectives not recognized"),
-                }
+                );
+                self.objectives.push(XObjective::XObjectiveElement(tmp));
             }
         }
-
         pub fn new(set: &'a XVariableSet) -> Self {
             Self {
                 objectives: vec![],

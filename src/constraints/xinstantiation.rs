@@ -31,13 +31,10 @@ pub mod xcsp3_core {
         inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
-    use std::fmt::{Display, Formatter};
 
-    // #[derive(Clone)]
     #[derive(Clone)]
     pub struct XInstantiation<'a> {
         scope: Vec<XVarVal>,
@@ -58,32 +55,12 @@ pub mod xcsp3_core {
             )
         }
     }
-    impl Display for XInstantiation<'_> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let mut ret = String::default();
-            for e in self.scope.iter() {
-                ret.push('(');
-                ret.push_str(&e.to_string());
-                ret.push_str("), ")
-            }
-            ret.push_str(&format!("values = {:?}", self.values));
-            write!(f, "XInstantiation: list =  {}", ret)
-        }
-    }
 
     impl<'a> XInstantiation<'a> {
-        pub fn from_str(
-            list: &str,
-            values_str: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match list_to_vec_var_val(values_str) {
-                    Ok(values) => Ok(XInstantiation::new(scope_vec_str, set, values)),
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            }
+        pub fn from_str(list: &str, values_str: &str, set: &'a XVariableSet) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let values = list_to_vec_var_val(values_str);
+            XInstantiation::new(scope, set, values)
         }
 
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, values: Vec<XVarVal>) -> Self {

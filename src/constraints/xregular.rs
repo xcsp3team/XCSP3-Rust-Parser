@@ -30,7 +30,7 @@ pub mod xcsp3_core {
         inject_parameters_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::{list_to_transitions, list_to_vec_var_val};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
@@ -61,27 +61,22 @@ pub mod xcsp3_core {
             start_str: &str,
             final_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let mut finals: Vec<String> = vec![];
-                    let t_final: Vec<&str> = final_str.split_whitespace().collect();
-                    for s in t_final.iter() {
-                        finals.push(s.to_string());
-                    }
-                    match list_to_transitions(transitions_str) {
-                        Ok(transitions) => Ok(XRegular::new(
-                            scope_vec_str,
-                            set,
-                            start_str.to_string(),
-                            finals,
-                            transitions,
-                        )),
-                        Err(e) => Err(e),
-                    }
-                }
-                Err(e) => Err(e),
+        ) -> Self {
+            let scope_vec_str = list_to_vec_var_val(list);
+
+            let mut finals: Vec<String> = vec![];
+            let t_final: Vec<&str> = final_str.split_whitespace().collect();
+            for s in t_final.iter() {
+                finals.push(s.to_string());
             }
+            let transitions = list_to_transitions(transitions_str);
+            XRegular::new(
+                scope_vec_str,
+                set,
+                start_str.to_string(),
+                finals,
+                transitions,
+            )
         }
 
         pub fn new(

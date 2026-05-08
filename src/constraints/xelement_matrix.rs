@@ -27,22 +27,14 @@
 */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, arg_in_var, inject_parameters_in_list, inject_parameters_in_operand,
-        inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
-    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::utils::utils_functions::xcsp3_utils::{
-        extract_operator, list_to_matrix_ids, list_to_vec_var_val,
+        list_to_vec_var_val, str_to_condition, to_i32_option, to_matrix,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
-        XVariableArray, XVariableTree,
-    };
-    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]
@@ -98,100 +90,39 @@ pub mod xcsp3_core {
             start_col_index_str: &str,
             condition: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let value = match XVarVal::from_string(value_str) {
-                None => None,
-                Some(v) => Some(v),
-            };
+        ) -> Self {
+            let value = XVarVal::from_string(value_str);
             let (row_index, col_index) = if index_str.is_empty() {
                 panic!("index in element matrix constraint must be specified");
             } else {
-                match list_to_vec_var_val(index_str) {
-                    Ok(tmp) => {
-                        if tmp.len() != 2 {
-                            panic!("index in element matrix constraint must be of length 2");
-                        }
-                        (tmp[0].clone(), tmp[1].clone())
-                    }
-                    Err(_) => panic!("index in element matrix constraint must be of length 2"),
+                let tmp = list_to_vec_var_val(index_str);
+                if tmp.len() != 2 {
+                    panic!("index in element matrix constraint must be of length 2");
                 }
+                (tmp[0].clone(), tmp[1].clone())
             };
 
-            let start_row_index = if !start_row_index_str.is_empty() {
-                match start_row_index_str.parse::<i32>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_sum_error(
-                            "parse element constraint row_index error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
-            let start_col_index = if !start_col_index_str.is_empty() {
-                match start_col_index_str.parse::<i32>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_sum_error(
-                            "parse element constraint col_index error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
+            let start_row_index = to_i32_option(start_row_index_str);
+            let start_col_index = to_i32_option(start_col_index_str);
             let (operator, operand) = if condition.is_empty() {
                 (None, None)
             } else {
-                match extract_operator(&condition) {
-                    Ok((op, val)) => (Some(op), Some(val)),
-                    Err(_) => panic!("condition in binpacking is wrong: {}", condition),
-                }
+                let tmp = str_to_condition(&condition);
+                (Some(tmp.0), Some(tmp.1))
             };
-            if list.contains("[][]") {
-                let name = list.split('[').next().unwrap_or(list);
-                let vartype = set.find_variable(name)?;
-                let size = match vartype {
-                    XVariableArray(v) => v.sizes[0],
-                    XVariableTree(v) => v.sizes[0],
-                    _ => 0,
-                };
-                let mut matrix: Vec<Vec<XVarVal>> = Vec::with_capacity(size);
-                for i in 0..size {
-                    matrix.push(vec![]);
-                    for j in 0..size {
-                        matrix[i].push(XVarVal::IntVar(format!("{}[{}][{}]", name, i, j)));
-                    }
-                }
-                Ok(Self::new(
-                    matrix,
-                    set,
-                    value,
-                    row_index,
-                    col_index,
-                    start_row_index,
-                    start_col_index,
-                    operator,
-                    operand,
-                ))
-            } else {
-                let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
-                    .iter()
-                    .map(|line| line.iter().map(|e| XVarVal::IntVar(e.clone())).collect())
-                    .collect();
-                Ok(Self::new(
-                    matrix,
-                    set,
-                    value,
-                    row_index,
-                    col_index,
-                    start_row_index,
-                    start_col_index,
-                    operator,
-                    operand,
-                ))
-            }
+
+            let matrix = to_matrix(list, set);
+            Self::new(
+                matrix,
+                set,
+                value,
+                row_index,
+                col_index,
+                start_row_index,
+                start_col_index,
+                operator,
+                operand,
+            )
         }
 
         pub fn new(

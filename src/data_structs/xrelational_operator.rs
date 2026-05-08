@@ -39,17 +39,17 @@ pub mod xcsp3_core {
     }
 
     impl Operator {
-        pub fn get_operator_by_str(op: &str) -> Option<Self> {
+        pub fn get_operator_by_str(op: &str) -> Self {
             match op {
-                "lt" => Some(Self::Lt),
-                "le" => Some(Self::Le),
-                "ge" => Some(Self::Ge),
-                "gt" => Some(Self::Gt),
-                "ne" => Some(Self::Ne),
-                "eq" => Some(Self::Eq),
-                "in" => Some(Self::In),
-                "notin" => Some(Self::Notin),
-                _ => None,
+                "lt" => Self::Lt,
+                "le" => Self::Le,
+                "ge" => Self::Ge,
+                "gt" => Self::Gt,
+                "ne" => Self::Ne,
+                "eq" => Self::Eq,
+                "in" => Self::In,
+                "notin" => Self::Notin,
+                _ => panic!("unknown operator {}", op),
             }
         }
     }

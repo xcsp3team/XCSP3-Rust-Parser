@@ -69,7 +69,7 @@ pub mod xcsp3_xml {
       <domain for="others"> 0 1 </domain>
     </array>
         ```
-     */
+    */
     #[derive(Deserialize, Debug)]
     pub struct VariableArray {
         #[serde(rename = "@id")]

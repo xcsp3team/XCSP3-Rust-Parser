@@ -29,7 +29,7 @@
 pub mod xcsp3_core {
     use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     #[derive(Clone)]
@@ -48,33 +48,12 @@ pub mod xcsp3_core {
             &self.expression
         }
 
-        pub fn from_expr(
-            expr: &str,
-            is_maximize: bool,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match ExpressionTree::from_string(expr) {
-                Ok(tree) => {
-                    // let mut scope: Vec<XVarVal> = vec![];
-                    let scope: Vec<XVarVal> = tree.get(set);
-                    // for e in tree.get() {
-                    // match set.find_variable(&e) {
-                    //     Ok(_) => {
-                    //         // println!("{}", r);
-                    //         scope.push(XVarVal::IntVar(e))
-                    //     }
-                    //     Err(err) => {
-                    //         return Err(err);
-                    //     }
-                    // }
-                    // }
-                    // Ok(Self::new(scope, set, tree))
-                    Ok(Self::new(tree, scope, is_maximize, set))
-                }
-
-                Err(e) => Err(e),
-            }
+        pub fn from_expr(expr: &str, is_maximize: bool, set: &'a XVariableSet) -> Self {
+            let tree = ExpressionTree::from_string(expr);
+            let scope: Vec<XVarVal> = tree.get(set);
+            Self::new(tree, scope, is_maximize, set)
         }
+
         pub fn new(
             expression: ExpressionTree,
             scope: Vec<XVarVal>,

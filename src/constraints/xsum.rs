@@ -34,8 +34,8 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -69,30 +69,15 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XSum<'a> {
-        pub fn from_str(
-            list: &str,
-            condition: &str,
-            coeffs: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let coe = if coeffs.is_empty() {
-                        None
-                    } else {
-                        match list_to_vec_var_val(coeffs) {
-                            Ok(coe_vec) => Some(coe_vec),
-                            Err(e) => return Err(e),
-                        }
-                    };
-                    let (ope, rand) = match extract_operator(condition) {
-                        Ok(value) => value,
-                        Err(e) => return Err(e),
-                    };
-                    Ok(Self::new(scope_vec_str, set, ope, rand, coe))
-                }
-                Err(e) => Err(e),
-            }
+        pub fn from_str(list: &str, condition: &str, coeffs: &str, set: &'a XVariableSet) -> Self {
+            let scope_vec_str = list_to_vec_var_val(list);
+            let coe = if coeffs.is_empty() {
+                None
+            } else {
+                Some(list_to_vec_var_val(coeffs))
+            };
+            let (ope, rand) = str_to_condition(condition);
+            Self::new(scope_vec_str, set, ope, rand, coe)
         }
 
         pub fn new(

@@ -33,8 +33,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -79,29 +78,23 @@ pub mod xcsp3_core {
             limits: &str,
             loads: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = list_to_vec_var_val(list)?;
-            let sizes = list_to_vec_var_val(sizes)?;
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let sizes = list_to_vec_var_val(sizes);
             let (operator, operand) = if condition.is_empty() {
                 (None, None)
             } else {
-                match extract_operator(&condition) {
-                    Ok((op, val)) => (Some(op), Some(val)),
-                    Err(_) => panic!("condition in binpacking is wrong: {}", condition),
-                }
+                let tmp = str_to_condition(&condition);
+                (Some(tmp.0), Some(tmp.1))
             };
-            let limits = list_to_vec_var_val(limits)?;
-            let loads = list_to_vec_var_val(loads)?;
+            let limits = list_to_vec_var_val(limits);
+            let loads = list_to_vec_var_val(loads);
 
             if operator.is_none() && limits.len() == 0 && loads.len() == 0 {
-                return Err(Xcsp3Error::get_constraint_sum_error(
-                    "binPacking requires a condition, limits, or loads, ",
-                ));
+                panic!("binPacking requires a condition, limits, or loads,");
             }
 
-            Ok(Self::new(
-                scope, sizes, operator, operand, limits, loads, set,
-            ))
+            Self::new(scope, sizes, operator, operand, limits, loads, set)
         }
 
         pub fn new(

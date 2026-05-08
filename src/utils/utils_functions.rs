@@ -25,57 +25,91 @@
 * THE SOFTWARE.
 *=============================================================================
 */
-use crate::data_structs::expression_tree::xcsp3_utils::{ExpressionTree, TreeNode};
+use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
 use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
 pub mod xcsp3_utils {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
+    use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
+        XVariableArray, XVariableTree,
+    };
     // use std::str::FromStr;
 
-    pub fn extract_operator(condition: &str) -> Result<(Operator, Operand), Xcsp3Error> {
+    pub fn str_to_condition(condition: &str) -> (Operator, Operand) {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
-        let ope: Operator = match Operator::get_operator_by_str(split[0]) {
-            None => {
-                return Err(Xcsp3Error::get_constraint_sum_error(
-                    "parse sum  constraint Operator error, ",
-                ));
-            }
-            Some(o) => o,
-        };
+        let ope = Operator::get_operator_by_str(split[0]);
 
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
-            None => {
-                return Err(Xcsp3Error::get_constraint_sum_error(
-                    "parse sum constraint Operand error, ",
-                ));
-            }
+            None => panic!("parse condition  error, {}", condition),
             Some(r) => r,
         };
-        Ok((ope, rand))
+        (ope, rand)
     }
 
-    pub fn list_to_vec_var_val(list: &str) -> Result<Vec<XVarVal>, Xcsp3Error> {
+    pub fn to_bool_option(string: &str) -> Option<bool> {
+        if !string.trim().is_empty() {
+            match string.trim().parse::<bool>() {
+                Ok(n) => Some(n),
+                Err(_) => panic!("parse bool error {}", string),
+            }
+        } else {
+            None
+        }
+    }
+
+    pub fn to_i32_option(string: &str) -> Option<i32> {
+        if !string.trim().is_empty() {
+            match string.trim().parse::<i32>() {
+                Ok(n) => Some(n),
+                Err(_) => panic!("parse i32 error {}", string),
+            }
+        } else {
+            None
+        }
+    }
+    pub fn to_matrix(list: &str, set: &XVariableSet) -> Vec<Vec<XVarVal>> {
+        if list.contains("[][]") {
+            let name = list.split('[').next().unwrap_or(list);
+            let var = set.find_variable(name);
+            let size = match var {
+                XVariableArray(v) => v.sizes[0],
+                XVariableTree(v) => v.sizes[0],
+                _ => 0,
+            };
+            let mut matrix: Vec<Vec<XVarVal>> = Vec::with_capacity(size);
+            for i in 0..size {
+                matrix.push(vec![]);
+                for j in 0..size {
+                    matrix[i].push(XVarVal::IntVar(format!("{}[{}][{}]", name, i, j)));
+                }
+            }
+            matrix
+        } else {
+            let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
+                .iter()
+                .map(|line| line.iter().map(|e| XVarVal::IntVar(e.clone())).collect())
+                .collect();
+            matrix
+        }
+    }
+
+    pub fn list_to_vec_var_val(list: &str) -> Vec<XVarVal> {
         let mut ret: Vec<XVarVal> = vec![];
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
             match XVarVal::from_string(e) {
-                None => {
-                    return Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse the list of values error. ",
-                    ))
-                }
+                None => panic!("parseing  list membererror {}", e),
                 Some(vv) => {
                     ret.push(vv);
                 }
             }
         }
-        Ok(ret)
+        ret
     }
 
     // pub fn list_to_vec_var(list: &str) -> Vec<XVarVal> {
@@ -153,7 +187,7 @@ pub mod xcsp3_utils {
 
     /// return the transitions,
     /// eg  "(a,0,a)(a,1,b)(b,1,c)(c,0,d)(d,0,d)(d,1,e)(e,0,e)" -> vec[ (a,0,a),(a,1,b),(b,1,c),(c,0,d),(d,0,d),(d,1,e),(e,0,e)]
-    pub fn list_to_transitions(list: &str) -> Result<Vec<(String, i32, String)>, Xcsp3Error> {
+    pub fn list_to_transitions(list: &str) -> Vec<(String, i32, String)> {
         let mut ret: Vec<(String, i32, String)> = Vec::new();
         let chars = list.chars();
         if let Some(left) = list.find('(') {
@@ -176,11 +210,7 @@ pub mod xcsp3_utils {
                         num,
                         list[last_comma2 + 1..i].to_string(),
                     )),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_regular_transitions_error(
-                            "parse the transitions error, ",
-                        ));
-                    }
+                    Err(_) => panic!("parse the transitions error: {} ", list),
                 }
                 last_comma1 = usize::MAX;
             } else if x == ',' {
@@ -191,7 +221,7 @@ pub mod xcsp3_utils {
                 }
             }
         }
-        Ok(ret)
+        ret
     }
 
     /// return the matrix,
@@ -215,122 +245,38 @@ pub mod xcsp3_utils {
 
     /// return the list of values,
     /// eg str"1 3 5 76" -> vec[1,3,5,76],
-    pub fn list_to_values(list: &str) -> Result<Vec<i32>, Xcsp3Error> {
+    pub fn list_to_values(list: &str) -> Vec<i32> {
         let mut ret: Vec<i32> = Vec::new();
         let lists: Vec<&str> = list.split_whitespace().collect();
         for l in lists.iter() {
             match l.parse::<i32>() {
                 Ok(n) => ret.push(n),
-                Err(_) => {
-                    return Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse the list of values error. ",
-                    ));
-                }
+                Err(_) => panic!("parsing  list of int error: {} ", list),
             }
         }
-        Ok(ret)
+        ret
     }
 
     /// return the list of values,
     /// eg str"(1, 3, 5, 76)" -> vec[1,3,5,76],
-    pub fn list_with_bracket_comma_to_values(list: &str) -> Result<Vec<XVarVal>, Xcsp3Error> {
+    pub fn list_with_bracket_comma_to_values(list: &str) -> Vec<XVarVal> {
         let mut ret: Vec<XVarVal> = Vec::new();
         let list = list.to_string().replace(['(', ')', ','], " ");
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
             match e.parse::<i32>() {
                 Ok(n) => ret.push(XVarVal::IntVal(n)),
-                Err(_) => {
-                    return Err(Xcsp3Error::get_constraint_list_of_values_error(
-                        "parse the list of values error. ",
-                    ));
-                }
+                Err(_) => panic!("parsing list error: {} ", list),
             }
         }
-        Ok(ret)
+        ret
     }
 
-    // fn string_to_i32(s: &str) -> Option<i32> {
-    //     let char = s.chars().rev();
-    //     let mut n: i32 = 0;
-    //     for (i, c) in char.enumerate() {
-    //         if !c.is_numeric() {
-    //             return None;
-    //         } else {
-    //             n += 10i32.pow((i as i32).try_into().unwrap()) * c as i32
-    //         }
-    //     }
-    //     Some(n)
-    // }
-    // fn str_to_2vec(string: &str) -> Vec<Vec<i32>> {
-    //     use serde::Deserialize;
-    //     #[derive(Debug, Deserialize)]
-    //     struct Tuples {
-    //         tuples: Vec<Vec<i32>>,
-    //     }
-    //     let s: Tuples = serde_json::from_str(string).unwrap();
-    //     s.tuples
-    // }
-    // pub fn tuple_to_vector1(tuple_str: &str, is_unary: bool) -> Result<Vec<Vec<i32>>, Xcsp3Error> {
-    //     let err = Xcsp3Error::get_constraint_extension_error("parse the tuple of extension error");
-    //     if is_unary {
-    //         let mut ret: Vec<Vec<i32>> = Vec::new();
-    //         let tuples: Vec<&str> = tuple_str.split_whitespace().collect();
-    //         for tuple in tuples.iter() {
-    //             if tuple.contains("..") {
-    //                 let interval: Vec<&str> = tuple.split("..").collect();
-    //                 if interval.len() == 2 {
-    //                     let left = interval[0].parse::<i32>();
-    //                     let right = interval[1].parse::<i32>();
-    //                     match left {
-    //                         Ok(l) => match right {
-    //                             Ok(r) => {
-    //                                 if l <= r {
-    //                                     for i in l..r + 1 {
-    //                                         ret.push(vec![i])
-    //                                     }
-    //                                 } else {
-    //                                     return Err(err);
-    //                                 }
-    //                             }
-    //                             Err(_) => {
-    //                                 return Err(err);
-    //                             }
-    //                         },
-    //                         Err(_) => {
-    //                             return Err(err);
-    //                         }
-    //                     }
-    //                 }
-    //             } else {
-    //                 match tuple.parse::<i32>() {
-    //                     Ok(v) => ret.push(vec![v]),
-    //                     Err(_) => {
-    //                         return Err(err);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         Ok(ret)
-    //     } else {
-    //         let mut tuple_str = tuple_str
-    //             .replace(")(", "],[")
-    //             .replace('(', "[")
-    //             .replace(')', "]")
-    //             .replace("*", &i32::MAX.to_string());
-    //         tuple_str = "{\"tuples\":[".to_owned() + &tuple_str + "]}";
-    //         // println!("{}",tuple_str);
-    //         Ok(str_to_2vec(&tuple_str))
-    //         // println!("{:?}",ret);
-    //     }
-    //     // println!("parse Extension {:?}",ti.get());
-    // }
     ///return the tuples by given string,
     /// eg (0,0,1)(0,1,0)(1,0,0)(1,1,1) -> [[0,0,1],[0,1,0],[1,0,0],[1,1,1]]
-    pub fn tuple_to_vector(tuple_str: &str, is_unary: bool) -> Result<Vec<Vec<i32>>, Xcsp3Error> {
+    pub fn tuple_to_vector(tuple_str: &str, is_unary: bool) -> Vec<Vec<i32>> {
         // let ti = TimeInterval::new();
         let mut ret: Vec<Vec<i32>> = Vec::new();
-        let err = Xcsp3Error::get_constraint_extension_error("parse the tuple of extension error");
         if is_unary {
             let tuples: Vec<&str> = tuple_str.split_whitespace().collect();
             for tuple in tuples.iter() {
@@ -347,24 +293,18 @@ pub mod xcsp3_utils {
                                             ret.push(vec![i])
                                         }
                                     } else {
-                                        return Err(err);
+                                        panic!("parsing tuples error: {} ", tuple_str);
                                     }
                                 }
-                                Err(_) => {
-                                    return Err(err);
-                                }
+                                Err(_) => panic!("parsing tuples error: {} ", tuple_str),
                             },
-                            Err(_) => {
-                                return Err(err);
-                            }
+                            Err(_) => panic!("parsing tuples error: {} ", tuple_str),
                         }
                     }
                 } else {
                     match tuple.parse::<i32>() {
                         Ok(v) => ret.push(vec![v]),
-                        Err(_) => {
-                            return Err(err);
-                        }
+                        Err(_) => panic!("parsing tuples error: {} ", tuple_str),
                     }
                 }
             }
@@ -394,7 +334,7 @@ pub mod xcsp3_utils {
                             if &tuple_str[last + 1..i] == "*" {
                                 tt.push(i32::MAX);
                             } else {
-                                return Err(err);
+                                panic!("parsing tuples error: {} ", tuple_str);
                             }
                         }
                     }
@@ -409,7 +349,7 @@ pub mod xcsp3_utils {
                             if &tuple_str[last + 1..i] == "*" {
                                 tt.push(i32::MAX);
                             } else {
-                                return Err(err);
+                                panic!("parsing tuples error: {} ", tuple_str);
                             }
                         }
                     }
@@ -418,12 +358,12 @@ pub mod xcsp3_utils {
             }
         }
         // println!("parse Extension {:?}",ti.get());
-        Ok(ret)
+        ret
     }
 
     /// transform the string size to vector sizes
     /// eg:  [2][3..4][4..8] -> ([2,3,4],[2,4,8])
-    pub fn sizes_to_double_vec(sizes: &str) -> Result<(Vec<usize>, Vec<usize>), Xcsp3Error> {
+    pub fn sizes_to_double_vec(sizes: &str) -> (Vec<usize>, Vec<usize>) {
         let mut lower: Vec<usize> = vec![];
         let mut upper: Vec<usize> = vec![];
         let sizes = sizes.replace("[]", "[*]").replace(['[', ']'], " ");
@@ -444,17 +384,9 @@ pub mod xcsp3_utils {
                                 lower.push(l);
                                 upper.push(u);
                             }
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_domain_for_error(
-                                    "parse the domain for error",
-                                ));
-                            }
+                            Err(_) => panic!("parsing sizes error: {} ", sizes),
                         },
-                        Err(_) => {
-                            return Err(Xcsp3Error::get_domain_for_error(
-                                "parse the domain for error",
-                            ));
-                        }
+                        Err(_) => panic!("parsing sizes error: {} ", sizes),
                     }
                 }
             } else {
@@ -463,18 +395,16 @@ pub mod xcsp3_utils {
                         lower.push(v);
                         upper.push(v);
                     }
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_domain_for_error("parse the domain error"));
-                    }
+                    Err(_) => panic!("parsing sizes error: {} ", sizes),
                 };
             }
         }
-        Ok((lower, upper))
+        (lower, upper)
     }
 
     /// transform the string size to vector sizes
     /// eg:  [2][3][4] -> ([2,3,4], 24)
-    pub fn sizes_to_vec(sizes: &str) -> Result<(Vec<usize>, usize), Xcsp3Error> {
+    pub fn sizes_to_vec(sizes: &str) -> (Vec<usize>, usize) {
         let mut ret: Vec<usize> = vec![];
         let mut sz: usize = 1;
         let mut sizes = sizes.replace('[', " ");
@@ -486,15 +416,10 @@ pub mod xcsp3_utils {
                     ret.push(v);
                     sz *= v;
                 }
-                Err(_) => {
-                    return Err(Xcsp3Error::get_variable_size_invalid_error(
-                        "parse the size of variable error",
-                    ));
-                }
+                Err(_) => panic!("parse the size of variable error {}", sizes),
             };
         }
-
-        Ok((ret, sz))
+        (ret, sz)
     }
 }
 
@@ -518,10 +443,10 @@ pub fn to_var_list(the_list: &[XVarVal], set: &XVariableSet) -> Vec<String> {
     the_list
         .iter()
         .filter_map(|e| match e {
-            XVarVal::IntVar(s) => match set.construct_scope(&[&s]) {
-                Ok(s) => Some(s),
-                Err(_) => panic!("Variable {} unknown", s),
-            },
+            XVarVal::IntVar(s) => {
+                let tmp = set.construct_scope(&[&s]);
+                Some(tmp)
+            }
             _ => {
                 panic!("Only vars in this list are allowed: {}", e)
             }
@@ -549,10 +474,10 @@ pub fn to_expression_list(the_list: &[XVarVal], _set: &XVariableSet) -> Vec<Expr
 
     for v in the_list {
         match v {
-            XVarVal::IntVar(expr) => match ExpressionTree::from_string(expr) {
-                Ok(tree) => trees.push(tree),
-                Err(_) => panic!("Invalid expression tree: {}", expr),
-            },
+            XVarVal::IntVar(expr) => {
+                let tree = ExpressionTree::from_string(expr);
+                trees.push(tree);
+            }
             _ => panic!("Only IntVar expressions are allowed in this list"),
         }
     }

@@ -30,7 +30,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, tuple_to_vector};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
@@ -56,29 +55,11 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XExtension<'a> {
-        pub fn from_str(
-            list: &str,
-            tuple: &str,
-            is_support: bool,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let a = match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => match tuple_to_vector(tuple, !tuple.contains('(')) {
-                    Ok(tuples) => {
-                        let has_star = tuples.iter().flatten().any(|&x| x == i32::MAX);
-                        Ok(XExtension::new(
-                            scope_vec_str,
-                            set,
-                            tuples,
-                            is_support,
-                            has_star,
-                        ))
-                    }
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            };
-            a
+        pub fn from_str(list: &str, tuple: &str, is_support: bool, set: &'a XVariableSet) -> Self {
+            let scope_vec_str = list_to_vec_var_val(list);
+            let tuples = tuple_to_vector(tuple, !tuple.contains('('));
+            let has_star = tuples.iter().flatten().any(|&x| x == i32::MAX);
+            XExtension::new(scope_vec_str, set, tuples, is_support, has_star)
         }
 
         pub fn new(

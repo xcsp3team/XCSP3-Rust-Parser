@@ -29,14 +29,11 @@
 pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::xcsp3_utils::{
         get_all_variables_between_lower_and_upper, size_to_string, sizes_to_double_vec,
         sizes_to_vec,
     };
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
-
-    // use crate::variables::xvariable_trait::xcsp3_core::XVariableTrait;
 
     #[derive(Clone)]
     pub struct XVariableTree {
@@ -49,7 +46,7 @@ pub mod xcsp3_core {
 
     impl XVariableTree {
         /// return which node the variable belongs to
-        pub(crate) fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
+        fn get_node_by_vec(&self, v: &[usize]) -> &XVariableTreeNode {
             for e in self.nodes.iter() {
                 if e.belongs_to_this_node(v) {
                     return e;
@@ -58,38 +55,27 @@ pub mod xcsp3_core {
             &self.others
         }
 
-        pub fn find_variable(
-            &self,
-            id: &str,
-        ) -> Result<Vec<(String, &XDomainInteger)>, Xcsp3Error> {
+        pub fn find_variable(&self, id: &str) -> Vec<(String, &XDomainInteger)> {
             let mut ret: Vec<(String, &XDomainInteger)> = vec![];
             // println!("{}", id);
             match id.find('[') {
-                None => {
-                    return Err(Xcsp3Error::get_variable_size_invalid_error(
-                        "find_variable in XVariableTree error",
-                    ));
+                None => panic!("Variable {} unknown", id),
+                Some(v) => {
+                    let (mut lower, mut upper) = sizes_to_double_vec(&id[v..]);
+                    for i in 0..lower.len() {
+                        if lower[i] == usize::MAX && upper[i] == usize::MAX {
+                            lower[i] = 0;
+                            upper[i] = self.sizes[i] - 1;
+                        }
+                    }
+                    let all_variable = get_all_variables_between_lower_and_upper(lower, upper);
+                    for size_vec in all_variable.iter() {
+                        let node = self.get_node_by_vec(size_vec);
+                        ret.push((size_to_string(&id[..v], size_vec), &node.domain));
+                    }
                 }
-                Some(v) => match sizes_to_double_vec(&id[v..]) {
-                    Ok((mut lower, mut upper)) => {
-                        for i in 0..lower.len() {
-                            if lower[i] == usize::MAX && upper[i] == usize::MAX {
-                                lower[i] = 0;
-                                upper[i] = self.sizes[i] - 1;
-                            }
-                        }
-                        let all_variable = get_all_variables_between_lower_and_upper(lower, upper);
-                        for size_vec in all_variable.iter() {
-                            let node = self.get_node_by_vec(size_vec);
-                            ret.push((size_to_string(&id[..v], size_vec), &node.domain));
-                        }
-                    }
-                    Err(e) => {
-                        return Err(e);
-                    }
-                },
             }
-            Ok(ret)
+            ret
         }
 
         pub fn new(
@@ -97,54 +83,31 @@ pub mod xcsp3_core {
             sizes: &str,
             domain_for: Vec<&String>,
             domain_value: Vec<&String>,
-        ) -> Result<Self, Xcsp3Error> {
-            match sizes_to_vec(sizes) {
-                Ok((size_vec, _)) => {
-                    let mut has_others = false;
-                    let mut nodes: Vec<XVariableTreeNode> = Vec::new();
-                    // for dom in domain_vec.iter() {
-                    let mut others_domain = Default::default();
-                    for i in 0..domain_for.len() {
-                        match XDomainInteger::from_string(domain_value[i]) {
-                            Ok(domain) => {
-                                if domain_for[i].eq("others") {
-                                    has_others = true;
-                                    others_domain = domain;
-                                } else {
-                                    let for_strs: Vec<&str> =
-                                        domain_for[i].split_whitespace().collect();
-                                    for e in for_strs.iter() {
-                                        let for_str = e.to_string().replace(id, "");
-                                        match sizes_to_double_vec(&for_str) {
-                                            Ok((lower, upper)) => {
-                                                nodes.push(XVariableTreeNode::new(
-                                                    lower,
-                                                    upper,
-                                                    domain.clone(),
-                                                ));
-                                            }
-                                            Err(e) => {
-                                                eprintln!("{}", e);
-                                                return Err(e);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            Err(e) => {
-                                return Err(e);
-                            }
-                        }
+        ) -> Self {
+            let (size_vec, _) = sizes_to_vec(sizes);
+            let mut has_others = false;
+            let mut nodes: Vec<XVariableTreeNode> = Vec::new();
+            let mut others_domain = Default::default();
+            for i in 0..domain_for.len() {
+                let domain = XDomainInteger::from_string(domain_value[i]);
+                if domain_for[i].eq("others") {
+                    has_others = true;
+                    others_domain = domain;
+                } else {
+                    let for_strs: Vec<&str> = domain_for[i].split_whitespace().collect();
+                    for e in for_strs.iter() {
+                        let for_str = e.to_string().replace(id, "");
+                        let (lower, upper) = sizes_to_double_vec(&for_str);
+                        nodes.push(XVariableTreeNode::new(lower, upper, domain.clone()));
                     }
-                    Ok(XVariableTree {
-                        id: id.to_string(),
-                        sizes: size_vec,
-                        others: XVariableTreeNode::new_other(others_domain),
-                        has_others,
-                        nodes,
-                    })
                 }
-                Err(e) => Err(e),
+            }
+            XVariableTree {
+                id: id.to_string(),
+                sizes: size_vec,
+                others: XVariableTreeNode::new_other(others_domain),
+                has_others,
+                nodes,
             }
         }
 

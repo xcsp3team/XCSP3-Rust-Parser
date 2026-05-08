@@ -33,8 +33,9 @@ pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::{extract_operator, list_to_vec_var_val};
+    use std::option::Option;
+
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -72,25 +73,15 @@ pub mod xcsp3_core {
             condition: &str,
             except_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let except = if except_str.is_empty() {
-                        None
-                    } else {
-                        match list_to_vec_var_val(except_str) {
-                            Ok(coe_vec) => Some(coe_vec),
-                            Err(e) => return Err(e),
-                        }
-                    };
-                    let (ope, rand) = match extract_operator(condition) {
-                        Ok(value) => value,
-                        Err(e) => return Err(e),
-                    };
-                    Ok(Self::new(scope_vec_str, set, ope, rand, except))
-                }
-                Err(e) => Err(e),
-            }
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let except: Option<Vec<XVarVal>> = if except_str.is_empty() {
+                None
+            } else {
+                Some(list_to_vec_var_val(except_str))
+            };
+            let (ope, rand) = str_to_condition(condition);
+            Self::new(scope, set, ope, rand, except)
         }
 
         pub fn new(

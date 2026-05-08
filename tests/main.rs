@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use xcsp3_rust::constraints::xconstraint_type::xcsp3_core::XConstraintType;
-use xcsp3_rust::objectives::xobjectives_type::xcsp3_core::XObjectivesType;
 use xcsp3_rust::variables::xvariable_type::xcsp3_core::XVariableType;
 use xcsp3_rust::xcsp_callback::XcspCallback;
 use xcsp3_rust::xcsp_runner::XcspRunner;

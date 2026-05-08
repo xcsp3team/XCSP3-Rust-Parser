@@ -1584,10 +1584,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v1(
         &mut self,
         _matrix: &Vec<Vec<String>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _value: i32,
     ) {
         println!("c Element Matrix Variant 2 not yet implemented");
@@ -1614,10 +1614,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v2(
         &mut self,
         _matrix: &Vec<Vec<String>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _value: String,
     ) {
         println!("c Element Matrix Variant 2 not yet implemented");
@@ -1643,10 +1643,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v3(
         &mut self,
         _matrix: &Vec<Vec<String>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _operator: Operator,
         _operand: Operand,
     ) {
@@ -1674,10 +1674,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v4(
         &mut self,
         _matrix: &Vec<Vec<i32>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _operator: Operator,
         _operand: Operand,
     ) {
@@ -1705,10 +1705,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v5(
         &mut self,
         _matrix: &Vec<Vec<i32>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _value: i32,
     ) {
         println!("c Element Matrix Variant 5 not yet implemented");
@@ -1735,10 +1735,10 @@ pub trait XcspCallback {
     fn on_constraint_element_matrix_v6(
         &mut self,
         _matrix: &Vec<Vec<i32>>,
-        _rowIndex: String,
-        _colIndex: String,
-        _startRowIndex: i32,
-        _startColIndex: i32,
+        _row_index: String,
+        _col_index: String,
+        _start_row_index: i32,
+        _start_col_index: i32,
         _value: String,
     ) {
         println!("c Element Matrix Variant 5 not yet implemented");

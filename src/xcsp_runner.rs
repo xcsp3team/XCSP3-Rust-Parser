@@ -96,21 +96,17 @@ impl XcspRunner {
                         let brackets: String = sz.iter().map(|n| format!("[{}]", n)).collect();
                         let var_id = format!("{}{}", av.id, brackets);
                         let tmp = av.find_variable(&*brackets);
-                        if let Ok(vec) = tmp {
-                            for (_s, domain) in &vec {
-                                if XDomainInteger::default().equals(domain)
-                                    && av.has_others() == false
-                                {
-                                } else {
-                                    call_var(var_id.clone(), domain, callback);
-                                }
+                        for (_s, domain) in &tmp {
+                            if XDomainInteger::default().equals(domain) && av.has_others() == false
+                            {
+                            } else {
+                                call_var(var_id.clone(), domain, callback);
                             }
                         }
                     }
                     // get_all_variables_between_lower_and_upper
                     callback.end_variable_array();
                 }
-                XVariableType::XVariableNone(_) => {}
             }
         }
         callback.end_variables();
@@ -240,9 +236,6 @@ impl XcspRunner {
         c: &mut XConstraintType,
     ) -> Result<(), Box<dyn Error>> {
         match c {
-            XConstraintType::XConstraintNone(_) => {
-                panic!("An error during parsing constraints appeared")
-            }
             //---------------------------------------------------------------------------------------------------
             // All Diff constraints
             //---------------------------------------------------------------------------------------------------
@@ -972,7 +965,7 @@ impl XcspRunner {
                             XVarVal::IntVar(v) => {
                                 callback.on_constraint_element_v2(&*scope, v.clone())
                             }
-                            (_) => panic!("Unexpected value for element constraint"),
+                            _ => panic!("Unexpected value for element constraint"),
                         }
                     }
                 }
@@ -1187,7 +1180,6 @@ impl XcspRunner {
             // Streteh Constraint
             //---------------------------------------------------------------------------------------------------
             //XConstraintType::XStretch(inner) => callback.on_constraint_stretch(inner),
-            XConstraintType::XConstraintNone(_) => {}
             _ => {
                 panic!("Unknown constraint");
             }

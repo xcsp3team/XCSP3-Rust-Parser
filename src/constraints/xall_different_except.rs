@@ -31,7 +31,6 @@ pub mod xcsp3_core {
         inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
     use crate::utils::utils_functions::to_int_list;
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, list_with_bracket_comma_to_values,
@@ -62,18 +61,10 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XAllDifferentExcept<'a> {
-        pub fn from_str(
-            list: &str,
-            except_str: &str,
-            set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            match list_to_vec_var_val(list) {
-                Ok(scope) => match list_with_bracket_comma_to_values(except_str) {
-                    Ok(except) => Ok(XAllDifferentExcept::new(scope, set, except)),
-                    Err(e) => Err(e),
-                },
-                Err(e) => Err(e),
-            }
+        pub fn from_str(list: &str, except_str: &str, set: &'a XVariableSet) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let except = list_with_bracket_comma_to_values(except_str);
+            XAllDifferentExcept::new(scope, set, except)
         }
 
         pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet, except: Vec<XVarVal>) -> Self {

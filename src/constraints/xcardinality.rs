@@ -30,8 +30,7 @@ pub mod xcsp3_core {
         inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::errors::xcsp3error::xcsp3_core::Xcsp3Error;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -70,32 +69,12 @@ pub mod xcsp3_core {
             occurs_str: &str,
             closed_str: &str,
             set: &'a XVariableSet,
-        ) -> Result<Self, Xcsp3Error> {
-            let scope = match list_to_vec_var_val(list) {
-                Ok(s) => s,
-                Err(e) => return Err(e),
-            };
-            let value = match list_to_vec_var_val(values_str) {
-                Ok(s) => s,
-                Err(e) => return Err(e),
-            };
-            let occurs = match list_to_vec_var_val(occurs_str) {
-                Ok(s) => s,
-                Err(e) => return Err(e),
-            };
-            let closed = if !closed_str.is_empty() {
-                match closed_str.parse::<bool>() {
-                    Ok(n) => Some(n),
-                    Err(_) => {
-                        return Err(Xcsp3Error::get_constraint_cardinality_error(
-                            "parse cardinality  constraint closed error, ",
-                        ));
-                    }
-                }
-            } else {
-                None
-            };
-            Ok(Self::new(scope, value, occurs, set, closed))
+        ) -> Self {
+            let scope = list_to_vec_var_val(list);
+            let value = list_to_vec_var_val(values_str);
+            let occurs = list_to_vec_var_val(occurs_str);
+            let closed = to_bool_option(closed_str);
+            Self::new(scope, value, occurs, set, closed)
         }
 
         pub fn new(
