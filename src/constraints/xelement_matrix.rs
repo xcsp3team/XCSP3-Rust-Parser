@@ -32,7 +32,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 
     use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, str_to_condition, to_i32_option, to_matrix,
+        list_to_vec_var_val, str_to_condition, str_to_condition_option, to_i32_option, to_matrix,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
@@ -104,12 +104,7 @@ pub mod xcsp3_core {
 
             let start_row_index = to_i32_option(start_row_index_str);
             let start_col_index = to_i32_option(start_col_index_str);
-            let (operator, operand) = if condition.is_empty() {
-                (None, None)
-            } else {
-                let tmp = str_to_condition(&condition);
-                (Some(tmp.0), Some(tmp.1))
-            };
+            let (operator, operand) = str_to_condition_option(condition);
 
             let matrix = to_matrix(list, set);
             Self::new(
