@@ -337,7 +337,7 @@
             <args>y[1] y[2] y[3] t[0]</args>
         </group>
 
-        
+
         <group>
             <allEqual>
                 %...

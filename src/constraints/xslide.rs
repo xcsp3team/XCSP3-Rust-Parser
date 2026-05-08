@@ -30,15 +30,12 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xdomain::xcsp3_core::XDomainInteger;
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option, to_i32_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use std::collections::HashMap;
 
     #[derive(Clone)]
     pub struct XSlide<'a> {
         args: Vec<XVarVal>,
-        map: HashMap<String, &'a XDomainInteger>,
         set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
         circular: bool,
@@ -51,24 +48,6 @@ pub mod xcsp3_core {
         }
         pub fn get_circular(&self) -> bool {
             self.circular
-        }
-        pub fn get_scope(&mut self) -> Vec<(&String, &XDomainInteger)> {
-            for e in &self.args {
-                if let XVarVal::IntVar(s) = e {
-                    if !self.map.contains_key(s) {
-                        if let Ok(vec) = self.set.construct_scope(&[s]) {
-                            for (vs, vv) in vec.into_iter() {
-                                self.map.insert(vs, vv);
-                            }
-                        }
-                    }
-                }
-            }
-            let mut scope_vec_var: Vec<(&String, &XDomainInteger)> = vec![];
-            for e in self.map.iter() {
-                scope_vec_var.push((e.0, e.1))
-            }
-            scope_vec_var
         }
 
         pub fn get_args(&self) -> &Vec<XVarVal> {
@@ -86,80 +65,34 @@ pub mod xcsp3_core {
             circular_str: &str,
             set: &'a XVariableSet,
         ) -> Self {
-            match list_to_vec_var_val(arg_str) {
-                Ok(scope_vec_str) => {
-                    let offset = if offset_str.is_empty() {
-                        0
-                    } else {
-                        match offset_str.parse::<i32>() {
-                            Ok(o) => o,
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_constraint_slide_error(
-                                    "parse the offset error, ",
-                                ));
-                            }
-                        }
-                    };
-                    let circular = if circular_str.is_empty() {
-                        false
-                    } else {
-                        match circular_str.parse::<bool>() {
-                            Ok(c) => c,
-                            Err(_) => {
-                                return Err(Xcsp3Error::get_constraint_slide_error(
-                                    "parse the circular error, ",
-                                ))
-                            }
-                        }
-                    };
-                    Ok(Self::new(
-                        scope_vec_str,
-                        set,
-                        offset,
-                        circular,
-                        Box::new(cc),
-                    ))
-                }
-                Err(e) => Err(e),
-            }
-
-            // match list_to_vec_var_val(arg_str) {
-            //     Ok(scope_vec_str) => match offset_str.parse::<i32>() {
-            //         Ok(offset) => match circular_str.parse::<bool>() {
-            //             Ok(circular) => Ok(Self::new(
-            //                 scope_vec_str,
-            //                 set,
-            //                 offset,
-            //                 circular,
-            //                 Box::new(cc),
-            //             )),
-            //             Err(_) => Err(Xcsp3Error::get_constraint_slide_error(
-            //                 "parse the circular error, ",
-            //             )),
-            //         },
-            //         Err(_) => Err(Xcsp3Error::get_constraint_slide_error(
-            //             "parse the offset error, ",
-            //         )),
-            //     },
-            //     Err(e) => Err(e),
-            // }
-        }
-
-        pub fn new(
-            args: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            offset: i32,
-            circular: bool,
-            template: Box<XConstraintType<'a>>,
-        ) -> Self {
-            Self {
-                args,
-                map: Default::default(),
+            let scope_vec_str = list_to_vec_var_val(arg_str);
+            let offset = to_i32_option(offset_str).unwrap_or(0);
+            let circular = to_bool_option(circular_str).unwrap_or(false);
+            Self::new(
+                scope_vec_str,
                 set,
-                template,
-                circular,
                 offset,
-            }
+                circular,
+                Box::new(cc),
+            )
         }
     }
+
+    pub fn new(
+        args: Vec<XVarVal>,
+        set: &'a XVariableSet,
+        offset: i32,
+        circular: bool,
+        template: Box<XConstraintType<'a>>,
+    ) -> Self {
+        Self {
+            args,
+            map: Default::default(),
+            set,
+            template,
+            circular,
+            offset,
+        }
+    }
+}
 }

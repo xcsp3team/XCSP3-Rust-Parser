@@ -62,62 +62,63 @@ pub mod xcsp3_core {
             final_str: &str,
             set: &'a XVariableSet,
         ) -> Self {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let mut finals: Vec<String> = vec![];
-                    let t_final: Vec<&str> = final_str.split_whitespace().collect();
-                    for s in t_final.iter() {
-                        finals.push(s.to_string());
-                    }
-                    match list_to_transitions(transitions_str) {
-                        Ok(transitions) => Ok(XRegular::new(
-                            scope_vec_str,
-                            set,
-                            start_str.to_string(),
-                            finals,
-                            transitions,
-                        )),
-                        Err(e) => Err(e),
-                    }
+            let scope_vec_str = list_to_vec_var_val(list);
+
+            Ok(scope_vec_str) => {
+                let mut finals: Vec<String> = vec![];
+                let t_final: Vec<&str> = final_str.split_whitespace().collect();
+                for s in t_final.iter() {
+                    finals.push(s.to_string());
                 }
-                Err(e) => Err(e),
+                match list_to_transitions(transitions_str) {
+                    Ok(transitions) => Ok(XRegular::new(
+                        scope_vec_str,
+                        set,
+                        start_str.to_string(),
+                        finals,
+                        transitions,
+                    )),
+                    Err(e) => Err(e),
+                }
             }
-        }
-
-        pub fn new(
-            scope: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            start: String,
-            r#final: Vec<String>,
-            transitions: Vec<(String, i32, String)>,
-        ) -> Self {
-            XRegular {
-                scope,
-                set,
-                start,
-                r#final,
-                transitions,
-            }
-        }
-
-        pub fn start(&self) -> &str {
-            &self.start
-        }
-
-        pub fn finals(&self) -> &Vec<String> {
-            &self.r#final
-        }
-
-        pub fn transitions(&self) -> &Vec<(String, i32, String)> {
-            &self.transitions
-        }
-
-        pub fn scope(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        pub fn set(&self) -> &'a XVariableSet {
-            self.set
+            Err(e) => Err(e),
         }
     }
+
+    pub fn new(
+        scope: Vec<XVarVal>,
+        set: &'a XVariableSet,
+        start: String,
+        r#final: Vec<String>,
+        transitions: Vec<(String, i32, String)>,
+    ) -> Self {
+        XRegular {
+            scope,
+            set,
+            start,
+            r#final,
+            transitions,
+        }
+    }
+
+    pub fn start(&self) -> &str {
+        &self.start
+    }
+
+    pub fn finals(&self) -> &Vec<String> {
+        &self.r#final
+    }
+
+    pub fn transitions(&self) -> &Vec<(String, i32, String)> {
+        &self.transitions
+    }
+
+    pub fn scope(&self) -> &Vec<XVarVal> {
+        &self.scope
+    }
+
+    pub fn set(&self) -> &'a XVariableSet {
+        self.set
+    }
+}
 }

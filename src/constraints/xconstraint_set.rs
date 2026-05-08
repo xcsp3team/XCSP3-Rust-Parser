@@ -115,7 +115,7 @@ pub mod xcsp3_core {
             machines_str: &str,
             start_index_str: &str,
         ) {
-            match XCumulative::from_str(
+            let c = XCumulative::from_str(
                 origins_str,
                 lengths_str,
                 heights_str,
@@ -124,35 +124,17 @@ pub mod xcsp3_core {
                 machines_str,
                 start_index_str,
                 self.set,
-            ) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XCumulative(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            );
+            self.constraints.push(XConstraintType::XCumulative(c));
         }
 
         pub fn build_lex(&mut self, lists: &[String], operator: &str) {
-            match XLex::from_str(lists, operator, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XLex(c));
-                }
-                Err(e) => {
-                    //println!("{:?}", e);
-                    self.constraints.push(XConstraintType::XConstraintNone(e))
-                }
-            }
+            let c = XLex::from_str(lists, operator, self.set);
+            self.constraints.push(XConstraintType::XLex(c));
         }
         pub fn build_lex_matrix(&mut self, matrix: &str, operator: &str) {
-            match XLexMatrix::from_str(matrix, operator, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XLexMatrix(c));
-                }
-                Err(e) => {
-                    //println!("{:?}", e);
-                    self.constraints.push(XConstraintType::XConstraintNone(e))
-                }
-            }
+            let c = XLexMatrix::from_str(matrix, operator, self.set);
+            self.constraints.push(XConstraintType::XLexMatrix(c));
         }
         pub fn build_channel(
             &mut self,
@@ -162,22 +144,15 @@ pub mod xcsp3_core {
             start_index2: &str,
             value_str: &str,
         ) {
-            match XChannel::from_str(
+            let c = XChannel::from_str(
                 list1,
                 start_index1,
                 list2,
                 start_index2,
                 value_str,
                 self.set,
-            ) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XChannel(c));
-                }
-                Err(e) => {
-                    //println!("{:?}", e);
-                    self.constraints.push(XConstraintType::XConstraintNone(e))
-                }
-            }
+            );
+            self.constraints.push(XConstraintType::XChannel(c));
         }
         pub fn build_cardinality(
             &mut self,
@@ -186,12 +161,8 @@ pub mod xcsp3_core {
             occurs_str: &str,
             closed_str: &str,
         ) {
-            match XCardinality::from_str(list, values_str, occurs_str, closed_str, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XCardinality(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XCardinality::from_str(list, values_str, occurs_str, closed_str, self.set);
+            self.constraints.push(XConstraintType::XCardinality(c));
         }
 
         pub fn build_stretch(
@@ -201,12 +172,8 @@ pub mod xcsp3_core {
             widths_str: &str,
             patterns_str: &str,
         ) {
-            match XStretch::from_str(list, value_str, widths_str, patterns_str, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XStretch(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XStretch::from_str(list, value_str, widths_str, patterns_str, self.set);
+            self.constraints.push(XConstraintType::XStretch(c));
         }
         pub fn build_element(
             &mut self,
@@ -216,19 +183,15 @@ pub mod xcsp3_core {
             start_index_str: &str,
             condition: &str,
         ) {
-            match XElement::from_str(
+            let c = XElement::from_str(
                 vars,
                 values_str,
                 index_str,
                 start_index_str,
                 condition,
                 self.set,
-            ) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XElement(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            );
+            self.constraints.push(XConstraintType::XElement(c));
         }
 
         pub fn build_element_matrix(
@@ -240,7 +203,7 @@ pub mod xcsp3_core {
             col_index_str: &str,
             condition: &str,
         ) {
-            match XElementMatrix::from_str(
+            let c = XElementMatrix::from_str(
                 matrix,
                 values_str,
                 index_str,
@@ -248,12 +211,8 @@ pub mod xcsp3_core {
                 col_index_str,
                 condition,
                 self.set,
-            ) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XElementMatrix(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            );
+            self.constraints.push(XConstraintType::XElementMatrix(c));
         }
         pub fn build_slide(
             &mut self,
@@ -262,27 +221,12 @@ pub mod xcsp3_core {
             offset_str: &str,
             circular_str: &str,
         ) {
-            // println!("tttt: {}", cc.to_string())
-            match XSlide::from_str(cc, vars, offset_str, circular_str, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XSlide(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XSlide::from_str(cc, vars, offset_str, circular_str, self.set);
+            self.constraints.push(XConstraintType::XSlide(c));
         }
         pub fn build_group(&mut self, cc: XConstraintType<'a>, args: &[String]) {
-            // if let XConstraintType::XGroup(_) = &cc {
-            //     // println!("group is in {}",c.to_string());
-            //     self.constraints.push(XConstraintType::XConstraintNone(
-            //         Xcsp3Error::get_constraint_group_error("the group is in group"),
-            //     ))
-            // }
-            match XGroup::from_str(cc, args, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XGroup(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XGroup::from_str(cc, args, self.set);
+            self.constraints.push(XConstraintType::XGroup(c));
         }
 
         /// this function is designed for XGroup, parse the template for XGroup
@@ -299,20 +243,12 @@ pub mod xcsp3_core {
         }
 
         pub fn build_minimum(&mut self, vars: &str, condition: &str) {
-            match XMaxMin::from_str(vars, condition, true, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XMinimum(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XMaxMin::from_str(vars, condition, true, self.set);
+            self.constraints.push(XConstraintType::XMinimum(c));
         }
         pub fn build_maximum(&mut self, vars: &str, condition: &str) {
-            match XMaxMin::from_str(vars, condition, false, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XMaximum(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XMaxMin::from_str(vars, condition, false, self.set);
+            self.constraints.push(XConstraintType::XMaximum(c));
         }
         pub fn build_maximum_arg(
             &mut self,
@@ -321,12 +257,8 @@ pub mod xcsp3_core {
             start_index: i32,
             condition: &str,
         ) {
-            match XMaxMinArg::from_str(vars, condition, rank, start_index, true, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XMaximumArg(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XMaxMinArg::from_str(vars, condition, rank, start_index, true, self.set);
+            self.constraints.push(XConstraintType::XMaximumArg(c));
         }
 
         pub fn build_minimum_arg(
@@ -336,48 +268,28 @@ pub mod xcsp3_core {
             start_index: i32,
             condition: &str,
         ) {
-            match XMaxMinArg::from_str(vars, condition, rank, start_index, false, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XMinimumArg(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XMaxMinArg::from_str(vars, condition, rank, start_index, false, self.set);
+            self.constraints.push(XConstraintType::XMinimumArg(c));
         }
 
         pub fn build_count(&mut self, vars: &str, condition: &str, coeffs: &str) {
-            match XCount::from_str(vars, condition, coeffs, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XCount(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XCount::from_str(vars, condition, coeffs, self.set);
+            self.constraints.push(XConstraintType::XCount(c));
         }
 
         pub fn build_n_values(&mut self, vars: &str, condition: &str, coeffs: &str) {
-            match XNValues::from_str(vars, condition, coeffs, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XNValues(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XNValues::from_str(vars, condition, coeffs, self.set);
+            self.constraints.push(XConstraintType::XNValues(c));
         }
 
         pub fn build_sum(&mut self, vars: &str, condition: &str, coeffs: &str) {
-            match XSum::from_str(vars, condition, coeffs, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XSum(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XSum::from_str(vars, condition, coeffs, self.set);
+            self.constraints.push(XConstraintType::XSum(c));
         }
 
         pub fn build_intention(&mut self, function: &str) {
-            match XIntention::create(function, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XIntention(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XIntention::create(function, self.set);
+            self.constraints.push(XConstraintType::XIntention(c));
         }
 
         pub fn build_regular(
@@ -387,140 +299,67 @@ pub mod xcsp3_core {
             start_str: &str,
             final_str: &str,
         ) {
-            match XRegular::from_str(list, transitions_str, start_str, final_str, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XRegular(c));
-                }
-            }
+            let c = XRegular::from_str(list, transitions_str, start_str, final_str, self.set);
+            self.constraints.push(XConstraintType::XRegular(c));
         }
 
         pub fn build_mdd(&mut self, list: &str, transitions_str: &str) {
-            match XMdd::from_str(list, transitions_str, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XMdd(c));
-                }
-            }
+            let c = XMdd::from_str(list, transitions_str, self.set);
+            self.constraints.push(XConstraintType::XMdd(c));
         }
 
         pub fn build_ordered(&mut self, list: &str, lengths_str: &str, operator: &str) {
             if lengths_str.is_empty() {
-                match XOrdered::from_str_without_lengths(list, operator, self.set) {
-                    Ok(c) => {
-                        self.constraints.push(XConstraintType::XOrdered(c));
-                    }
-                    Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                }
+                let c = XOrdered::from_str_without_lengths(list, operator, self.set);
+                self.constraints.push(XConstraintType::XOrdered(c));
             } else {
-                match XOrdered::from_str(list, lengths_str, operator, self.set) {
-                    Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                    Ok(c) => {
-                        self.constraints.push(XConstraintType::XOrdered(c));
-                    }
-                }
+                let c = XOrdered::from_str(list, lengths_str, operator, self.set);
+                self.constraints.push(XConstraintType::XOrdered(c));
             }
         }
 
         pub fn build_instantiation(&mut self, list: &str, values: &str) {
-            match XInstantiation::from_str(list, values, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XInstantiation(c));
-                }
-            }
+            let c = XInstantiation::from_str(list, values, self.set);
+            self.constraints.push(XConstraintType::XInstantiation(c));
         }
 
         pub fn build_extension(&mut self, list: &str, tuple: &str, is_support: bool) {
-            match XExtension::from_str(list, tuple, is_support, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XExtension(c));
-                }
-            }
+            let c = XExtension::from_str(list, tuple, is_support, self.set);
+            self.constraints.push(XConstraintType::XExtension(c));
         }
 
         pub fn build_all_equal(&mut self, list: &str) {
-            match XAllEqual::from_str(list, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XAllEqual(c));
-                }
-            }
+            let c = XAllEqual::from_str(list, self.set);
+            self.constraints.push(XConstraintType::XAllEqual(c));
         }
 
         pub fn build_all_different(&mut self, list: &str) {
-            match XAllDifferent::from_str(list, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XAllDifferent(c));
-                }
-            }
+            let c = XAllDifferent::from_str(list, self.set);
+            self.constraints.push(XConstraintType::XAllDifferent(c));
         }
 
         pub fn build_all_different_except(&mut self, list: &str, except: &str) {
-            match XAllDifferentExcept::from_str(list, except, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints
-                        .push(XConstraintType::XAllDifferentExcept(c));
-                }
-            }
+            let c = XAllDifferentExcept::from_str(list, except, self.set);
+            self.constraints
+                .push(XConstraintType::XAllDifferentExcept(c));
         }
         pub fn build_all_different_list(&mut self, lists: &[String]) {
-            match XAllDifferentList::from_str(lists, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XAllDifferentList(c));
-                }
-            }
+            let c = XAllDifferentList::from_str(lists, self.set);
+            self.constraints.push(XConstraintType::XAllDifferentList(c));
         }
         pub fn build_all_different_matrix(&mut self, list: &str) {
-            match XAllDifferentMatrix::from_str(list, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints
-                        .push(XConstraintType::XAllDifferentMatrix(c));
-                }
-            }
-            /*let mat = list_to_matrix_ids(list);
-            for line in mat.iter() {
-                let mut scope: Vec<XVarVal> = vec![];
-                for e in line {
-                    scope.push(XVarVal::IntVar(e.clone()))
-                }
-                self.constraints
-                    .push(XConstraintType::XAllDifferent(XAllDifferent::from_str_vec(
-                        scope, self.set,
-                    )))
-            }
-            for i in 0..mat[0].len() {
-                let mut scope: Vec<XVarVal> = vec![];
-                for m in mat.iter() {
-                    scope.push(XVarVal::IntVar(m[i].clone()))
-                }
-                self.constraints
-                    .push(XConstraintType::XAllDifferent(XAllDifferent::from_str_vec(
-                        scope, self.set,
-                    )))
-            }*/
+            let c = XAllDifferentMatrix::from_str(list, self.set);
+            self.constraints
+                .push(XConstraintType::XAllDifferentMatrix(c));
         }
 
         pub fn build_circuit(&mut self, list: &str, size: &str) {
-            match XCircuit::from_str(list, size, self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XCircuit(c));
-                }
-            }
+            let c = XCircuit::from_str(list, size, self.set);
+            self.constraints.push(XConstraintType::XCircuit(c));
         }
         pub fn build_clause(&mut self, value: &str) {
-            match XClause::from_str(value, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XClause(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XClause::from_str(value, self.set);
+            self.constraints.push(XConstraintType::XClause(c));
         }
         pub fn build_knapsack(
             &mut self,
@@ -529,20 +368,12 @@ pub mod xcsp3_core {
             profits: &str,
             conditions: &Box<[String]>,
         ) {
-            match XKnapsack::from_str(list, weights, profits, conditions, self.set) {
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XKnapsack(c));
-                }
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-            }
+            let c = XKnapsack::from_str(list, weights, profits, conditions, self.set);
+            self.constraints.push(XConstraintType::XKnapsack(c));
         }
         pub fn build_precedence(&mut self, list: &str, values: &str, covered: bool) {
-            match XPrecedence::from_str(list, values, Option::from(covered), self.set) {
-                Err(e) => self.constraints.push(XConstraintType::XConstraintNone(e)),
-                Ok(c) => {
-                    self.constraints.push(XConstraintType::XPrecedence(c));
-                }
-            }
+            let c = XPrecedence::from_str(list, values, Option::from(covered), self.set);
+            self.constraints.push(XConstraintType::XPrecedence(c));
         }
     }
 }

@@ -78,20 +78,13 @@ pub mod xcsp3_core {
             covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Self {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let vals = if values.is_empty() {
-                        None
-                    } else {
-                        match list_to_vec_var_val(values) {
-                            Ok(vals_vec) => Some(vals_vec),
-                            Err(e) => return Err(e),
-                        }
-                    };
-                    Ok(XPrecedence::new(scope_vec_str, vals, covered, set)) // virgule supprimée
-                }
-                Err(_) => panic!("parse precedence constraint error, list is not valid"), // doublon supprimé
-            }
+            let scope = list_to_vec_var_val(list);
+            let vals = if values.is_empty() {
+                None
+            } else {
+                Some(list_to_vec_var_val(values))
+            };
+            XPrecedence::new(scope, vals, covered, set)
         }
         pub fn new(
             scope: Vec<XVarVal>,

@@ -28,7 +28,7 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::utils::utils_functions::xcsp3_utils::{list_to_matrix_ids, to_matrix};
+    use crate::utils::utils_functions::xcsp3_utils::to_matrix;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     #[derive(Clone)]

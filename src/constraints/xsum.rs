@@ -70,24 +70,14 @@ pub mod xcsp3_core {
 
     impl<'a> XSum<'a> {
         pub fn from_str(list: &str, condition: &str, coeffs: &str, set: &'a XVariableSet) -> Self {
-            match list_to_vec_var_val(list) {
-                Ok(scope_vec_str) => {
-                    let coe = if coeffs.is_empty() {
-                        None
-                    } else {
-                        match list_to_vec_var_val(coeffs) {
-                            Ok(coe_vec) => Some(coe_vec),
-                            Err(e) => return Err(e),
-                        }
-                    };
-                    let (ope, rand) = match str_to_condition(condition) {
-                        Ok(value) => value,
-                        Err(e) => return Err(e),
-                    };
-                    Ok(Self::new(scope_vec_str, set, ope, rand, coe))
-                }
-                Err(e) => Err(e),
-            }
+            let scope_vec_str = list_to_vec_var_val(list);
+            let coe = if coeffs.is_empty() {
+                None
+            } else {
+                Some(list_to_vec_var_val(coeffs))
+            };
+            let (ope, rand) = str_to_condition(condition);
+            Self::new(scope_vec_str, set, ope, rand, coe)
         }
 
         pub fn new(

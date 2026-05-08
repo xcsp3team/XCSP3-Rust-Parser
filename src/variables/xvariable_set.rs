@@ -27,7 +27,6 @@
 */
 
 pub mod xcsp3_core {
-
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_type::xcsp3_core::XVariableType;
     use std::collections::HashMap;
@@ -41,7 +40,7 @@ pub mod xcsp3_core {
     pub struct XVariableSet {
         variables: Vec<XVariableType>,
         id_to_index: HashMap<String, usize>, //store the id and the index of the variable
-                                             // empty_domain: XDomainInteger,
+        // empty_domain: XDomainInteger,
     }
 
     impl Default for XVariableSet {
@@ -93,10 +92,7 @@ pub mod xcsp3_core {
                         self.id_to_index.insert(var.get_id(), self.variables.len());
                         self.variables.push(var);
                     }
-                    Err(e) => {
-                        // eprintln!("{}", e.to_string());
-                        self.variables.push(XVariableType::XVariableNone(e));
-                    }
+                    Err(e) => panic!("Error parsing variable {}", id);
                 }
             }
         }

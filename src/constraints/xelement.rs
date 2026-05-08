@@ -53,7 +53,6 @@ pub mod xcsp3_core {
     }
 
 
-
     impl XConstraintUnfold for XElement<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
@@ -119,32 +118,31 @@ pub mod xcsp3_core {
         }
 
 
-    pub fn new(
-        scope: Vec<XVarVal>,
-        set: &'a XVariableSet,
-        value: Option<XVarVal>,
-        index: Option<XVarVal>,
-        start_index: Option<i32>,
-        operator: Option<Operator>,
-        operand: Option<Operand>,
-    ) ->
-        Self {
-        scope,
-        set,
-        value,
-        index,
-        start_index,
-        operator,
-        operand,
-    }
+        pub fn new(
+            scope: Vec<XVarVal>,
+            set: &'a XVariableSet,
+            value: Option<XVarVal>,
+            index: Option<XVarVal>,
+            start_index: Option<i32>,
+            operator: Option<Operator>,
+            operand: Option<Operand>,
+        ) ->
+            Self {
+            scope,
+            set,
+            value,
+            index,
+            start_index,
+            operator,
+            operand,
+        }
 
 
+        pub fn scope(&self) -> &Vec<XVarVal> {
+            &self.scope
+        }
 
-pub fn scope(&self) -> &Vec<XVarVal> {
-    &self.scope
-}
-
-pub fn set(&self) -> &'a XVariableSet {
+        pub fn set(&self) -> &'a XVariableSet {
             self.set
         }
 

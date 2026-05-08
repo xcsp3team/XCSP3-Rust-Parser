@@ -27,7 +27,6 @@
 */
 
 pub mod xcsp3_core {
-
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use crate::variables::xvariable_array::xcsp3_core::XVariableArray;
     use crate::variables::xvariable_int::xcsp3_core::XVariableInt;
@@ -36,7 +35,6 @@ pub mod xcsp3_core {
 
     #[derive(Clone)]
     pub enum XVariableType {
-        XVariableNone(Xcsp3Error),
         XVariableArray(XVariableArray),
         XVariableInt(XVariableInt),
         XVariableTree(XVariableTree),
@@ -50,7 +48,7 @@ pub mod xcsp3_core {
         pub fn new_array(id: &str, sizes: &str, domain: XDomainInteger) -> XVariableType {
             match XVariableArray::new(id, sizes, domain) {
                 Ok(array) => XVariableType::XVariableArray(array),
-                Err(e) => XVariableType::XVariableNone(e),
+                Err(e) => panic!("parse variable array error: {}", id),
             }
         }
 

@@ -27,22 +27,14 @@
 */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, arg_in_var, inject_parameters_in_list, inject_parameters_in_operand,
-        inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
-    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 
     use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_matrix_ids, list_to_vec_var_val, str_to_condition, to_i32_option, to_matrix,
+        list_to_vec_var_val, str_to_condition, to_i32_option, to_matrix,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
-        XVariableArray, XVariableTree,
-    };
-    use std::cmp::max;
 
     // #[derive(Clone)]
     #[derive(Clone)]

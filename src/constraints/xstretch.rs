@@ -47,35 +47,15 @@ pub mod xcsp3_core {
             patterns_str: &str,
             set: &'a XVariableSet,
         ) -> Self {
-            let scope = match list_to_vec_var_val(list) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let value = match list_to_vec_var_val(value_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
-            let widths = match list_to_vec_var_val(widths_str) {
-                Ok(n) => n,
-                Err(e) => {
-                    return Err(e);
-                }
-            };
+            let scope = list_to_vec_var_val(list);
+            let value = list_to_vec_var_val(value_str);
+            let widths = list_to_vec_var_val(widths_str);
             let patterns = if patterns_str.is_empty() {
                 None
             } else {
-                match list_to_vec_var_val(patterns_str) {
-                    Ok(n) => Some(n),
-                    Err(e) => {
-                        return Err(e);
-                    }
-                }
+                Some(list_to_vec_var_val(patterns_str))
             };
-            Ok(Self::new(scope, set, value, widths, patterns))
+            Self::new(scope, set, value, widths, patterns)
         }
 
         pub fn new(
