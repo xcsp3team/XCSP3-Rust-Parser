@@ -216,6 +216,11 @@ pub mod xcsp3_utils {
         }
 
         fn parse(expression: &str) -> TreeNode {
+            if expression.contains("(") == false {
+                // This is only a variable
+                return TreeNode::Variable(expression.parse().unwrap());
+            }
+
             let mut stack: Vec<TreeNode> = vec![];
             let exp: String = expression.chars().filter(|c| !c.is_whitespace()).collect();
 
