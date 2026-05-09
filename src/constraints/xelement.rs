@@ -76,7 +76,7 @@ pub mod xcsp3_core {
                 Some(v) => max(tmp, arg_in_var(&v)),
                 None => tmp,
             };
-            match self.index() {
+            match self.value() {
                 Some(v) => max(tmp, arg_in_var(&v)),
                 None => tmp,
             }

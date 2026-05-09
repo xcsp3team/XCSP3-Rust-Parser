@@ -7,6 +7,17 @@
 
     </variables>
     <constraints>
+        <group>
+            <element>
+                <list>%...</list>
+                <index>r[2]</index>
+                <value>%0</value>
+            </element>
+            <args>y[2] 0 0 269 57</args>
+            <args>y[3] 74 0 72 0</args>
+
+        </group>
+
         <element>
             <list>y[]</list>
             <value>3</value>

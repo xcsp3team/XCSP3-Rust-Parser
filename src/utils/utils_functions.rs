@@ -60,7 +60,6 @@ pub mod xcsp3_utils {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
         let ope = Operator::get_operator_by_str(split[0]);
-        println!("tmp={} split={:?} ope={:?}", tmp, split, ope);
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
             None => panic!("parse condition  error, {}", condition),
             Some(r) => r,
