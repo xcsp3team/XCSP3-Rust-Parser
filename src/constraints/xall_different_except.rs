@@ -63,7 +63,7 @@ pub mod xcsp3_core {
     impl<'a> XAllDifferentExcept<'a> {
         pub fn from_str(list: &str, except_str: &str, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
-            let except = list_with_bracket_comma_to_values(except_str);
+            let except = list_to_vec_var_val(except_str);
             XAllDifferentExcept::new(scope, set, except)
         }
 
