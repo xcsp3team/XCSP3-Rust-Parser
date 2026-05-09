@@ -303,8 +303,13 @@ impl XcspRunner {
                 let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
                 match inner.lengths() {
                     Some(val) => {
-                        let tmp = to_int_list(val);
-                        callback.on_constraint_ordered_v2(&*scope, &*tmp, *inner.operator());
+                        if is_int_list(val) {
+                            let tmp = to_int_list(val);
+                            callback.on_constraint_ordered_v2(&*scope, &*tmp, *inner.operator());
+                        } else {
+                            let tmp: Vec<String> = to_var_list(val, &inner.set());
+                            callback.on_constraint_ordered_v3(&*scope, &*tmp, *inner.operator());
+                        }
                     }
                     None => {
                         callback.on_constraint_ordered_v1(&*scope, *inner.operator());

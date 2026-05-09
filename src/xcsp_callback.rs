@@ -468,7 +468,7 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
     /**
-     * The callback function related to an ordered constraint
+     * The callback function related to an ordered constraint with lenths int
      * See http://xcsp.org/specifications/ordered
      *
      * Ordered is Lt, Le, Gt, Ge...
@@ -488,6 +488,33 @@ pub trait XcspCallback {
         &mut self,
         _scope: &[String],
         _lengths: &[i32],
+        _operator: Operator,
+    ) {
+        println!("c Ordered Variant 2 not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
+
+    /**
+     * The callback function related to an ordered constraint with lengths var
+     * See http://xcsp.org/specifications/ordered
+     *
+     * Ordered is Lt, Le, Gt, Ge...
+     *
+     * Example:
+     * &lt;ordered>
+     *   &lt;list> x1 x2 x3 x4 </list>
+     *   <&lt;operator> lt </operator>
+     * &lt;/ordered>
+     *
+     * @param _scope the scope of the constraint
+     * @param _lengths the lengths
+
+    * @param order the order Lt, Le...
+    */
+    fn on_constraint_ordered_v3(
+        &mut self,
+        _scope: &[String],
+        _lengths: &[String],
         _operator: Operator,
     ) {
         println!("c Ordered Variant 2 not yet implemented");

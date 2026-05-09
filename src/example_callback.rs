@@ -149,16 +149,27 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_ordered_v1(&mut self, scope: &[String], operator: Operator) {
-        println!("  [Ordered]  {:?}, operator {:?}", scope, operator);
+        println!("  [Ordered V1]  {:?}, operator {:?}", scope, operator);
     }
 
     fn on_constraint_ordered_v2(&mut self, scope: &[String], lengths: &[i32], operator: Operator) {
         println!(
-            "  [Ordered]  {:?}, length: {:?} operator {:?}",
+            "  [Ordered V2]  {:?}, length: {:?} operator {:?}",
             scope, lengths, operator
         );
     }
 
+    fn on_constraint_ordered_v3(
+        &mut self,
+        scope: &[String],
+        lengths: &[String],
+        operator: Operator,
+    ) {
+        println!(
+            "  [Ordered V3]  {:?}, length: {:?} operator {:?}",
+            scope, lengths, operator
+        );
+    }
     fn on_constraint_extension(
         &mut self,
         scope: &[String],

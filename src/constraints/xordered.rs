@@ -48,6 +48,7 @@ pub mod xcsp3_core {
     impl XConstraintUnfold for XOrdered<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
+            println!("tmp: {}", tmp);
             self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
             if let Some(vals) = &mut self.lengths {
                 *vals = inject_parameters_in_list(vals, arg, tmp);
