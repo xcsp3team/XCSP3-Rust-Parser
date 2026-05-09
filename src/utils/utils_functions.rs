@@ -140,7 +140,10 @@ pub mod xcsp3_utils {
         let mut ret: Vec<XVarVal> = vec![];
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
-            if e.trim().starts_with(|c: char| c.is_ascii_digit()) && e.contains("x") {
+            if e.trim()
+                .starts_with(|c: char| c.is_ascii_digit() || c == '-')
+                && e.contains("x")
+            {
                 // Deal with compressed coefficient
                 if let Some((value_str, count_str)) = e.trim().split_once('x') {
                     let count: usize = count_str.parse().expect("invalid count");
