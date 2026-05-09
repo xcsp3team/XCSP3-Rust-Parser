@@ -32,9 +32,7 @@ pub mod xcsp3_core {
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::to_int_list;
-    use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, list_with_bracket_comma_to_values,
-    };
+    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 

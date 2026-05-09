@@ -35,7 +35,7 @@ pub mod xcsp3_core {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, str_to_condition, str_to_condition_option, to_i32_option,
+        list_to_vec_var_val, str_to_condition_option, to_i32_option,
     };
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
