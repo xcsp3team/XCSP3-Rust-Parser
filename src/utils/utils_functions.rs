@@ -99,11 +99,24 @@ pub mod xcsp3_utils {
             }
             matrix
         } else {
-            let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
-                .iter()
-                .map(|line| line.iter().map(|e| XVarVal::IntVar(e.clone())).collect())
-                .collect();
-            matrix
+            let tmp = list_to_matrix_ids(list);
+            if tmp[0][0].parse::<i32>().is_ok() {
+                let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
+                    .iter()
+                    .map(|line| {
+                        line.iter()
+                            .map(|e| XVarVal::IntVal(e.parse::<i32>().expect("argl")))
+                            .collect()
+                    })
+                    .collect();
+                matrix
+            } else {
+                let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
+                    .iter()
+                    .map(|line| line.iter().map(|e| XVarVal::IntVar(e.clone())).collect())
+                    .collect();
+                matrix
+            }
         }
     }
 

@@ -27,9 +27,14 @@
 */
 
 pub mod xcsp3_core {
+    use crate::constraints::xconstraint_trait::xcsp3_core::{
+        arg_in_operand, arg_in_var, inject_parameters_in_list, inject_parameters_in_operand,
+        inject_parameters_in_var_val, max_arg_in_list, XConstraintUnfold,
+    };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
+    use std::cmp::max;
 
     use crate::utils::utils_functions::xcsp3_utils::{
         list_to_vec_var_val, str_to_condition, str_to_condition_option, to_i32_option, to_matrix,
@@ -50,13 +55,11 @@ pub mod xcsp3_core {
         operand: Option<Operand>,
     }
 
-    /*impl XConstraintUnfold for XElementM<'_> {
+    impl XConstraintUnfold for XElementMatrix<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             let tmp = self.max_args_used();
-            self.scope = inject_parameters_in_list(&self.scope, arg, tmp);
-            if let Some(index) = &mut self.index {
-                *index = inject_parameters_in_var_val(index.clone(), arg);
-            }
+            self.row_index = inject_parameters_in_var_val(self.row_index.clone(), arg);
+            self.col_index = inject_parameters_in_var_val(self.col_index.clone(), arg);
             if let Some(value) = &mut self.value {
                 *value = inject_parameters_in_var_val(value.clone(), arg);
             }
@@ -65,21 +68,9 @@ pub mod xcsp3_core {
             }
         }
         fn max_args_used(&mut self) -> i32 {
-            let tmp = max_arg_in_list(&*self.scope);
-            let tmp = match self.operand.clone() {
-                Some(v) => max(tmp, arg_in_operand(&v)),
-                None => tmp,
-            };
-            let tmp = match self.index() {
-                Some(v) => max(tmp, arg_in_var(&v)),
-                None => tmp,
-            };
-            match self.index() {
-                Some(v) => max(tmp, arg_in_var(&v)),
-                None => tmp,
-            }
+            -1
         }
-    }*/
+    }
 
     impl<'a> XElementMatrix<'a> {
         pub fn from_str(
@@ -106,6 +97,9 @@ pub mod xcsp3_core {
             let start_col_index = to_i32_option(start_col_index_str);
             let (operator, operand) = str_to_condition_option(condition);
 
+            if list.contains("%") {
+                panic!("Group and parameters in the matrix of an element is not yet implemented");
+            }
             let matrix = to_matrix(list, set);
             Self::new(
                 matrix,
