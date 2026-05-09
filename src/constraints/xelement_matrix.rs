@@ -55,7 +55,6 @@ pub mod xcsp3_core {
 
     impl XConstraintUnfold for XElementMatrix<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            let tmp = self.max_args_used();
             self.row_index = inject_parameters_in_var_val(self.row_index.clone(), arg);
             self.col_index = inject_parameters_in_var_val(self.col_index.clone(), arg);
             if let Some(value) = &mut self.value {
