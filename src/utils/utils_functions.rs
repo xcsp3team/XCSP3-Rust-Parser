@@ -39,11 +39,28 @@ pub mod xcsp3_utils {
     };
     // use std::str::FromStr;
 
+    pub fn str_to_interval(interval: &str) -> (i32, i32) {
+        let interval: Vec<&str> = interval.split("..").collect();
+        if interval.len() == 2 {
+            let left = interval[0].parse::<i32>();
+            let right = interval[1].parse::<i32>();
+            match left {
+                Ok(l) => match right {
+                    Ok(r) => (l, r),
+                    Err(_) => panic!("parse interval error{:?}", interval),
+                },
+                Err(_) => panic!("parse interval error{:?}", interval),
+            }
+        } else {
+            panic!("parse interval error{:?}", interval);
+        }
+    }
+
     pub fn str_to_condition(condition: &str) -> (Operator, Operand) {
         let tmp = condition.replace(['(', ')', ','], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
         let ope = Operator::get_operator_by_str(split[0]);
-
+        println!("tmp={} split={:?} ope={:?}", tmp, split, ope);
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {
             None => panic!("parse condition  error, {}", condition),
             Some(r) => r,

@@ -1,0 +1,12 @@
+<instance format="XCSP3" type="CSP">
+    <variables>
+        <array id="t" size="[6]">0 10</array>
+    </variables>
+    <constraints>
+        <sum>
+            <list>t[]</list>
+            <condition>(in,36..54)</condition>
+        </sum>
+    </constraints>
+</instance>
+

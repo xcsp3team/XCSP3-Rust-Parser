@@ -27,6 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
+    use crate::utils::utils_functions::xcsp3_utils::str_to_interval;
     use regex::Regex;
     use std::collections::HashSet;
     use std::str::FromStr;
@@ -48,40 +49,29 @@ pub mod xcsp3_core {
                 Operator::Notin => is_set = true,
                 _ => {}
             }
-            return if is_set {
-                let mut ret: HashSet<i32> = HashSet::new();
-                for l in s.iter() {
-                    match i32::from_str(l) {
-                        Ok(n) => {
-                            ret.insert(n);
-                        }
-                        Err(_) => {
-                            return None;
+            if is_set {
+                if s[0].contains("..") {
+                    let tmp = str_to_interval(s[0]);
+                    Some(Operand::Interval(tmp.0, tmp.1))
+                } else {
+                    let mut ret: HashSet<i32> = HashSet::new();
+                    for l in s.iter() {
+                        match i32::from_str(l) {
+                            Ok(n) => {
+                                ret.insert(n);
+                            }
+                            Err(_) => {
+                                return None;
+                            }
                         }
                     }
+                    Some(Operand::SetInteger(ret))
                 }
-                Some(Operand::SetInteger(ret))
             } else if s.len() != 1 {
                 None
             } else if s[0].contains("..") {
-                let interval: Vec<&str> = s[0].split("..").collect();
-                if interval.len() == 2 {
-                    match i32::from_str(interval[0]) {
-                        Ok(l) => match i32::from_str(interval[1]) {
-                            Ok(r) => {
-                                if l <= r {
-                                    Some(Operand::Interval(l, r))
-                                } else {
-                                    None
-                                }
-                            }
-                            Err(_) => None,
-                        },
-                        Err(_) => None,
-                    }
-                } else {
-                    None
-                }
+                let tmp = str_to_interval(s[0]);
+                Some(Operand::Interval(tmp.0, tmp.1))
             } else if Regex::new(r"%(0|[1-9][0-9]*)").unwrap().is_match(s[0]) {
                 match i32::from_str(&s[0][1..]) {
                     Ok(e) => Some(Operand::IntArgument(e)),
@@ -92,7 +82,7 @@ pub mod xcsp3_core {
                     Ok(n) => Some(Operand::Integer(n)),
                     Err(_) => Some(Operand::Variable(s[0].to_string())),
                 }
-            };
+            }
         }
     }
 }
