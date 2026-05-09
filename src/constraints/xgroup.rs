@@ -58,8 +58,9 @@ pub mod xcsp3_core {
                 let arg: Vec<XVarVal> = list_to_vec_var_val(a)
                     .iter()
                     .flat_map(|e| match e {
-                        XVarVal::IntVar(s) => set
-                            .construct_scope(&[s])
+                        XVarVal::IntVar(st) if st.contains('(') => vec![e.clone()],
+                        XVarVal::IntVar(st) => set
+                            .construct_scope(&[st])
                             .iter()
                             .map(|(var, _)| XVarVal::IntVar(var.clone()))
                             .collect(),
