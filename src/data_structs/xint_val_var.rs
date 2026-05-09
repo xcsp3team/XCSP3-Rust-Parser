@@ -89,8 +89,12 @@ pub mod xcsp3_core {
                 {
                     Some(XVarVal::IntStart)
                 } else {
-                    None
+                    panic!("invalid parameter in group {}", s);
                 }
+            } else if let Some((left, right)) = s.split_once("..") {
+                let lower: i32 = left.parse().expect("invalid lower bound");
+                let upper: i32 = right.parse().expect("invalid upper bound");
+                Some(XVarVal::IntInterval(lower, upper))
             } else {
                 match i32::from_str(s) {
                     Ok(e) => Some(XVarVal::IntVal(e)),

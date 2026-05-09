@@ -133,7 +133,7 @@ pub mod xcsp3_utils {
                 }
             } else {
                 match XVarVal::from_string(e) {
-                    None => panic!("parseing  list membererror {}", e),
+                    None => panic!("parsing  list membererror {}", e),
                     Some(vv) => {
                         ret.push(vv);
                     }
