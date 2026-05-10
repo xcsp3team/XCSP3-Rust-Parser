@@ -38,10 +38,11 @@ pub mod xcsp3_core {
     #[derive(Clone)]
     pub struct XSlide<'a> {
         args: Vec<XVarVal>,
-        set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
         circular: Option<bool>,
         offset: Option<i32>,
+        collect: Option<i32>,
+        set: &'a XVariableSet,
     }
 
     impl<'a> XSlide<'a> {
@@ -50,6 +51,7 @@ pub mod xcsp3_core {
             arg_str: &str,
             offset_str: &str,
             circular_str: &str,
+            collect_str: &str,
             set: &'a XVariableSet,
         ) -> Self {
             let scope_vec_str = list_to_vec_var_val(arg_str)
@@ -65,23 +67,26 @@ pub mod xcsp3_core {
                 })
                 .collect();
             let offset = to_i32_option(offset_str);
+            let collect = to_i32_option(collect_str);
             let circular = to_bool_option(circular_str);
-            Self::new(scope_vec_str, set, offset, circular, Box::new(cc))
+            Self::new(scope_vec_str, Box::new(cc), circular, offset, collect, set)
         }
 
         pub fn new(
             args: Vec<XVarVal>,
-            set: &'a XVariableSet,
-            offset: Option<i32>,
-            circular: Option<bool>,
             template: Box<XConstraintType<'a>>,
+            circular: Option<bool>,
+            offset: Option<i32>,
+            collect: Option<i32>,
+            set: &'a XVariableSet,
         ) -> Self {
             XSlide {
                 args,
-                set,
                 template,
                 circular,
                 offset,
+                collect,
+                set,
             }
         }
 
@@ -102,6 +107,9 @@ pub mod xcsp3_core {
         }
 
         pub fn offset(&self) -> i32 {
+            self.offset.unwrap_or(1)
+        }
+        pub fn collect(&self) -> i32 {
             self.offset.unwrap_or(1)
         }
     }

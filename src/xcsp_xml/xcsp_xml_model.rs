@@ -424,11 +424,31 @@ pub mod xcsp3_xml {
                     // println!("{}{:?}", vars, values);
                     set.build_instantiation(vars, values);
                 }
-                ConstraintType::Slide {
-                    circular,
-                    list,
-                    constraints,
-                } => {
+                ConstraintType::Slide(slide) => {
+                    XcspXmlModel::parse_constraint(&*slide.constraint, set);
+                    match set.get_last_constraint() {
+                        None => {
+                            panic!("slide constraint is empty.")
+                        }
+                        Some(cc) => {
+                            // println!("{}",cc.to_string())
+                            set.build_slide(
+                                cc,
+                                &*slide.arg.vars,
+                                &*slide.arg.offset,
+                                &*slide.circular,
+                                &*slide.arg.collect,
+                            );
+                        }
+                    }
+                    /*  set.build_slide(cc, slide.args
+                                     offset_str: &str,
+                                     circular_str: &str,
+                                     collect_str: &str,
+
+                    */
+                }
+                /*ConstraintType::Slide { slide } => {
                     // println!("{circular} {:?},{:?}", list, constraints);
                     XcspXmlModel::parse_constraint(constraints, set);
                     match set.get_last_constraint() {
@@ -437,7 +457,7 @@ pub mod xcsp3_xml {
                             set.build_slide(cc, &list.vars, &list.collect, circular);
                         }
                     }
-                }
+                }*/
                 ConstraintType::Channel {
                     lists,
                     with_value,

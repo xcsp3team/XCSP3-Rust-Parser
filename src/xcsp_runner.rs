@@ -130,9 +130,9 @@ impl XcspRunner {
                     callback.begin_slide();
                     let len = inner.args().len();
                     let arr = inner.args();
-                    let tmp = inner.template().max_args_used();
+                    let mut tmp = inner.template().max_args_used();
                     if tmp == -1 {
-                        panic!("Slide constraint can not have %... in the inner constraint");
+                        tmp = inner.collect();
                     }
                     let nb: usize = tmp as usize;
                     let mut i = 0;
