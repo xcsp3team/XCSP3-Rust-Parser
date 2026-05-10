@@ -59,6 +59,7 @@ pub mod xcsp3_core {
                     .iter()
                     .flat_map(|e| match e {
                         XVarVal::IntVar(st) if st.contains('(') => vec![e.clone()],
+                        XVarVal::IntVar(st) if st.contains('{') => vec![e.clone()],
                         XVarVal::IntVar(st) => set
                             .construct_scope(&[st])
                             .iter()

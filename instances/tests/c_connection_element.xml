@@ -7,6 +7,24 @@
 
     </variables>
     <constraints>
+        <group note="assigning items to groups that are compatible wrt their facilities">
+            <element>
+                <list>y[]</list>
+                <index>%0</index>
+                <condition>(in,%1)</condition>
+            </element>
+            <args>t[0] {2,6}</args>
+            <args>t[1] {1,2,3,4,6}</args>
+        </group>
+        <group note="assigning items to groups that are compatible wrt their facilities">
+            <element>
+                <list>y[]</list>
+                <index>%0</index>
+                <condition>(eq,%1)</condition>
+            </element>
+            <args>t[0] 4</args>
+            <args>t[1] i</args>
+        </group>
         <group>
             <element>
                 <list>%...</list>

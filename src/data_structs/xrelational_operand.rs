@@ -50,7 +50,12 @@ pub mod xcsp3_core {
                 _ => {}
             }
             if is_set {
-                if s[0].contains("..") {
+                if Regex::new(r"%(0|[1-9][0-9]*)").unwrap().is_match(s[0]) {
+                    match i32::from_str(&s[0][1..]) {
+                        Ok(e) => Some(Operand::IntArgument(e)),
+                        Err(_) => None,
+                    }
+                } else if s[0].contains("..") {
                     let tmp = str_to_interval(s[0]);
                     Some(Operand::Interval(tmp.0, tmp.1))
                 } else {

@@ -29,6 +29,8 @@
 pub mod xcsp3_core {
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
+    use std::collections::HashSet;
+    use std::str::FromStr;
 
     pub fn inject_parameters_in_var_val(value: XVarVal, arg: &[XVarVal]) -> XVarVal {
         match value {
@@ -71,11 +73,40 @@ pub mod xcsp3_core {
         }
         unfolded_scope
     }
-
+    /*
+        let mut ret: HashSet<i32> = HashSet::new();
+        for l in s.iter() {
+    match i32::from_str(l) {
+    Ok(n) => {
+    ret.insert(n);
+    }
+    Err(_) => {
+    return None;
+    }
+    }
+    }
+        Some(Operand::SetInteger(ret))
+    */
     pub fn inject_parameters_in_operand(operand: &Operand, arg: &[XVarVal]) -> Operand {
         match operand {
             Operand::IntArgument(index) => match arg.get(*index as usize) {
                 Some(XVarVal::IntVal(val)) => Operand::Integer(*val),
+                Some(XVarVal::IntVar(interval)) if interval.starts_with("{") => {
+                    let mut tmp = interval.replace(['{', '}', ','], " ");
+                    let split: Vec<&str> = tmp.split_whitespace().collect();
+                    let mut ret: HashSet<i32> = HashSet::new();
+                    for l in split.iter() {
+                        match i32::from_str(l) {
+                            Ok(n) => {
+                                ret.insert(n);
+                            }
+                            Err(_) => {
+                                panic!("parse interval error: {:?}", interval);
+                            }
+                        }
+                    }
+                    Operand::SetInteger(ret)
+                }
                 Some(XVarVal::IntVar(var)) => Operand::Variable(var.clone()),
                 Some(XVarVal::IntInterval(a, b)) => Operand::Interval(*a, *b),
                 _ => operand.clone(),
