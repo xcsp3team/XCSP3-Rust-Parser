@@ -101,15 +101,22 @@ pub mod xcsp3_utils {
         if list.contains("[][]") {
             let name = list.split('[').next().unwrap_or(list);
             let var = set.find_variable(name);
-            let size = match var {
+            let row_size = match var {
                 XVariableArray(v) => v.sizes[0],
                 XVariableTree(v) => v.sizes[0],
-                _ => 0,
+                _ => todo!("In progress)"),
             };
-            let mut matrix: Vec<Vec<XVarVal>> = Vec::with_capacity(size);
-            for i in 0..size {
+            let col_size = match var {
+                XVariableArray(v) => v.sizes[1],
+                XVariableTree(v) => v.sizes[1],
+                _ => todo!("In progress)"),
+            };
+
+            let mut matrix: Vec<Vec<XVarVal>> = Vec::with_capacity(row_size);
+            for i in 0..row_size {
                 matrix.push(vec![]);
-                for j in 0..size {
+                for j in 0..col_size {
+                    ///println!("{}[{}][{}]", name, i, j);
                     matrix[i].push(XVarVal::IntVar(format!("{}[{}][{}]", name, i, j)));
                 }
             }
