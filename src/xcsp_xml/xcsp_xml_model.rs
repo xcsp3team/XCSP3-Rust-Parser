@@ -66,6 +66,21 @@ pub mod xcsp3_xml {
     use std::fs;
     use std::time::Instant;
 
+    impl PartialEq<InstanceType> for &InstanceType {
+        fn eq(&self, other: &InstanceType) -> bool {
+            match self {
+                InstanceType::Cop => match other {
+                    InstanceType::Cop => true,
+                    _ => false,
+                },
+                InstanceType::Csp => match other {
+                    InstanceType::Csp => true,
+                    _ => false,
+                },
+            }
+        }
+    }
+
     #[derive(Deserialize, Debug)]
     pub enum InstanceType {
         #[serde(rename = "CSP")]

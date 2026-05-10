@@ -41,7 +41,8 @@ use crate::utils::utils_functions::{
 use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
-use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::XcspXmlModel;
+use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::{InstanceType, XcspXmlModel};
+use std::cmp::PartialEq;
 use std::error::Error;
 
 pub struct XcspRunner;
@@ -135,13 +136,15 @@ impl XcspRunner {
         callback.end_constraints();
 
         // ── Objectifs ────────────────────────────────────────────────────────
-        callback.begin_objectives();
-        let objectives = model.build_objectives(&variables);
-        for objective in objectives.objectives().iter() {
-            Self::build_objective(callback, objective);
-        }
-        callback.end_objectives();
+        if model.get_instance_type() == InstanceType::Cop {
+            callback.begin_objectives();
 
+            let objectives = model.build_objectives(&variables);
+            for objective in objectives.objectives().iter() {
+                Self::build_objective(callback, objective);
+            }
+            callback.end_objectives();
+        }
         callback.end_instance();
 
         Ok(())
