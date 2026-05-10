@@ -97,6 +97,22 @@ pub trait XcspCallback {
     fn end_group(&mut self) {}
 
     /**
+     * Start to parse a slide of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn begin_slide(&mut self) {}
+
+    /**
+     * The end to parse a slide of constraints
+     * Related to tag <group>
+     * See http://xcsp.org/specifications/groups
+     */
+
+    fn end_slide(&mut self) {}
+
+    /**
      * Start to parse objectives
      * Related to tag <objectives>
      * See http://xcsp.org/specifications/objectives
@@ -794,11 +810,6 @@ pub trait XcspCallback {
     ) {
         println!("c Maximum Arg Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
-    }
-
-    /// <slide> ... </slide>
-    fn on_constraint_slide(&mut self, _c: &XSlide) {
-        todo!("c Slide not yet implemented");
     }
 
     /**

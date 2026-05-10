@@ -49,7 +49,7 @@ pub mod xcsp3_core {
                 *list = inject_parameters_in_list(&*list, arg, tmp);
             }
         }
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             let mut tmp = -1;
             for list in self.lists.iter() {
                 tmp = max(tmp, max_arg_in_list(list));

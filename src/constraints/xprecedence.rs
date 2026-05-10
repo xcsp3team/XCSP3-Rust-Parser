@@ -53,7 +53,7 @@ pub mod xcsp3_core {
                 *vals = inject_parameters_in_list(vals, arg, tmp);
             }
         }
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             let tmp = max_arg_in_list(&*self.scope);
             match self.values.as_deref() {
                 Some(v) => max(tmp, max_arg_in_list(v)),

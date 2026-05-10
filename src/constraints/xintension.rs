@@ -47,7 +47,7 @@ pub mod xcsp3_core {
                     .replace(&format!("%{}", index), arg[index].to_string().as_str());
             }
         }
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             -1
         }
     }

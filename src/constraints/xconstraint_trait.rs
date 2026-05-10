@@ -114,6 +114,6 @@ pub mod xcsp3_core {
 
     pub trait XConstraintUnfold {
         fn extract_parameters(&mut self, arg: &[XVarVal]);
-        fn max_args_used(&mut self) -> i32;
+        fn max_args_used(&self) -> i32;
     }
 }

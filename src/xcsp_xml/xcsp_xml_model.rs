@@ -434,8 +434,7 @@ pub mod xcsp3_xml {
                     match set.get_last_constraint() {
                         None => {}
                         Some(cc) => {
-                            // println!("{}",cc.to_string())
-                            set.build_slide(cc, &list.vars, &list.offset, circular);
+                            set.build_slide(cc, &list.vars, &list.collect, circular);
                         }
                     }
                 }

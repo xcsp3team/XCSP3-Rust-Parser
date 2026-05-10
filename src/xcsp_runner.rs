@@ -126,6 +126,26 @@ impl XcspRunner {
                     }
                     callback.end_group();
                 }
+                XConstraintType::XSlide(inner) => {
+                    callback.begin_slide();
+                    let len = inner.args().len();
+                    let arr = inner.args();
+                    let tmp = inner.template().max_args_used();
+                    if tmp == -1 {
+                        panic!("Slide constraint can not have %... in the inner constraint");
+                    }
+                    let nb: usize = tmp as usize;
+                    let mut i = 0;
+                    while i + nb <= len || (inner.circular() && i < len) {
+                        let arg: Vec<XVarVal> =
+                            (0..nb).map(|j| arr[(i + j) % len].clone()).collect();
+                        let mut c = inner.template().clone();
+                        c.extract_parameters(&*arg);
+                        Self::build_constraint(callback, &mut c)?;
+                        i += inner.offset() as usize;
+                    }
+                    callback.end_slide();
+                }
 
                 _ => {
                     Self::build_constraint(callback, c)?;
@@ -451,7 +471,6 @@ impl XcspRunner {
                 }
             }
 
-            XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
             //---------------------------------------------------------------------------------------------------

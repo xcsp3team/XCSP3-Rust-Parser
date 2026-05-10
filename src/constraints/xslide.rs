@@ -40,26 +40,11 @@ pub mod xcsp3_core {
         args: Vec<XVarVal>,
         set: &'a XVariableSet,
         template: Box<XConstraintType<'a>>,
-        circular: bool,
-        offset: i32,
+        circular: Option<bool>,
+        offset: Option<i32>,
     }
 
     impl<'a> XSlide<'a> {
-        pub fn get_offset(&self) -> i32 {
-            self.offset
-        }
-        pub fn get_circular(&self) -> bool {
-            self.circular
-        }
-
-        pub fn get_args(&self) -> &Vec<XVarVal> {
-            &self.args
-        }
-
-        pub fn get_template(&self) -> &XConstraintType<'a> {
-            &self.template
-        }
-
         pub fn from_str(
             cc: XConstraintType<'a>,
             arg_str: &str,
@@ -67,17 +52,28 @@ pub mod xcsp3_core {
             circular_str: &str,
             set: &'a XVariableSet,
         ) -> Self {
-            let scope_vec_str = list_to_vec_var_val(arg_str);
-            let offset = to_i32_option(offset_str).unwrap_or(0);
-            let circular = to_bool_option(circular_str).unwrap_or(false);
+            let scope_vec_str = list_to_vec_var_val(arg_str)
+                .iter()
+                .flat_map(|e| match e {
+                    XVarVal::IntVar(st) if st.contains('(') => vec![e.clone()],
+                    XVarVal::IntVar(st) => set
+                        .construct_scope(&[st])
+                        .iter()
+                        .map(|(var, _)| XVarVal::IntVar(var.clone()))
+                        .collect(),
+                    _ => vec![e.clone()],
+                })
+                .collect();
+            let offset = to_i32_option(offset_str);
+            let circular = to_bool_option(circular_str);
             Self::new(scope_vec_str, set, offset, circular, Box::new(cc))
         }
 
         pub fn new(
             args: Vec<XVarVal>,
             set: &'a XVariableSet,
-            offset: i32,
-            circular: bool,
+            offset: Option<i32>,
+            circular: Option<bool>,
             template: Box<XConstraintType<'a>>,
         ) -> Self {
             XSlide {
@@ -87,6 +83,26 @@ pub mod xcsp3_core {
                 circular,
                 offset,
             }
+        }
+
+        pub fn args(&self) -> &Vec<XVarVal> {
+            &self.args
+        }
+
+        pub fn set(&self) -> &'a XVariableSet {
+            self.set
+        }
+
+        pub fn template(&self) -> &Box<XConstraintType<'a>> {
+            &self.template
+        }
+
+        pub fn circular(&self) -> bool {
+            self.circular.unwrap_or(false)
+        }
+
+        pub fn offset(&self) -> i32 {
+            self.offset.unwrap_or(1)
         }
     }
 }

@@ -66,7 +66,7 @@ pub mod xcsp3_core {
                 *o = inject_parameters_in_operand(o, arg);
             }
         }
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             let tmp = max_arg_in_list(&*self.scope);
             let tmp = match self.operand.clone() {
                 Some(v) => max(tmp, arg_in_operand(&v)),
