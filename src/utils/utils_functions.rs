@@ -57,7 +57,7 @@ pub mod xcsp3_utils {
     }
 
     pub fn str_to_condition(condition: &str) -> (Operator, Operand) {
-        let tmp = condition.replace(['(', ')', ','], " ");
+        let tmp = condition.replace(['(', ')', ',', '{', '}'], " ");
         let split: Vec<&str> = tmp.split_whitespace().collect();
         let ope = Operator::get_operator_by_str(split[0]);
         let rand: Operand = match Operand::get_operand_by_str(&split[1..], &ope) {

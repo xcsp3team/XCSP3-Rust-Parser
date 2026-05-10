@@ -5,7 +5,7 @@
     <constraints>
         <sum>
             <list>t[]</list>
-            <condition>(in,36..54)</condition>
+            <condition>(in,{0,5,6,7,8})</condition>
         </sum>
     </constraints>
 </instance>
