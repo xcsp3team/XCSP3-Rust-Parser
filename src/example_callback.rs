@@ -62,13 +62,13 @@ impl XcspCallback for PrintingSolver {
         println!("=== Variables ===");
     }
     fn end_variables(&mut self) {
-        println!("→ {} variables chargées\n", self.nb_variables);
+        println!("Number of variables: {}\n", self.nb_variables);
     }
     fn begin_constraints(&mut self) {
-        println!("=== Contraintes ===");
+        println!("=== Constraints ===");
     }
     fn end_constraints(&mut self) {
-        println!("→ {} contraintes chargées\n", self.nb_constraints);
+        println!("Number of constraints: {} \n", self.nb_constraints);
     }
 
     fn begin_group(&mut self) {
@@ -128,12 +128,14 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
+        self.nb_constraints += 1;
         println!("  [AllDiff List]");
         for v in _lists {
             println!("       {:?} ", v);
         }
     }
     fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
+        self.nb_constraints += 1;
         println!("  [AllDiff Matrix]");
         for v in _lists {
             println!("       {:?} ", v);
@@ -149,10 +151,12 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_ordered_v1(&mut self, scope: &[String], operator: Operator) {
+        self.nb_constraints += 1;
         println!("  [Ordered V1]  {:?}, operator {:?}", scope, operator);
     }
 
     fn on_constraint_ordered_v2(&mut self, scope: &[String], lengths: &[i32], operator: Operator) {
+        self.nb_constraints += 1;
         println!(
             "  [Ordered V2]  {:?}, length: {:?} operator {:?}",
             scope, lengths, operator
@@ -165,6 +169,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &[String],
         operator: Operator,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Ordered V3]  {:?}, length: {:?} operator {:?}",
             scope, lengths, operator
@@ -177,6 +182,7 @@ impl XcspCallback for PrintingSolver {
         is_support: bool,
         has_star: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Extension] scope={:?} is_support={} has_star={}",
             scope, is_support, has_star
@@ -189,6 +195,7 @@ impl XcspCallback for PrintingSolver {
         println!("           address = {:X}", tuples.as_ptr() as usize);
     }
     fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
+        self.nb_constraints += 1;
         println!(
             "  [Unary]  {:?} values: {:?} is_support: {}",
             _scope, values, is_support
@@ -221,11 +228,13 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_mdd(&mut self, scope: &[String], transitions: &Vec<(String, i32, String)>) {
+        self.nb_constraints += 1;
         println!("  [MDD]  {:?}", scope);
         println!("           transitions: {:?}", transitions);
     }
 
     fn on_constraint_sum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        self.nb_constraints += 1;
         println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
     }
 
@@ -236,6 +245,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Sum]  {:?} * {:?} {:?}, {:?}",
             scope, coeffs, operator, operand
@@ -249,6 +259,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Sum]  {:?} * {:?} {:?}, {:?}",
             scope, coeffs, operator, operand
@@ -261,6 +272,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
     }
 
@@ -271,6 +283,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Sum]  {:?} * {:?} {:?} {:?}",
             scope, coeffs, operator, operand
@@ -278,6 +291,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_maximum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        self.nb_constraints += 1;
         println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
@@ -287,10 +301,12 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
     fn on_constraint_minimum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        self.nb_constraints += 1;
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
@@ -300,6 +316,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
@@ -311,6 +328,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Maximum Arg]  {:?} rank={} start={} {:?}, {:?}",
             scope, rank, start_index, operator, operand
@@ -325,6 +343,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Maxnimum Arg]  {:?} rank={} start={} {:?}, {:?}",
             scope, rank, start_index, operator, operand
@@ -339,6 +358,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
             scope, rank, start_index, operator, operand
@@ -353,6 +373,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
             scope, rank, start_index, operator, operand
@@ -366,6 +387,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Count]  {:?} - values: {:?} {:?} {:?}",
             scope, values, operator, operand
@@ -379,6 +401,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Count]  {:?} - values: {:?} {:?} {:?}",
             scope, values, operator, operand
@@ -392,6 +415,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Count]  {:?} - values: {:?} {:?} {:?}",
             scope, values, operator, operand
@@ -405,6 +429,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Count]  {:?} - values: {:?} {:?} {:?}",
             scope, values, operator, operand
@@ -419,6 +444,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V1] {:?} lengths={:?} heights={:?} {:?} {:?}",
             origins, lengths, heights, operator, operand
@@ -433,6 +459,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V2] {:?} lengths={:?} heights={:?} {:?} {:?}",
             origins, lengths, heights, operator, operand
@@ -447,6 +474,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V3] {:?} lengths={:?} heights={:?} {:?} {:?}",
             origins, lengths, heights, operator, operand
@@ -461,6 +489,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V4] {:?} lengths={:?} heights={:?} {:?} {:?}",
             origins, lengths, heights, operator, operand
@@ -476,6 +505,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V5] {:?} lengths={:?} heights={:?} ends={:?} {:?} {:?}",
             origins, lengths, heights, ends, operator, operand
@@ -491,6 +521,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V6] {:?} lengths={:?} heights={:?} ends={:?} {:?} {:?}",
             origins, lengths, heights, ends, operator, operand
@@ -506,6 +537,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V7] {:?} lengths={:?} heights={:?} ends={:?} {:?} {:?}",
             origins, lengths, heights, ends, operator, operand
@@ -521,6 +553,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cumulative V8] {:?} lengths={:?} heights={:?} ends={:?} {:?} {:?}",
             origins, lengths, heights, ends, operator, operand
@@ -528,6 +561,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_nvalues_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
+        self.nb_constraints += 1;
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
@@ -538,6 +572,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NValues]  {:?} (exception: {:?}) {:?} {:?}",
             scope, except, operator, operand
@@ -550,14 +585,17 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
     fn on_constraint_element_v1(&mut self, scope: &[String], value: i32) {
+        self.nb_constraints += 1;
         println!("  [Element V1] {:?} value={}", scope, value);
     }
 
     fn on_constraint_element_v2(&mut self, scope: &[String], value: String) {
+        self.nb_constraints += 1;
         println!("  [Element V2] {:?} value={}", scope, value);
     }
 
@@ -568,6 +606,7 @@ impl XcspCallback for PrintingSolver {
         index: String,
         value: String,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V3] {:?} start={} index= {} value={}",
             list, start_index, index, value
@@ -580,6 +619,7 @@ impl XcspCallback for PrintingSolver {
         index: String,
         value: i32,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V4] {:?} start={} index= {} value={}",
             list, start_index, index, value
@@ -594,6 +634,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V5] {:?} start={} index= {}  operator={:?}, operand={:?}",
             list, start_index, index, operator, operand
@@ -607,6 +648,7 @@ impl XcspCallback for PrintingSolver {
         index: String,
         value: String,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V6] {:?} start={} index= {} value={}",
             list, start_index, index, value
@@ -619,6 +661,7 @@ impl XcspCallback for PrintingSolver {
         index: String,
         value: i32,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V7] {:?} start={} index= {} value={}",
             list, start_index, index, value
@@ -633,6 +676,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element V8] {:?} start={} index= {}  operator={:?}, operand={:?}",
             list, start_index, index, operator, operand
@@ -648,6 +692,7 @@ impl XcspCallback for PrintingSolver {
         start_col_index: i32,
         value: i32,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V1] {:?} row={} col={} startRow={} startCol={} value={}",
             matrix, row_index, col_index, start_row_index, start_col_index, value
@@ -663,6 +708,7 @@ impl XcspCallback for PrintingSolver {
         start_col_index: i32,
         value: String,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V2] {:?} row={} col={} startRow={} startCol={} value={}",
             matrix, row_index, col_index, start_row_index, start_col_index, value
@@ -679,6 +725,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V3] {:?} row={} col={} startRow={} startCol={} {:?} {:?}",
             matrix, row_index, col_index, start_row_index, start_col_index, operator, operand
@@ -695,6 +742,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V4] {:?} row={} col={} startRow={} startCol={} {:?} {:?}",
             matrix, row_index, col_index, start_row_index, start_col_index, operator, operand
@@ -710,6 +758,7 @@ impl XcspCallback for PrintingSolver {
         start_col_index: i32,
         value: i32,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V5] {:?} row={} col={} startRow={} startCol={} value={}",
             matrix, row_index, col_index, start_row_index, start_col_index, value
@@ -725,6 +774,7 @@ impl XcspCallback for PrintingSolver {
         start_col_index: i32,
         value: String,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Element Matrix V6] {:?} row={} col={} startRow={} startCol={} value={}",
             matrix, row_index, col_index, start_row_index, start_col_index, value
@@ -737,6 +787,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &[i32],
         zero_ignored: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NoOverlap]  {:?}  lengths={:?} zero {}",
             scope, lengths, zero_ignored
@@ -749,6 +800,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &[String],
         zero_ignored: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NoOverlap]  {:?}  lengths={:?} zero {}",
             scope, lengths, zero_ignored
@@ -761,6 +813,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &Vec<Vec<i32>>,
         zero: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NoOverlap]  {:?}  lengths={:?} zero {}",
             origins, lengths, zero
@@ -773,6 +826,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &Vec<Vec<String>>,
         zero: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NoOverlap]  {:?}  lengths={:?} zero {}",
             origins, lengths, zero
@@ -785,6 +839,7 @@ impl XcspCallback for PrintingSolver {
         lengths: &Vec<(String, i32)>,
         zero: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [NoOverlap]  {:?}  lengths={:?} zero {}",
             origins, lengths, zero
@@ -798,6 +853,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[i32],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -811,6 +867,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[String],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -824,6 +881,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[(i32, i32)],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -837,6 +895,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[i32],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -850,6 +909,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[String],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -863,6 +923,7 @@ impl XcspCallback for PrintingSolver {
         occurs: &[(i32, i32)],
         closed: bool,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
             scope, occurs, values, closed
@@ -870,30 +931,36 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_circuit_v1(&mut self, scope: &Vec<String>) {
-        println!("  [Circuit]  {:?}", scope);
+        self.nb_constraints += 1;
+        println!("  [Circuit V1]  {:?}", scope);
     }
 
     fn on_constraint_circuit_v2(&mut self, scope: &Vec<String>, size: i32) {
-        println!("  [Circuit]  {:?} size={}", scope, size);
+        self.nb_constraints += 1;
+        println!("  [Circuit V2]  {:?} size={}", scope, size);
     }
 
     fn on_constraint_circuit_v3(&mut self, scope: &Vec<String>, size: String) {
-        println!("  [Circuit]  {:?} size={}", scope, size);
+        self.nb_constraints += 1;
+        println!("  [Circuit V3]  {:?} size={}", scope, size);
     }
 
     fn on_constraint_precedence_v1(&mut self, scope: &[String], covered: bool) {
-        println!("  [Precedence]  {:?} covered={}", scope, covered);
+        self.nb_constraints += 1;
+        println!("  [Precedence V2]  {:?} covered={}", scope, covered);
     }
 
     fn on_constraint_precedence_v2(&mut self, scope: &[String], values: &[i32], covered: bool) {
+        self.nb_constraints += 1;
         println!(
-            "  [Precedence]  {:?} covered={} values={:?}",
+            "  [Precedence V2]  {:?} covered={} values={:?}",
             scope, covered, values
         );
     }
 
     fn on_constraint_channel_v1(&mut self, scope: &[String], start_index: i32) {
-        println!("  [Channel]  {:?} start_index={}", scope, start_index);
+        self.nb_constraints += 1;
+        println!("  [Channel V1]  {:?} start_index={}", scope, start_index);
     }
 
     fn on_constraint_channel_v2(
@@ -903,15 +970,17 @@ impl XcspCallback for PrintingSolver {
         _list2: &[String],
         _start_index2: i32,
     ) {
+        self.nb_constraints += 1;
         println!(
-            "  [Channel]\n      l1={:?} start_index1={}\n      l2={:?} start_index2={}",
+            "  [Channel V2]\n      l1={:?} start_index1={}\n      l2={:?} start_index2={}",
             _list1, _start_index1, _list2, _start_index2
         );
     }
 
     fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
+        self.nb_constraints += 1;
         println!(
-            "  [Channel]  {:?} start_index={}, _value={:?}",
+            "  [Channel V3]  {:?} start_index={}, _value={:?}",
             _list, _start_index, _value
         );
     }
@@ -922,6 +991,7 @@ impl XcspCallback for PrintingSolver {
         values: &[(i32, i32)],
         widths: &[i32],
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Stretch V1]  {:?} values={:?} widths={:?}",
             scope, values, widths
@@ -934,6 +1004,7 @@ impl XcspCallback for PrintingSolver {
         values: &[(i32, i32)],
         widths: &[i32],
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Stretch V2]  {:?} values={:?} widths={:?}",
             scope, values, widths
@@ -941,6 +1012,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
+        self.nb_constraints += 1;
         println!(
             "  [Clause]  pos_lit {:?} neg lit {:?}",
             _positive, _negative
@@ -957,6 +1029,7 @@ impl XcspCallback for PrintingSolver {
         _poperator: Operator,
         _poperand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [Knapsack]: {:?} weight: {:?} profits:{:?}",
             _scope, _weights, _profits
@@ -970,6 +1043,7 @@ impl XcspCallback for PrintingSolver {
         operator: Operator,
         operand: Operand,
     ) {
+        self.nb_constraints += 1;
         println!(
             "  [BinPacking V1]  {:?} sizes={:?} {:?} {:?}",
             scope, sizes, operator, operand
@@ -977,6 +1051,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_bin_packing_v2(&mut self, scope: &[String], sizes: &[i32], limits: &[i32]) {
+        self.nb_constraints += 1;
         println!(
             "  [BinPacking V2]  {:?} sizes={:?} limits={:?}",
             scope, sizes, limits
@@ -984,6 +1059,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_bin_packing_v3(&mut self, scope: &[String], sizes: &[i32], limits: &[String]) {
+        self.nb_constraints += 1;
         println!(
             "  [BinPacking V3]  {:?} sizes={:?} limits={:?}",
             scope, sizes, limits
@@ -991,6 +1067,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_bin_packing_v4(&mut self, scope: &[String], sizes: &[i32], loads: &[i32]) {
+        self.nb_constraints += 1;
         println!(
             "  [BinPacking V4]  {:?} sizes={:?} loads={:?}",
             scope, sizes, loads
@@ -998,6 +1075,7 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_bin_packing_v5(&mut self, scope: &[String], sizes: &[i32], loads: &[String]) {
+        self.nb_constraints += 1;
         println!(
             "  [BinPacking V5]  {:?} sizes={:?} loads={:?}",
             scope, sizes, loads
@@ -1005,9 +1083,11 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
+        self.nb_constraints += 1;
         println!("  [Lex] {:?} {:?}", lists, operator);
     }
     fn on_constraint_lex_matrix(&mut self, matrix: &Vec<Vec<String>>, operator: Operator) {
+        self.nb_constraints += 1;
         println!("  [Lex Matrix] {:?} {:?}", matrix, operator);
     }
 
