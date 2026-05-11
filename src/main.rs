@@ -26,10 +26,8 @@
 *=============================================================================
 */
 use std::env;
-
 use xcsp3_rust::example_callback::PrintingSolver;
 use xcsp3_rust::xcsp_runner::XcspRunner;
-
 fn main() {
     let xml_file = env::args()
         .nth(2)

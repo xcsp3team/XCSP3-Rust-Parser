@@ -66,6 +66,7 @@ pub mod xcsp3_utils {
     impl Operator {
         pub fn get_operator_by_str(op: &str) -> Option<Self> {
             match op {
+                // Arithmetic
                 "add" => Some(Operator::Add),
                 "neg" => Some(Operator::Neg),
                 "abs" => Some(Operator::Abs),
@@ -78,12 +79,14 @@ pub mod xcsp3_utils {
                 "min" => Some(Operator::Min),
                 "max" => Some(Operator::Max),
                 "dist" => Some(Operator::Dist),
+                // relational
                 "lt" => Some(Operator::Lt),
                 "le" => Some(Operator::Le),
                 "ge" => Some(Operator::Ge),
                 "gt" => Some(Operator::Gt),
                 "ne" => Some(Operator::Ne),
                 "eq" => Some(Operator::Eq),
+                // logical
                 "and" => Some(Operator::And),
                 "not" => Some(Operator::Not),
                 "or" => Some(Operator::Or),
@@ -290,35 +293,80 @@ pub mod xcsp3_utils {
         }
     }
 
-    // pub struct ExpressionLastOrderIter<'a> {
-    //     stack: Vec<&'a TreeNode>,
-    // }
-    //
-    // impl<'a> Iterator for ExpressionLastOrderIter<'a> {
-    //     type Item = &'a TreeNode;
-    //     fn next(&mut self) -> Option<Self::Item> {
-    //         loop
-    //         {
-    //             match self.stack.last() {
-    //                 None => { return None; }
-    //                 Some(top) => {
-    //                     match top
-    //                     {
-    //                         TreeNode::Operator(_, vec) => {
-    //                             (0..vec.len()).rev().for_each(|i| {
-    //                                 self.stack.push(&vec[i]);
-    //                             })
-    //                         }
-    //                         _ => {break}
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         match self.stack.pop()
-    //         {
-    //             None => { None }
-    //             Some(t) => { Some(t) }
-    //         }
-    //     }
-    // }
+    use std::collections::HashMap;
+
+    impl ExpressionTree {
+        pub fn evaluate(&self, vars: &HashMap<String, i32>) -> i32 {
+            Self::eval_node(&self.root, vars)
+        }
+
+        fn eval_node(node: &TreeNode, vars: &HashMap<String, i32>) -> i32 {
+            match node {
+                TreeNode::Constant(n) => *n,
+
+                TreeNode::Variable(name) => *vars
+                    .get(name)
+                    .unwrap_or_else(|| panic!("variable '{}' not found in assignment", name)),
+
+                TreeNode::Argument(_) => panic!("cannot evaluate uninstantiated argument"),
+
+                TreeNode::Operator(op, children) => {
+                    let eval = |i: usize| Self::eval_node(&children[i], vars);
+                    let all: Vec<i32> = children.iter().map(|c| Self::eval_node(c, vars)).collect();
+
+                    match op {
+                        // arithmetic
+                        Operator::Add => all.iter().sum(),
+                        Operator::Sub => eval(0) - eval(1),
+                        Operator::Mul => all.iter().product(),
+                        Operator::Div => eval(0) / eval(1),
+                        Operator::Mod => eval(0) % eval(1),
+                        Operator::Pow => eval(0).pow(eval(1) as u32),
+                        Operator::Sqr => eval(0) * eval(0),
+                        Operator::Neg => -eval(0),
+                        Operator::Abs => eval(0).abs(),
+                        Operator::Dist => (eval(0) - eval(1)).abs(),
+                        Operator::Min => *all.iter().min().unwrap(),
+                        Operator::Max => *all.iter().max().unwrap(),
+
+                        // relational — return 1 (true) or 0 (false)
+                        Operator::Lt => (eval(0) < eval(1)) as i32,
+                        Operator::Le => (eval(0) <= eval(1)) as i32,
+                        Operator::Ge => (eval(0) >= eval(1)) as i32,
+                        Operator::Gt => (eval(0) > eval(1)) as i32,
+                        Operator::Ne => (eval(0) != eval(1)) as i32,
+                        Operator::Eq => all.windows(2).all(|w| w[0] == w[1]) as i32,
+
+                        // logical
+                        Operator::Not => (eval(0) == 0) as i32,
+                        Operator::And => all.iter().all(|&v| v != 0) as i32,
+                        Operator::Or => all.iter().any(|&v| v != 0) as i32,
+                        Operator::Xor => (all.iter().filter(|&&v| v != 0).count() % 2 == 1) as i32,
+                        Operator::Iff => ((eval(0) != 0) == (eval(1) != 0)) as i32, // biconditional
+                        Operator::Imp => (eval(0) == 0 || eval(1) != 0) as i32,     // implication
+
+                        // ternary if
+                        Operator::If => {
+                            if eval(0) != 0 {
+                                eval(1)
+                            } else {
+                                eval(2)
+                            }
+                        }
+
+                        // set membership: in(x, set(a,b,c)) -> 1 if x in {a,b,c}
+                        Operator::In => {
+                            let val = eval(0);
+                            all[1..].contains(&val) as i32
+                        }
+                        Operator::Set => panic!("Set node should be child of In"),
+                    }
+                }
+
+                TreeNode::LeftBracket | TreeNode::RightBracket => {
+                    panic!("bracket nodes should not appear during evaluation")
+                }
+            }
+        }
+    }
 }
