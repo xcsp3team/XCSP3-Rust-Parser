@@ -153,7 +153,9 @@ pub mod xcsp3_utils {
             let mut scope = vec![];
             for e in self.first_order_iter() {
                 if let TreeNode::Variable(v) = e {
-                    scope.push(v.clone());
+                    if scope.contains(v) == false {
+                        scope.push(v.clone());
+                    }
                 }
             }
             scope
