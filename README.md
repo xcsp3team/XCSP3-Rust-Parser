@@ -10,130 +10,134 @@
 
 ## Description
 
-### This lib is implemented by rust and is licensed under the MIT license.
+`xcsp3-rust` is a Rust library for reading constraint satisfaction and constraint optimization instances written in the [XCSP3](http://xcsp.org) format.
+The library supports the XCSP3-core composed of the main components:
 
-### The purpose of this library is to read XCSP files into rust constraint programming solvers.
+- CSP instances: constraint satisfaction problems
+- COP instances: constraint optimization problems
+- Integer variables and arrays
+- Common global constraints (AllDiff, Regular, MDD, Count, Sum, cumulative...)
+- Generic constraints (intention, table)
+- Objectives
 
-### You can learn about the semantics of XCSP3 through this site http://xcsp.org/.
+This library does not solve the problem by itself. Instead, it parses an XCSP3 file and reports the parsed elements through a callback interface.
+This makes it useful for building XCSP3 frontends for Rust-based constraint solvers.
 
-### I will keep improving this code to support more constraints and fix possible bugs.
+This project is heavily inspired by the [xcsp3-rs](https://github.com/luhanzhen/xcsp3-rs) project.
+We are grateful to the original authors for their work!
 
-### If you have something to tell me, feel free to contact me.
+## How it works
 
-## Usage
+The parser follows an event/callback architecture.
 
-### Just add the following dependency to your project's Cargo.toml file:
+You provide a type that implements `XcspCallback`.
+While reading the XCSP3 file, the runner calls methods on your callback whenever it encounters variables, constraints,
+objectives, or structural parts of the instance.
 
-```toml
-[dependencies]
-xcsp3-rust = "0.1.0"
+At a high level:
+
+1. Create a callback object.
+2. Call `XcspRunner::run(path, &mut callback)`.
+3. The runner parses the XML file.
+4. The runner calls callback methods such as:
+    - `begin_instance`
+    - `on_variable_interval`
+    - `on_constraint_all_different_v1`
+    - `on_constraint_intention`
+    - `on_minimize_var`
+    - `end_instance`
+
+This lets solver developers translate XCSP3 instances into their own internal solver representation.
+
+## Installation
+
+Add the library to your `Cargo.toml`:
+
 ```
 
-### The library is automatically built and statically linked to your binary.
+toml [dependencies] xcsp3-rust = "0.1.0"```
+
+Or, when using it from a local checkout:
+```
+
+toml [dependencies] xcsp3-rust = { path = "../xcsp3-rust" }```
 
 ## Example
 
-```rust,no_run
+The following example parses an XCSP3 file and prints the variables and constraints using the built-in example callback.
+
+```rust 
 use xcsp3_rust::example_callback::PrintingSolver;
 use xcsp3_rust::xcsp_runner::XcspRunner;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() {
+    let xml_file = "instances/my-example.xml";
     let mut solver = PrintingSolver::new();
 
-    XcspRunner::run("path/to/instance.xml", &mut solver)?;
+    println!("Parse {}", xml_file);
 
-    Ok(())
+    match XcspRunner::run(xml_file, &mut solver) {
+        Ok(_) => println!("Successful parsing!"),
+        Err(e) => eprintln!("Error during parsing: {}", e),
+    }
 }
 ```
 
-## Architecture Graph
+Run it with:
 
-### main architecture
+```bash 
+cargo run -- instances/my-example.xml
+``` 
 
-```mermaid
-graph BT
-A["XCSP(xml file)"] --serde--> B(XcspXmlModel)
-B --parser--> C([XVariableSet])
-B --parser--> D([XConstraintSet])
-B --parser--> E([XObjectivesSet])
-C --reader--> F[/example.rs/]
-D --reader--> F
-E --reader--> F
+The example callback prints each parsed item, for example:
 
+```text 
+Parse instances/my-example.xml 
+Start to load an instance of type Csp 
+
+=== Variables === 
+Interval Var x[0]: 1..9 
+Interval Var x[1]: 1..9 
+Number of variables: 2
+
+=== Constraints === 
+[AllDiff] ["x[0]", "x[1]"] 
+Number of constraints: 1
+Done... 
+Successful parsing!
 ```
 
-### XVariableSet
+## Implementing your own callback
 
-```mermaid
-graph LR
-    C([XVariableSet]) -.->XVariableType(XVariableType)
-    XVariableType -->  XVariableArray(XVariableArray)
-    XVariableType -->  XVariableInt(XVariableInt)
-    XVariableType -->  XVariableTree(XVariableTree)
-    XVariableTree -.domain.->  XDomainInteger(XDomainInteger)
-    XVariableInt -.domain.->  XDomainInteger
-    XVariableArray -.domain.->  XDomainInteger
-    XDomainInteger -.-> XIntegerType(XIntegerType)
-    XIntegerType -->IntegerValue(IntegerValue)
-    XIntegerType -->IntegerInterval(IntegerInterval)
-    XIntegerType -->XIntegerSymbolic(XIntegerSymbolic)
+To connect the parser to your own solver, implement `XcspCallback`.
+The file `src/example_callback.rs` contains an example implementation. It prints the parsed elements.
 
-```
+Unsupported or unimplemented callback methods may panic by default.
+Override the corresponding callback method if your solver supports the construct.
 
-### XConstraintSet
+## Library structure
 
-```mermaid
-graph LR
-    D([XConstraintSet]) -.-> XConstraintType(XConstraintType)
-    XConstraintType -->  XExtension(XExtension) -.scope.-> Scope(XVarVal)
-    XConstraintType --> XAllDifferent(XAllDifferent)-.scope.-> Scope
-    XConstraintType --> XAllDifferentExcept(XAllDifferentExcept)-.scope.-> Scope
-    XConstraintType --> XInstantiation(XInstantiation)-.scope.-> Scope
-    XConstraintType --> XAllEqual(XAllEqual)-.scope.-> Scope
-    XConstraintType --> XOrdered(XOrdered)-.scope.-> Scope
-    XConstraintType --> XRegular(XRegular)-.scope.-> Scope
-    XConstraintType -->XMdd(XMdd)-.scope.-> Scope
-    XConstraintType -->XIntention(XIntention)-.scope.-> Scope
-    XConstraintType -->XGroup(XGroup)-.scope.-> Scope
-    XConstraintType -->XSum(XSum)-.scope.-> Scope
-    XConstraintType -->XMaximum(XMaxMin)-.scope.-> Scope
-    XConstraintType -->XMinimum(XMaxMin)-.scope.-> Scope
-    XConstraintType -->XElement(XElement)-.scope.-> Scope
-    XConstraintType -->XSlide(XSlide)-.scope.-> Scope
-    XConstraintType -->XCount(XCount)-.scope.-> Scope
-    XConstraintType -->XNValues(XNValues)-.scope.-> Scope
-    XConstraintType -->XCardinality(XCardinality)-.scope.-> Scope
-    XConstraintType -->XChannel(XChannel)-.scope.-> Scope
-    XConstraintType -->XCumulative(XCumulative)-.scope.-> Scope
-    XConstraintType -->XNoOverlap(XNoOverlap)-.scope.-> Scope
-    XConstraintType -->XNoOverlapKDim(XNoOverlap)-.scope.-> Scope
-    XConstraintType --> XStretch(XStretch)-.scope.-> Scope
-    Scope -->IntVar(IntVar is a variable)
-    Scope -->IntVal(IntVal is a value)
-```
+The public modules are organized around the main XCSP3 concepts:
 
-### XObjectivesSet
+- `variables`: variable and domain representations
+- `constraints`: constraint representations
+- `objectives`: objective representations
+- `data_structs`: shared data structures such as expression trees and operands
+- `xcsp_xml`: XML model parsing
+- `xcsp_callback`: callback trait used by solver frontends
+- `xcsp_runner`: high-level runner that connects parsing and callbacks
+- `example_callback`: example implementation that prints parsed elements
 
-```mermaid
-graph LR
-    E([XObjectivesSet]) -.-> T(XObjectivesType)
-%%    XVariableArray(XVariableArray)
-    T --> Minimize(Minimize)
-    T --> Maximize(Maximize)
-    Minimize --> XObjective(XObjective)
-    Maximize --> XObjective(XObjective)
-    XObjective --> XObjectiveElement(XObjectiveElement)
-    XObjective --> XObjectiveExpression(XObjectiveExpression)
+## Command-line usage
+
+The crate also contains a simple executable that parses an XCSP3 file and uses the printing callback.
+
+```bash 
+cargo run -- path/to/instance.xml
+
 ```
 
 ## License
 
-> MIT License
-
-## Author
-
-> luhan zhen
-
-> tip: Maybe my code is not the best, but I will keep improving it to better build our 'CP' community.
-
+This project is distributed under the MIT License. See [`LICENSE`](LICENSE)
 
