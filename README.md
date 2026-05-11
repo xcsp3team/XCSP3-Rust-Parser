@@ -53,14 +53,15 @@ This lets solver developers translate XCSP3 instances into their own internal so
 
 Add the library to your `Cargo.toml`:
 
+```toml 
+[dependencies] xcsp3-rust = "0.1.0"
 ```
-
-toml [dependencies] xcsp3-rust = "0.1.0"```
 
 Or, when using it from a local checkout:
-```
 
-toml [dependencies] xcsp3-rust = { path = "../xcsp3-rust" }```
+```toml 
+[dependencies] xcsp3-rust = { path = "../xcsp3-rust" }
+```
 
 ## Example
 
