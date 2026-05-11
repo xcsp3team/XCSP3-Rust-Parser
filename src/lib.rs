@@ -29,7 +29,7 @@
 #![doc = include_str!("../README.md")]
 
 pub mod constraints;
-mod data_structs;
+pub mod data_structs;
 pub mod objectives;
 pub mod utils;
 pub mod variables;
