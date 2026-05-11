@@ -75,7 +75,6 @@ impl XcspRunner {
         // ── Variables ────────────────────────────────────────────────────────
         callback.begin_variables();
         let variables = model.build_variables();
-        println!("variables: {}", variables);
         for v in variables.iter() {
             match v {
                 XVariableType::XVariableInt(var) => {

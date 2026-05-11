@@ -169,25 +169,34 @@ pub mod xcsp3_xml {
                     }
                     VariableType::Array(var_array_str) => {
                         // println!("var_array {:?}", var_array)
-                        if var_array_str.domains.is_empty() {
-                            variables.build_variable_array(
+
+                        if var_array_str.r#as.is_empty() == false {
+                            variables.build_variable_array_as(
                                 &var_array_str.id,
                                 &var_array_str.size,
-                                &var_array_str.value,
+                                &var_array_str.r#as,
                             );
                         } else {
-                            let mut domain_for: Vec<&String> = vec![];
-                            let mut domain_value: Vec<&String> = vec![];
-                            for e in var_array_str.domains.iter() {
-                                domain_value.push(&e.value);
-                                domain_for.push(&e.r#for);
+                            if var_array_str.domains.is_empty() {
+                                variables.build_variable_array(
+                                    &var_array_str.id,
+                                    &var_array_str.size,
+                                    &var_array_str.value,
+                                );
+                            } else {
+                                let mut domain_for: Vec<&String> = vec![];
+                                let mut domain_value: Vec<&String> = vec![];
+                                for e in var_array_str.domains.iter() {
+                                    domain_value.push(&e.value);
+                                    domain_for.push(&e.r#for);
+                                }
+                                variables.build_variable_tree(
+                                    &var_array_str.id,
+                                    &var_array_str.size,
+                                    domain_for,
+                                    domain_value,
+                                );
                             }
-                            variables.build_variable_tree(
-                                &var_array_str.id,
-                                &var_array_str.size,
-                                domain_for,
-                                domain_value,
-                            );
                         }
                     }
                 }

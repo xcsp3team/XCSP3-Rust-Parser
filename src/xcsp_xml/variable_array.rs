@@ -74,6 +74,8 @@ pub mod xcsp3_xml {
     pub struct VariableArray {
         #[serde(rename = "@id")]
         pub id: String,
+        #[serde(rename = "@as", default)]
+        pub r#as: String,
         #[serde(rename = "@type", default)]
         pub type_: String,
         #[serde(rename = "@startIndex", default)]

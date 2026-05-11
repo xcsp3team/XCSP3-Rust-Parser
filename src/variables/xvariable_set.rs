@@ -99,6 +99,26 @@ pub mod xcsp3_core {
                 let var = XVariableType::new_int(id, vv.domain.clone());
                 self.id_to_index.insert(var.get_id(), self.variables.len());
                 self.variables.push(var);
+            } else {
+                if let XVariableType::XVariableArray(vv) = v {
+                    let var = XVariableType::new_int(id, vv.domain.clone());
+                    self.id_to_index.insert(var.get_id(), self.variables.len());
+                    self.variables.push(var);
+                }
+            }
+        }
+        pub fn build_variable_array_as(&mut self, id: &str, sizes: &str, as_str: &str) {
+            let v = self.find_variable(as_str);
+            if let XVariableType::XVariableInt(vv) = v {
+                let var = XVariableType::new_array(id, sizes, vv.domain.clone());
+                self.id_to_index.insert(var.get_id(), self.variables.len());
+                self.variables.push(var);
+            } else {
+                if let XVariableType::XVariableArray(vv) = v {
+                    let var = XVariableType::new_array(id, sizes, vv.domain.clone());
+                    self.id_to_index.insert(var.get_id(), self.variables.len());
+                    self.variables.push(var);
+                }
             }
         }
 
