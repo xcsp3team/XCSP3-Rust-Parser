@@ -42,6 +42,8 @@ pub mod xcsp3_xml {
         // #[serde(rename = "constraint", default)]
         #[serde(rename = "$value", default)]
         pub vars: String,
+        #[serde(rename = "@collect", default)]
+        pub collect: String,
         #[serde(rename = "@offset", default)]
         pub offset: String,
     }

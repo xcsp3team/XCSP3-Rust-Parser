@@ -62,7 +62,7 @@ pub mod xcsp3_core {
             }
         }
 
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             let mut tmp = max(max_arg_in_list(&*self.sizes), max_arg_in_list(&*self.scope));
             tmp = max(tmp, max_arg_in_list(&*self.limits));
             tmp = max(tmp, max_arg_in_list(&*self.loads));

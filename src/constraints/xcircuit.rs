@@ -51,8 +51,8 @@ pub mod xcsp3_core {
                 self.size = Option::from(inject_parameters_in_var_val(size.clone(), arg));
             }
         }
-        fn max_args_used(&mut self) -> i32 {
-            if let Some(size) = &mut self.size {
+        fn max_args_used(&self) -> i32 {
+            if let Some(size) = &mut self.size.clone() {
                 let mut s = Vec::new();
                 s.push(size.clone());
                 max(max_arg_in_list(&*s), max_arg_in_list(&*self.scope))

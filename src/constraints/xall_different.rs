@@ -46,7 +46,7 @@ pub mod xcsp3_core {
             let tmp = self.max_args_used();
             self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
         }
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             -1
         }
     }

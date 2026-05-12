@@ -117,6 +117,7 @@ impl XcspRunner {
         let mut constraints = model.build_constraints(&variables);
         for c in constraints.iter_mut() {
             match c {
+                // --------------- GROUP -------------------------
                 XConstraintType::XGroup(inner) => {
                     callback.begin_group();
                     for arg in inner.get_args() {
@@ -125,6 +126,27 @@ impl XcspRunner {
                         Self::build_constraint(callback, &mut c)?;
                     }
                     callback.end_group();
+                }
+                // --------------- Slide -------------------------
+                XConstraintType::XSlide(inner) => {
+                    callback.begin_slide();
+                    let len = inner.args().len();
+                    let arguments = inner.args();
+                    let mut tmp = inner.template().max_args_used() + 1;
+                    if tmp == 0 {
+                        tmp = inner.collect();
+                    }
+                    let nb: usize = tmp as usize;
+                    let mut i = 0;
+                    while i + nb <= len || (inner.circular() && i < len) {
+                        let arg: Vec<XVarVal> =
+                            (0..nb).map(|j| arguments[(i + j) % len].clone()).collect();
+                        let mut c = inner.template().clone();
+                        c.extract_parameters(&*arg);
+                        Self::build_constraint(callback, &mut c)?;
+                        i += inner.offset() as usize;
+                    }
+                    callback.end_slide();
                 }
 
                 _ => {
@@ -453,7 +475,6 @@ impl XcspRunner {
                 }
             }
 
-            XConstraintType::XSlide(inner) => callback.on_constraint_slide(inner),
             //---------------------------------------------------------------------------------------------------
             // Extremum Constraint
             //---------------------------------------------------------------------------------------------------

@@ -38,6 +38,7 @@ pub mod xcsp_xml_model;
 mod constraint;
 mod constraint_block;
 mod constraint_group;
+mod constraint_slide;
 mod constraint_type;
 mod objective;
 mod variable;

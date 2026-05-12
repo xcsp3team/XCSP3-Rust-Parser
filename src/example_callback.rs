@@ -78,6 +78,13 @@ impl XcspCallback for PrintingSolver {
         println!("  [Group] end");
     }
 
+    fn begin_slide(&mut self) {
+        println!("  [Slide] begin");
+    }
+    fn end_slide(&mut self) {
+        println!("  [Slide] end");
+    }
+
     fn begin_objectives(&mut self) {
         println!("=== Objectives ===");
     }

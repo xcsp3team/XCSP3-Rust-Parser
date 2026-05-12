@@ -26,46 +26,39 @@
 *=============================================================================
 */
 
-pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
-    };
-    use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
-    use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
-    use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
+pub mod xcsp3_xml {
+    use crate::xcsp_xml::constraint::xcsp3_xml::ListWithOffset;
+    use crate::xcsp_xml::constraint_type::xcsp3_xml::ConstraintType;
+    use serde::Deserialize;
 
-    // #[derive(Clone)]
-    #[derive(Clone)]
-    pub struct XAllEqual<'a> {
-        scope: Vec<XVarVal>,
-        set: &'a XVariableSet,
-    }
+    /**
+    syntax.
+    ```xml
+    <group  [ id="identifier" ]>
+      <constraint.../>  <!-- constraint template -->
+      (<args> (intExpr wspace)+ </args>)2+
+    </group>
+    ```
 
-    impl XConstraintUnfold for XAllEqual<'_> {
-        fn extract_parameters(&mut self, arg: &[XVarVal]) {
-            let tmp = self.max_args_used();
-            self.scope = inject_parameters_in_list(&*self.scope, arg, tmp);
-        }
-        fn max_args_used(&self) -> i32 {
-            -1
-        }
-    }
-
-    impl<'a> XAllEqual<'a> {
-        pub fn from_str(list: &str, set: &'a XVariableSet) -> Self {
-            let scope_vec_str = list_to_vec_var_val(list);
-            XAllEqual::new(scope_vec_str, set)
-        }
-        pub fn new(scope: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
-            XAllEqual { scope, set }
-        }
-
-        pub fn scope(&self) -> &Vec<XVarVal> {
-            &self.scope
-        }
-
-        pub fn set(&self) -> &'a XVariableSet {
-            self.set
-        }
+    eg.
+    ```xml
+    <group id="g">
+      <intension> eq(add(%0,%1),%2) </intension>
+      <args> x0 x1 x2 </args>
+      <args> x3 x4 x5 </args>
+      <args> x6 x7 x8 </args>
+    </group>
+    ```
+     */
+    #[derive(Deserialize, Debug)]
+    pub struct ConstraintSlide {
+        // #[serde(rename = "@id", default)]
+        // id: String,
+        #[serde(rename = "@circular", default)]
+        pub circular: String,
+        #[serde(rename = "list", default)]
+        pub arg: Box<ListWithOffset>,
+        #[serde(rename = "$value", default)]
+        pub constraint: Box<ConstraintType>,
     }
 }

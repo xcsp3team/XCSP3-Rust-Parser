@@ -64,7 +64,7 @@ pub mod xcsp3_core {
             self.operand = inject_parameters_in_operand(&self.operand, arg)
         }
 
-        fn max_args_used(&mut self) -> i32 {
+        fn max_args_used(&self) -> i32 {
             let mut tmp = max(arg_in_operand(&self.operand), max_arg_in_list(&*self.scope));
             tmp = max(tmp, max_arg_in_list(&*self.heights));
             tmp = max(tmp, max_arg_in_list(&*self.heights));

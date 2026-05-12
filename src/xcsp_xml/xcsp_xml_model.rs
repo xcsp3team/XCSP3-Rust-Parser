@@ -56,6 +56,7 @@ pub mod xcsp3_xml {
     use crate::objectives::xobjectives_set::xcsp3_core::XObjectivesSet;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use crate::xcsp_xml::constraint::xcsp3_xml::Constraint;
+    use crate::xcsp_xml::constraint_slide::xcsp3_xml::ConstraintSlide;
     use crate::xcsp_xml::constraint_type::xcsp3_xml::ConstraintType;
     use crate::xcsp_xml::objective::xcsp3_xml::Objective;
     use crate::xcsp_xml::variable::xcsp3_xml::Variable;
@@ -317,7 +318,7 @@ pub mod xcsp3_xml {
                     } else if conflicts.is_empty() {
                         set.build_extension(vars, supports, true)
                     } else {
-                        eprintln!("can't build extension, conflicts or supports must be non empty.")
+                        panic!("can't build extension, conflicts or supports must be non empty.")
                     }
                 }
                 ConstraintType::Regular {
@@ -448,18 +449,20 @@ pub mod xcsp3_xml {
                     // println!("{}{:?}", vars, values);
                     set.build_instantiation(vars, values);
                 }
-                ConstraintType::Slide {
-                    circular,
-                    list,
-                    constraints,
-                } => {
-                    // println!("{circular} {:?},{:?}", list, constraints);
-                    XcspXmlModel::parse_constraint(constraints, set);
+                ConstraintType::Slide(slide) => {
+                    XcspXmlModel::parse_constraint(&*slide.constraint, set);
                     match set.get_last_constraint() {
-                        None => {}
+                        None => {
+                            panic!("slide has no constraint template");
+                        }
                         Some(cc) => {
-                            // println!("{}",cc.to_string())
-                            set.build_slide(cc, &list.vars, &list.offset, circular);
+                            set.build_slide(
+                                cc,
+                                &*slide.arg.vars,
+                                &*slide.arg.offset,
+                                &*slide.circular,
+                                &*slide.arg.collect,
+                            );
                         }
                     }
                 }

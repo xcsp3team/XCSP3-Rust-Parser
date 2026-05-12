@@ -220,8 +220,9 @@ pub mod xcsp3_core {
             vars: &str,
             offset_str: &str,
             circular_str: &str,
+            collect_str: &str,
         ) {
-            let c = XSlide::from_str(cc, vars, offset_str, circular_str, self.set);
+            let c = XSlide::from_str(cc, vars, offset_str, circular_str, collect_str, self.set);
             self.constraints.push(XConstraintType::XSlide(c));
         }
         pub fn build_group(&mut self, cc: XConstraintType<'a>, args: &[String]) {

@@ -32,6 +32,7 @@ pub mod xcsp3_xml {
     };
     use crate::xcsp_xml::constraint_block::xcsp3_xml::ConstraintBlock;
     use crate::xcsp_xml::constraint_group::xcsp3_xml::ConstraintGroup;
+    use crate::xcsp_xml::constraint_slide::xcsp3_xml::ConstraintSlide;
     use serde::Deserialize;
 
     #[derive(Deserialize, Debug, Default)]
@@ -796,16 +797,7 @@ pub mod xcsp3_xml {
         ```
          */
         #[serde(rename = "slide")]
-        Slide {
-            // #[serde(rename = "@id", default)]
-            // id: String,
-            #[serde(rename = "@circular", default)]
-            circular: String,
-            #[serde(rename = "list", default)]
-            list: ListWithOffset,
-            #[serde(rename = "$value", default)]
-            constraints: Box<ConstraintType>,
-        },
+        Slide(ConstraintSlide),
 
         /**
         syntax.
