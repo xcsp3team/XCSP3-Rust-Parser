@@ -116,7 +116,6 @@ pub mod xcsp3_utils {
             for i in 0..row_size {
                 matrix.push(vec![]);
                 for j in 0..col_size {
-                    ///println!("{}[{}][{}]", name, i, j);
                     matrix[i].push(XVarVal::IntVar(format!("{}[{}][{}]", name, i, j)));
                 }
             }

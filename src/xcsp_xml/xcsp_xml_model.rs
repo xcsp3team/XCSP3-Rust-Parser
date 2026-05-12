@@ -56,7 +56,6 @@ pub mod xcsp3_xml {
     use crate::objectives::xobjectives_set::xcsp3_core::XObjectivesSet;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use crate::xcsp_xml::constraint::xcsp3_xml::Constraint;
-    use crate::xcsp_xml::constraint_slide::xcsp3_xml::ConstraintSlide;
     use crate::xcsp_xml::constraint_type::xcsp3_xml::ConstraintType;
     use crate::xcsp_xml::objective::xcsp3_xml::Objective;
     use crate::xcsp_xml::variable::xcsp3_xml::Variable;

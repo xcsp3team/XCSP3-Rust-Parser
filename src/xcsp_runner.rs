@@ -42,7 +42,6 @@ use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 use crate::variables::xvariable_type::xcsp3_core::XVariableType;
 use crate::xcsp_callback::XcspCallback;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::{InstanceType, XcspXmlModel};
-use std::cmp::PartialEq;
 use std::error::Error;
 
 pub struct XcspRunner;

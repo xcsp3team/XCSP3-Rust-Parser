@@ -110,7 +110,7 @@ pub mod xcsp3_core {
             self.offset.unwrap_or(1)
         }
         pub fn collect(&self) -> i32 {
-            self.offset.unwrap_or(1)
+            self.collect.unwrap_or(1)
         }
     }
 }

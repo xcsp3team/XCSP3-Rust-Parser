@@ -25,7 +25,6 @@
 * THE SOFTWARE.
 *=============================================================================
 */
-use crate::constraints::xslide::xcsp3_core::XSlide;
 use crate::data_structs::expression_tree::xcsp3_utils::ExpressionTree;
 use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
 use crate::data_structs::xrelational_operator::xcsp3_core::Operator;

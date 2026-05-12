@@ -92,7 +92,7 @@ pub mod xcsp3_core {
             Operand::IntArgument(index) => match arg.get(*index as usize) {
                 Some(XVarVal::IntVal(val)) => Operand::Integer(*val),
                 Some(XVarVal::IntVar(interval)) if interval.starts_with("{") => {
-                    let mut tmp = interval.replace(['{', '}', ','], " ");
+                    let tmp = interval.replace(['{', '}', ','], " ");
                     let split: Vec<&str> = tmp.split_whitespace().collect();
                     let mut ret: HashSet<i32> = HashSet::new();
                     for l in split.iter() {
