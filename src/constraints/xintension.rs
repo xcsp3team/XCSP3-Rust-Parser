@@ -48,7 +48,15 @@ pub mod xcsp3_core {
             }
         }
         fn max_args_used(&self) -> i32 {
-            -1
+            let re = regex::Regex::new(r"%(\d+)").unwrap();
+            let tmp = re
+                .captures_iter(&*self.expression)
+                .filter_map(|c| c[1].parse::<i32>().ok())
+                .max();
+            match tmp {
+                Some(v) => v,
+                None => panic!("Failed to arguments in expression {}", self.expression),
+            }
         }
     }
     impl<'a> XIntention<'a> {
