@@ -1,4 +1,4 @@
-<h1 > <div style="text-align: center;"><b>xcsp3-rust </b></div>  </h1>
+# XCSP3-Rust-Parser
 
 [//]: # ([![Crate]&#40;https://img.shields.io/crates/v/quick-xml.svg&#41;]&#40;https://crates.io/crates/quick-xml&#41;)
 
@@ -10,7 +10,7 @@
 
 ## Description
 
-`xcsp3-rust` is a Rust library for reading constraint satisfaction and constraint optimization instances written in the [XCSP3](http://xcsp.org) format.
+`xcsp3-rust-parser` is a Rust library for reading constraint satisfaction and constraint optimization instances written in the [XCSP3](http://xcsp.org) format.
 The library supports the XCSP3-core composed of the main components:
 
 - CSP instances: constraint satisfaction problems
@@ -23,7 +23,7 @@ The library supports the XCSP3-core composed of the main components:
 This library does not solve the problem by itself. Instead, it parses an XCSP3 file and reports the parsed elements through a callback interface.
 This makes it useful for building XCSP3 frontends for Rust-based constraint solvers.
 
-This project is heavily inspired by the [xcsp3-rs](https://github.com/luhanzhen/xcsp3-rs) project.
+This project is heavily inspired by the [xcsp3-rust](https://github.com/luhanzhen/xcsp3-rust) project.
 We are grateful to the original authors for their work!
 
 ## How it works
@@ -54,13 +54,13 @@ This lets solver developers translate XCSP3 instances into their own internal so
 Add the library to your `Cargo.toml`:
 
 ```toml 
-[dependencies] xcsp3-rust = "0.1.0"
+[dependencies] xcsp3-parser-rust = "0.1.0"
 ```
 
 Or, when using it from a local checkout:
 
 ```toml 
-[dependencies] xcsp3-rust = { path = "../xcsp3-rust" }
+[dependencies] xcsp3-parser-rust = { path = "../xcsp3-rust" }
 ```
 
 ## Example

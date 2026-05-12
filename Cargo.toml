@@ -1,5 +1,5 @@
 [package]
-name = "xcsp3-rust"
+name = "xcsp3-rust-parser"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.70"
@@ -12,7 +12,7 @@ keywords = [
     "parser",
 ]
 authors = [
-    "Luhan Zhen <zhenlh20@mails.jlu.edu.cn>",
+    "xcsp3team (contact@xcsp.org)",
 ]
 include = [
     "src/*",
@@ -25,7 +25,7 @@ description = "xcsp3-rust is a library that help constraint programming solvers 
 readme = "README.md"
 categories = ["Text processing"]
 license = "MIT"
-repository = "https://github.com/luhanzhen/xcsp3-rust"
+repository = "https://github.com/xcsp3team/XCSP3-Rust-Parser"
 
 
 [dependencies]
@@ -35,6 +35,6 @@ regex = "1.9.1"
 
 
 [lib]
-name = "xcsp3_rust"
+name = "xcsp3_rust_parser"
 path = "src/lib.rs"
 doctest = false
