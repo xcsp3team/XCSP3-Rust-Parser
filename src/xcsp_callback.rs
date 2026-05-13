@@ -2194,6 +2194,29 @@ pub trait XcspCallback {
         println!("c Lex matrix not yet implemented");
         panic!("s UNSUPPORTED");
     }
+
+    /**
+     * The callback function related to flow  constraint
+     *
+     * @param list the list of variables (not necessary the scope)
+     * @param balance the different values
+     * @param weights the different values
+     * @param arcs the different values
+     * @param operator
+     * @param operand
+     */
+    fn on_constraint_flow(
+        &mut self,
+        _scope: &[String],
+        _balance: &[i32],
+        _weights: &[i32],
+        _arcs: &[(i32, i32)],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        println!("c Flow not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
     // -------------------------------------------------------------------------
     // Objectifs
     // -------------------------------------------------------------------------

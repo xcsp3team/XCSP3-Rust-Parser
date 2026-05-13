@@ -644,6 +644,23 @@ impl XcspRunner {
                 callback.on_constraint_clause(&*pos, &*neg);
             }
             //---------------------------------------------------------------------------------------------------
+            // Flow Constraint
+            //---------------------------------------------------------------------------------------------------
+            XConstraintType::XFlow(inner) => {
+                let scope: Vec<String> = to_var_list(&inner.scope(), &inner.set());
+                let balances = to_int_list(inner.balances());
+                let weights = to_int_list(inner.weights());
+
+                callback.on_constraint_flow(
+                    &*scope,
+                    &*balances,
+                    &*weights,
+                    inner.arcs(),
+                    inner.operator(),
+                    inner.operand().clone(),
+                );
+            }
+            //---------------------------------------------------------------------------------------------------
             // Knapsack Constraint
             //---------------------------------------------------------------------------------------------------
             XConstraintType::XKnapsack(inner) => {

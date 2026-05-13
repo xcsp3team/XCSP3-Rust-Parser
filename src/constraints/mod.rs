@@ -63,6 +63,7 @@ pub mod xcount;
 pub mod xcumulative;
 pub mod xelement;
 pub mod xelement_matrix;
+mod xflow;
 pub mod xgroup;
 pub mod xintension;
 pub mod xknapsack;

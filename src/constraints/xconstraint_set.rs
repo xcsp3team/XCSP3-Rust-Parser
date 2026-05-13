@@ -43,6 +43,7 @@ pub mod xcsp3_core {
     use crate::constraints::xelement::xcsp3_core::XElement;
     use crate::constraints::xelement_matrix::xcsp3_core::XElementMatrix;
     use crate::constraints::xextension::xcsp3_core::XExtension;
+    use crate::constraints::xflow::xcsp3_core::XFlow;
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
@@ -192,6 +193,25 @@ pub mod xcsp3_core {
                 self.set,
             );
             self.constraints.push(XConstraintType::XElement(c));
+        }
+
+        pub fn build_flow(
+            &mut self,
+            list_str: &str,
+            balance_str: &str,
+            weights_str: &str,
+            arcs_str: &str,
+            condition_str: &str,
+        ) {
+            let c = XFlow::from_str(
+                list_str,
+                balance_str,
+                weights_str,
+                arcs_str,
+                condition_str,
+                self.set,
+            );
+            self.constraints.push(XConstraintType::XFlow(c));
         }
 
         pub fn build_element_matrix(

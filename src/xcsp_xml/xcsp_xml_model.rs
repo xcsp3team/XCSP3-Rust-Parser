@@ -506,6 +506,13 @@ pub mod xcsp3_xml {
                     }
                 }
                 ConstraintType::Clause { vars } => set.build_clause(vars),
+                ConstraintType::Flow {
+                    vars,
+                    balance,
+                    weights,
+                    arcs,
+                    condition,
+                } => set.build_flow(vars, balance, weights, arcs, condition),
 
                 ConstraintType::Lex {
                     lists,

@@ -930,6 +930,19 @@ pub mod xcsp3_xml {
             operator: String,
         },
 
+        #[serde(rename = "flow")]
+        Flow {
+            #[serde(rename = "list", default)]
+            vars: String,
+            #[serde(rename = "balance", default)]
+            balance: String,
+            #[serde(rename = "weights", default)]
+            weights: String,
+            #[serde(rename = "arcs", default)]
+            arcs: String,
+            #[serde(rename = "condition", default)]
+            condition: String,
+        },
         #[default]
         ConstraintNone,
     }

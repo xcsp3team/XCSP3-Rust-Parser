@@ -1026,6 +1026,22 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
+    fn on_constraint_flow(
+        &mut self,
+        _scope: &[String],
+        _balance: &[i32],
+        _weights: &[i32],
+        _arcs: &[(i32, i32)],
+        _operator: Operator,
+        _operand: Operand,
+    ) {
+        self.nb_constraints += 1;
+        println!(
+            "  [Flow] scope={:?} balance={:?} weights={:?} arcs={:?} operator={:?} operand={:?}",
+            _scope, _balance, _weights, _arcs, _operator, _operand
+        );
+    }
+
     fn on_constraint_knapsack(
         &mut self,
         _scope: &[String],

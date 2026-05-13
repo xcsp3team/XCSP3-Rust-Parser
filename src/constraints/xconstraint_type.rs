@@ -43,6 +43,7 @@ pub mod xcsp3_core {
     use crate::constraints::xelement::xcsp3_core::XElement;
     use crate::constraints::xelement_matrix::xcsp3_core::XElementMatrix;
     use crate::constraints::xextension::xcsp3_core::XExtension;
+    use crate::constraints::xflow::xcsp3_core::XFlow;
     use crate::constraints::xgroup::xcsp3_core::XGroup;
     use crate::constraints::xinstantiation::xcsp3_core::XInstantiation;
     use crate::constraints::xintension::xcsp3_core::XIntention;
@@ -100,6 +101,7 @@ pub mod xcsp3_core {
         XBinpacking(XBinpacking<'a>),
         XLex(XLex<'a>),
         XLexMatrix(XLexMatrix<'a>),
+        XFlow(XFlow<'a>),
     }
 
     impl<'a> XConstraintUnfold for XConstraintType<'a> {
@@ -142,6 +144,7 @@ pub mod xcsp3_core {
                 XLex,
                 XIntention,
                 XExtension,
+                XFlow
             );
         }
 
@@ -184,6 +187,7 @@ pub mod xcsp3_core {
                 XLex,
                 XIntention,
                 XExtension,
+                XFlow
             )
         }
     }
