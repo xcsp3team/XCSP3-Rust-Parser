@@ -220,7 +220,7 @@ pub trait XcspCallback {
      * @param scope the scope of the constraint
      */
     fn on_constraint_all_different_v1(&mut self, _scope: &[String]) {
-        println!("c Alldifferent not yet implemented");
+        println!("c Alldifferent Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -236,7 +236,7 @@ pub trait XcspCallback {
      * @param scope the trees of the constraint
      */
     fn on_constraint_all_different_v2(&mut self, _scope: &[ExpressionTree]) {
-        println!("c Alldifferent with expressions in list not yet implemented");
+        println!("c Alldifferent Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -254,7 +254,7 @@ pub trait XcspCallback {
      * @param except the set of excepted values
      */
     fn on_constraint_all_different_except(&mut self, _scope: &[String], _except: &[i32]) {
-        println!("c Alldifferent not yet implemented");
+        println!("c Alldifferent except not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -307,7 +307,7 @@ pub trait XcspCallback {
      *
      */
     fn on_constraint_all_equal_v1(&mut self, _scope: &[String]) {
-        println!("c Alldifferent not yet implemented");
+        println!("c AllEqual Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -323,7 +323,7 @@ pub trait XcspCallback {
      * @param list the trees of the constraint
      */
     fn on_constraint_all_equal_v2(&mut self, _scope: &[ExpressionTree]) {
-        println!("c Alldifferent with expressions in scope not yet implemented");
+        println!("c AllEqual Variant 2 with expressions in scope not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -436,7 +436,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Sum Variant 5s not yet implemented");
+        println!("c Sum Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -532,7 +532,7 @@ pub trait XcspCallback {
         _lengths: &[String],
         _operator: Operator,
     ) {
-        println!("c Ordered Variant 2 not yet implemented");
+        println!("c Ordered Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -601,7 +601,10 @@ pub trait XcspCallback {
      * @param _scope the scope of the constraint
      * @param _values the value for each variable
      */
-    fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {}
+    fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {
+        println!("c Instantiation not yet implemented");
+        panic!("s UNSUPPORTED");
+    }
 
     /**
      * The callback function related to a maximum constraint
@@ -701,7 +704,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Minimum Arg Variant 1 not yet implemented");
+        println!("c Minimum Arg Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -753,7 +756,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Minimum Variant 1 not yet implemented");
+        println!("c Minimum Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -780,7 +783,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Maximum Arg Variant 1 not yet implemented");
+        println!("c Maximum Arg Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -908,7 +911,7 @@ pub trait XcspCallback {
         _operator: Operator,
         _operand: Operand,
     ) {
-        println!("c Count Variant 2 not yet implemented");
+        println!("c Count Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -1627,7 +1630,7 @@ pub trait XcspCallback {
         _start_col_index: i32,
         _value: i32,
     ) {
-        println!("c Element Matrix Variant 2 not yet implemented");
+        println!("c Element Matrix Variant 1 not yet implemented");
     }
 
     /**
@@ -2066,7 +2069,7 @@ pub trait XcspCallback {
         _values: &[(i32, i32)],
         _widths: &[i32],
     ) {
-        println!("c Stretch Variant 1 not yet implemented");
+        println!("c Stretch Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
     /**
@@ -2188,7 +2191,7 @@ pub trait XcspCallback {
      * @param order the order LT, LE...
      */
     fn on_constraint_lex_matrix(&mut self, _matrix: &Vec<Vec<String>>, _operator: Operator) {
-        println!("c Lex not yet implemented");
+        println!("c Lex matrix not yet implemented");
         panic!("s UNSUPPORTED");
     }
     // -------------------------------------------------------------------------
@@ -2223,7 +2226,7 @@ pub trait XcspCallback {
      * @param var the variable
      */
     fn on_minimize_var(&mut self, _var: String) {
-        println!("c Objective Minimiez Var not yet implemented");
+        println!("c Objective Minimize Var not yet implemented");
         panic!("s UNSUPPORTED");
     }
     /**
@@ -2276,7 +2279,7 @@ pub trait XcspCallback {
      */
 
     fn on_minimize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
-        println!("c Objective Minimize v1 not yet implemented");
+        println!("c Objective Minimize Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2298,7 +2301,7 @@ pub trait XcspCallback {
      */
 
     fn on_maximize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
-        println!("c Objective Maximize v1 not yet implemented");
+        println!("c Objective Maximize Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
     /**
@@ -2319,7 +2322,7 @@ pub trait XcspCallback {
      */
 
     fn on_minimize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
-        println!("c Objective Minimize v2 not yet implemented");
+        println!("c Objective Minimize Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2341,7 +2344,7 @@ pub trait XcspCallback {
      */
 
     fn on_maximize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
-        println!("c Objective Maximize v2 not yet implemented");
+        println!("c Objective Maximize Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2368,7 +2371,7 @@ pub trait XcspCallback {
         _scope: &[ExpressionTree],
         _coefs: &[i32],
     ) {
-        println!("c Objective Minimize v3 not yet implemented");
+        println!("c Objective Minimize Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2395,7 +2398,7 @@ pub trait XcspCallback {
         _scope: &[ExpressionTree],
         _coefs: &[i32],
     ) {
-        println!("c Objective Maximize v3 not yet implemented");
+        println!("c Objective Maximize Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
     /**
@@ -2421,7 +2424,7 @@ pub trait XcspCallback {
         _scope: &[ExpressionTree],
         _coefs: &[String],
     ) {
-        println!("c Objective Minimize v4 not yet implemented");
+        println!("c Objective Minimize Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2448,7 +2451,7 @@ pub trait XcspCallback {
         _scope: &[ExpressionTree],
         _coefs: &[String],
     ) {
-        println!("c Objective Maximize v4 not yet implemented");
+        println!("c Objective Maximize Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2468,7 +2471,7 @@ pub trait XcspCallback {
      */
 
     fn on_minimize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
-        println!("c Objective Minimize v5 not yet implemented");
+        println!("c Objective Minimize Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2488,7 +2491,7 @@ pub trait XcspCallback {
      */
 
     fn on_maximize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
-        println!("c Objective Maximize v5 not yet implemented");
+        println!("c Objective Maximize Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2508,7 +2511,7 @@ pub trait XcspCallback {
      */
 
     fn on_minimize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
-        println!("c Objective Minimize v4 not yet implemented");
+        println!("c Objective Minimize Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -2528,7 +2531,7 @@ pub trait XcspCallback {
      */
 
     fn on_maximize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
-        println!("c Objective Maximize v6 not yet implemented");
+        println!("c Objective Maximize Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 }
