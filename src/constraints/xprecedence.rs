@@ -27,9 +27,7 @@
 */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, max_arg_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
@@ -72,18 +70,9 @@ pub mod xcsp3_core {
             XPrecedence::new(scope_vec_str, values, covered, set)
         }
 
-        pub fn from_str(
-            list: &str,
-            values: &str,
-            covered: Option<bool>,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, values: &str, covered: Option<bool>, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
-            let vals = if values.is_empty() {
-                None
-            } else {
-                Some(list_to_vec_var_val(values))
-            };
+            let vals = if values.is_empty() { None } else { Some(list_to_vec_var_val(values)) };
             XPrecedence::new(scope, vals, covered, set)
         }
         pub fn new(
@@ -92,12 +81,7 @@ pub mod xcsp3_core {
             covered: Option<bool>,
             set: &'a XVariableSet,
         ) -> Self {
-            XPrecedence {
-                scope,
-                values,
-                covered,
-                set,
-            }
+            XPrecedence { scope, values, covered, set }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

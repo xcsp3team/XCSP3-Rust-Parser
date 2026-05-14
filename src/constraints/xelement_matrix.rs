@@ -98,17 +98,7 @@ pub mod xcsp3_core {
                 panic!("Group and parameters in the matrix of an element is not yet implemented");
             }
             let matrix = to_matrix(list, set);
-            Self::new(
-                matrix,
-                set,
-                value,
-                row_index,
-                col_index,
-                start_row_index,
-                start_col_index,
-                operator,
-                operand,
-            )
+            Self::new(matrix, set, value, row_index, col_index, start_row_index, start_col_index, operator, operand)
         }
 
         pub fn new(
@@ -122,17 +112,7 @@ pub mod xcsp3_core {
             operator: Option<Operator>,
             operand: Option<Operand>,
         ) -> Self {
-            Self {
-                matrix,
-                set,
-                value,
-                row_index,
-                col_index,
-                start_row_index,
-                start_col_index,
-                operator,
-                operand,
-            }
+            Self { matrix, set, value, row_index, col_index, start_row_index, start_col_index, operator, operand }
         }
 
         pub fn matrix(&self) -> &Vec<Vec<XVarVal>> {

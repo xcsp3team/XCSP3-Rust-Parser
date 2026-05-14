@@ -41,12 +41,7 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XNoOverlapKDim<'a> {
-        pub fn from_str(
-            list: &str,
-            lengths_str: &str,
-            zero_ignored_str: &str,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, lengths_str: &str, zero_ignored_str: &str, set: &'a XVariableSet) -> Self {
             let scope: Vec<Vec<XVarVal>> = {
                 let mut sc = vec![];
                 let binding = list.replace(")(", "@").replace(['(', ',', ')'], " ");
@@ -76,12 +71,7 @@ pub mod xcsp3_core {
             set: &'a XVariableSet,
             zero_ignored: Option<bool>,
         ) -> Self {
-            Self {
-                scope,
-                lengths,
-                set,
-                zero_ignored,
-            }
+            Self { scope, lengths, set, zero_ignored }
         }
 
         pub fn scope(&self) -> &Vec<Vec<XVarVal>> {
@@ -109,10 +99,7 @@ pub mod xcsp3_core {
             )
         }
         pub fn is_lengths_int(&self) -> bool {
-            matches!(
-                self.lengths.first().and_then(|first| first.first()),
-                Some(XVarVal::IntVal(_))
-            )
+            matches!(self.lengths.first().and_then(|first| first.first()), Some(XVarVal::IntVal(_)))
         }
     }
     impl Display for XNoOverlapKDim<'_> {

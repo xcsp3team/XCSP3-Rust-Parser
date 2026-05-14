@@ -34,9 +34,7 @@ pub mod xcsp3_utils {
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
-    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{
-        XVariableArray, XVariableTree,
-    };
+    use crate::variables::xvariable_type::xcsp3_core::XVariableType::{XVariableArray, XVariableTree};
     // use std::str::FromStr;
 
     pub fn str_to_interval(interval: &str) -> (i32, i32) {
@@ -125,11 +123,7 @@ pub mod xcsp3_utils {
             if tmp[0][0].parse::<i32>().is_ok() {
                 let matrix: Vec<Vec<XVarVal>> = list_to_matrix_ids(list)
                     .iter()
-                    .map(|line| {
-                        line.iter()
-                            .map(|e| XVarVal::IntVal(e.parse::<i32>().expect("argl")))
-                            .collect()
-                    })
+                    .map(|line| line.iter().map(|e| XVarVal::IntVal(e.parse::<i32>().expect("argl"))).collect())
                     .collect();
                 matrix
             } else {
@@ -146,10 +140,7 @@ pub mod xcsp3_utils {
         let mut ret: Vec<XVarVal> = vec![];
         let lists: Vec<&str> = list.split_whitespace().collect();
         for e in lists.iter() {
-            if e.trim()
-                .starts_with(|c: char| c.is_ascii_digit() || c == '-')
-                && e.contains("x")
-            {
+            if e.trim().starts_with(|c: char| c.is_ascii_digit() || c == '-') && e.contains("x") {
                 // Deal with compressed coefficient
                 if let Some((value_str, count_str)) = e.trim().split_once('x') {
                     let count: usize = count_str.parse().expect("invalid count");
@@ -188,10 +179,7 @@ pub mod xcsp3_utils {
     }
 
     ///([2,3,4],[2,4,8]) -> [[2,3,4],[2,3,5],[2,3,6],[2,3,7],[2,3,8],[2,4,4],[2,4,5],[2,4,6],[2,4,7],[2,4,8]]
-    pub fn get_all_variables_between_lower_and_upper(
-        lower: Vec<usize>,
-        upper: Vec<usize>,
-    ) -> Vec<Vec<usize>> {
+    pub fn get_all_variables_between_lower_and_upper(lower: Vec<usize>, upper: Vec<usize>) -> Vec<Vec<usize>> {
         let mut tmp: Vec<Vec<usize>> = vec![];
         for i in lower[0]..=upper[0] {
             tmp.push(vec![i]);
@@ -261,11 +249,9 @@ pub mod xcsp3_utils {
             } else if x == ')' {
                 // println!("{}",&tuple_str[last+1..i]);
                 match list[last_comma1 + 1..last_comma2].parse::<i32>() {
-                    Ok(num) => ret.push((
-                        list[last + 1..last_comma1].to_string(),
-                        num,
-                        list[last_comma2 + 1..i].to_string(),
-                    )),
+                    Ok(num) => {
+                        ret.push((list[last + 1..last_comma1].to_string(), num, list[last_comma2 + 1..i].to_string()))
+                    }
                     Err(_) => panic!("parse the transitions error: {} ", list),
                 }
                 last_comma1 = usize::MAX;
@@ -284,11 +270,7 @@ pub mod xcsp3_utils {
     /// eg str"(x1,x2,x3,x4,x5)(y1,y2,y3,y4,y5)(z1,z2,z3,z4,z5)" - > vec[[x1,x2,x3,x4,x5][y1,y2,y3,y4,y5][z1,z2,z3,z4,z5]]
     pub fn list_to_matrix_ids(list: &str) -> Vec<Vec<String>> {
         let mut ret: Vec<Vec<String>> = Vec::new();
-        let list = list
-            .to_string()
-            .replace(')', "@")
-            .replace('\n', "")
-            .replace('(', " ");
+        let list = list.to_string().replace(')', "@").replace('\n', "").replace('(', " ");
         let lists: Vec<&str> = list.split('@').collect();
         for e in lists.iter() {
             if !e.is_empty() {

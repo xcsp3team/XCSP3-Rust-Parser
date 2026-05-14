@@ -26,9 +26,7 @@
 *=============================================================================
 */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
     use crate::utils::utils_functions::xcsp3_utils::{list_to_transitions, list_to_vec_var_val};
@@ -70,13 +68,7 @@ pub mod xcsp3_core {
                 finals.push(s.to_string());
             }
             let transitions = list_to_transitions(transitions_str);
-            XRegular::new(
-                scope_vec_str,
-                set,
-                start_str.to_string(),
-                finals,
-                transitions,
-            )
+            XRegular::new(scope_vec_str, set, start_str.to_string(), finals, transitions)
         }
 
         pub fn new(
@@ -86,13 +78,7 @@ pub mod xcsp3_core {
             r#final: Vec<String>,
             transitions: Vec<(String, i32, String)>,
         ) -> Self {
-            XRegular {
-                scope,
-                set,
-                start,
-                r#final,
-                transitions,
-            }
+            XRegular { scope, set, start, r#final, transitions }
         }
 
         pub fn start(&self) -> &str {

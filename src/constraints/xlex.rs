@@ -26,9 +26,7 @@
 *=============================================================================
 */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, max_arg_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
@@ -74,11 +72,7 @@ pub mod xcsp3_core {
         }
 
         pub fn new(lists: Vec<Vec<XVarVal>>, operator: Operator, set: &'a XVariableSet) -> Self {
-            Self {
-                lists,
-                operator,
-                set,
-            }
+            Self { lists, operator, set }
         }
 
         pub fn lists(&self) -> &Vec<Vec<XVarVal>> {

@@ -30,9 +30,7 @@ pub mod xcsp3_core {
     use crate::constraints::xconstraint_type::xcsp3_core::XConstraintType;
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
-    use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, to_bool_option, to_i32_option,
-    };
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option, to_i32_option};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
 
     #[derive(Clone)]
@@ -58,11 +56,9 @@ pub mod xcsp3_core {
                 .iter()
                 .flat_map(|e| match e {
                     XVarVal::IntVar(st) if st.contains('(') => vec![e.clone()],
-                    XVarVal::IntVar(st) => set
-                        .construct_scope(&[st])
-                        .iter()
-                        .map(|(var, _)| XVarVal::IntVar(var.clone()))
-                        .collect(),
+                    XVarVal::IntVar(st) => {
+                        set.construct_scope(&[st]).iter().map(|(var, _)| XVarVal::IntVar(var.clone())).collect()
+                    }
                     _ => vec![e.clone()],
                 })
                 .collect();
@@ -80,14 +76,7 @@ pub mod xcsp3_core {
             collect: Option<i32>,
             set: &'a XVariableSet,
         ) -> Self {
-            XSlide {
-                args,
-                template,
-                circular,
-                offset,
-                collect,
-                set,
-            }
+            XSlide { args, template, circular, offset, collect, set }
         }
 
         pub fn args(&self) -> &Vec<XVarVal> {

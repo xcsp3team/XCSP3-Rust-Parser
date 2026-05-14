@@ -118,8 +118,7 @@ pub mod xcsp3_core {
         pub fn build_variable_array(&mut self, id: &str, sizes: &str, domain_string: &str) {
             let domain = XDomainInteger::from_string(domain_string);
             let array = XVariableType::new_array(id, sizes, domain);
-            self.id_to_index
-                .insert(array.get_id(), self.variables.len());
+            self.id_to_index.insert(array.get_id(), self.variables.len());
             self.variables.push(array);
         }
 

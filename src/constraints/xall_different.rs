@@ -27,9 +27,7 @@
 */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::utils::utils_functions::xcsp3_utils::list_to_vec_var_val;
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;

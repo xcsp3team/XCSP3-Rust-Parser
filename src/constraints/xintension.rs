@@ -42,17 +42,12 @@ pub mod xcsp3_core {
     impl XConstraintUnfold for XIntention<'_> {
         fn extract_parameters(&mut self, arg: &[XVarVal]) {
             for index in 0..arg.len() {
-                self.expression = self
-                    .expression
-                    .replace(&format!("%{}", index), arg[index].to_string().as_str());
+                self.expression = self.expression.replace(&format!("%{}", index), arg[index].to_string().as_str());
             }
         }
         fn max_args_used(&self) -> i32 {
             let re = regex::Regex::new(r"%(\d+)").unwrap();
-            let tmp = re
-                .captures_iter(&*self.expression)
-                .filter_map(|c| c[1].parse::<i32>().ok())
-                .max();
+            let tmp = re.captures_iter(&*self.expression).filter_map(|c| c[1].parse::<i32>().ok()).max();
             match tmp {
                 Some(v) => v,
                 None => panic!("Failed to arguments in expression {}", self.expression),

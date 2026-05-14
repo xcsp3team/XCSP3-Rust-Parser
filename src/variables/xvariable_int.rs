@@ -49,11 +49,7 @@ pub mod xcsp3_core {
 
     impl Display for XVariableInt {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(
-                f,
-                "XVariableInt: id = {}, domain = {}",
-                self.id, self.domain
-            )
+            write!(f, "XVariableInt: id = {}, domain = {}", self.id, self.domain)
         }
     }
 }

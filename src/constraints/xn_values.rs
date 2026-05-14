@@ -27,8 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -68,18 +67,10 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XNValues<'a> {
-        pub fn from_str(
-            list: &str,
-            condition: &str,
-            except_str: &str,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, condition: &str, except_str: &str, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
-            let except: Option<Vec<XVarVal>> = if except_str.is_empty() {
-                None
-            } else {
-                Some(list_to_vec_var_val(except_str))
-            };
+            let except: Option<Vec<XVarVal>> =
+                if except_str.is_empty() { None } else { Some(list_to_vec_var_val(except_str)) };
             let (ope, rand) = str_to_condition(condition);
             Self::new(scope, set, ope, rand, except)
         }
@@ -91,13 +82,7 @@ pub mod xcsp3_core {
             operand: Operand,
             except: Option<Vec<XVarVal>>,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                operator,
-                operand,
-                except,
-            }
+            Self { scope, set, operator, operand, except }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

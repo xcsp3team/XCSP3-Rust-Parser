@@ -27,8 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -72,15 +71,7 @@ pub mod xcsp3_core {
         ) -> Self {
             let scope = list_to_vec_var_val(list);
             let (ope, rand) = str_to_condition(condition);
-            Self::new(
-                scope,
-                set,
-                ope,
-                rand,
-                rank.parse().unwrap(),
-                start_index,
-                is_maximum_or_minimum,
-            )
+            Self::new(scope, set, ope, rand, rank.parse().unwrap(), start_index, is_maximum_or_minimum)
         }
         pub fn new(
             scope: Vec<XVarVal>,
@@ -91,15 +82,7 @@ pub mod xcsp3_core {
             start_index: i32,
             is_maximum_or_minimum: bool,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                operator,
-                rank,
-                start_index,
-                operand,
-                is_maximum_or_minimum,
-            }
+            Self { scope, set, operator, rank, start_index, operand, is_maximum_or_minimum }
         }
         pub fn is_maximum(&self) -> bool {
             self.is_maximum_or_minimum

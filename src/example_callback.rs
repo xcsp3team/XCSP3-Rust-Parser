@@ -42,10 +42,7 @@ pub struct PrintingSolver {
 
 impl PrintingSolver {
     pub fn new() -> Self {
-        Self {
-            nb_variables: 0,
-            nb_constraints: 0,
-        }
+        Self { nb_variables: 0, nb_constraints: 0 }
     }
 }
 
@@ -128,10 +125,7 @@ impl XcspCallback for PrintingSolver {
 
     fn on_constraint_all_different_except(&mut self, scope: &[String], except: &[i32]) {
         self.nb_constraints += 1;
-        println!(
-            "  [AllDiff Except]  {:?} with except values: {:?}",
-            scope, except
-        );
+        println!("  [AllDiff Except]  {:?} with except values: {:?}", scope, except);
     }
 
     fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
@@ -164,36 +158,16 @@ impl XcspCallback for PrintingSolver {
 
     fn on_constraint_ordered_v2(&mut self, scope: &[String], lengths: &[i32], operator: Operator) {
         self.nb_constraints += 1;
-        println!(
-            "  [Ordered V2]  {:?}, length: {:?} operator {:?}",
-            scope, lengths, operator
-        );
+        println!("  [Ordered V2]  {:?}, length: {:?} operator {:?}", scope, lengths, operator);
     }
 
-    fn on_constraint_ordered_v3(
-        &mut self,
-        scope: &[String],
-        lengths: &[String],
-        operator: Operator,
-    ) {
+    fn on_constraint_ordered_v3(&mut self, scope: &[String], lengths: &[String], operator: Operator) {
         self.nb_constraints += 1;
-        println!(
-            "  [Ordered V3]  {:?}, length: {:?} operator {:?}",
-            scope, lengths, operator
-        );
+        println!("  [Ordered V3]  {:?}, length: {:?} operator {:?}", scope, lengths, operator);
     }
-    fn on_constraint_extension(
-        &mut self,
-        scope: &[String],
-        tuples: &Vec<Vec<i32>>,
-        is_support: bool,
-        has_star: bool,
-    ) {
+    fn on_constraint_extension(&mut self, scope: &[String], tuples: &Vec<Vec<i32>>, is_support: bool, has_star: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Extension] scope={:?} is_support={} has_star={}",
-            scope, is_support, has_star
-        );
+        println!("  [Extension] scope={:?} is_support={} has_star={}", scope, is_support, has_star);
         if tuples.len() > 10 {
             println!("           too many tuples. nb tuples: {}", tuples.len());
         } else {
@@ -203,10 +177,7 @@ impl XcspCallback for PrintingSolver {
     }
     fn on_constraint_unary(&mut self, _scope: &String, values: &[i32], is_support: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Unary]  {:?} values: {:?} is_support: {}",
-            _scope, values, is_support
-        );
+        println!("  [Unary]  {:?} values: {:?} is_support: {}", _scope, values, is_support);
     }
 
     fn on_constraint_intention(&mut self, scope: &[String], tree: &ExpressionTree) {
@@ -227,10 +198,7 @@ impl XcspCallback for PrintingSolver {
         transitions: &[(String, i32, String)],
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Regular]  {:?}. start={}, finals={:?}",
-            scope, start, finals
-        );
+        println!("  [Regular]  {:?}. start={}, finals={:?}", scope, start, finals);
         println!("           transitions: {:?}", transitions);
     }
 
@@ -245,56 +213,24 @@ impl XcspCallback for PrintingSolver {
         println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
     }
 
-    fn on_constraint_sum_v2(
-        &mut self,
-        scope: &[String],
-        coeffs: &[i32],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_sum_v2(&mut self, scope: &[String], coeffs: &[i32], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [Sum]  {:?} * {:?} {:?}, {:?}",
-            scope, coeffs, operator, operand
-        );
+        println!("  [Sum]  {:?} * {:?} {:?}, {:?}", scope, coeffs, operator, operand);
     }
 
-    fn on_constraint_sum_v3(
-        &mut self,
-        scope: &[String],
-        coeffs: &[String],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_sum_v3(&mut self, scope: &[String], coeffs: &[String], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [Sum]  {:?} * {:?} {:?}, {:?}",
-            scope, coeffs, operator, operand
-        );
+        println!("  [Sum]  {:?} * {:?} {:?}, {:?}", scope, coeffs, operator, operand);
     }
 
-    fn on_constraint_sum_v4(
-        &mut self,
-        scope: &[ExpressionTree],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_sum_v4(&mut self, scope: &[ExpressionTree], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
         println!("  [Sum]  {:?} {:?} {:?}", scope, operator, operand);
     }
 
-    fn on_constraint_sum_v5(
-        &mut self,
-        scope: &[ExpressionTree],
-        coeffs: &[i32],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_sum_v5(&mut self, scope: &[ExpressionTree], coeffs: &[i32], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [Sum]  {:?} * {:?} {:?} {:?}",
-            scope, coeffs, operator, operand
-        );
+        println!("  [Sum]  {:?} * {:?} {:?} {:?}", scope, coeffs, operator, operand);
     }
 
     fn on_constraint_maximum_v1(&mut self, scope: &[String], operator: Operator, operand: Operand) {
@@ -302,12 +238,7 @@ impl XcspCallback for PrintingSolver {
         println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
-    fn on_constraint_maximum_v2(
-        &mut self,
-        scope: &[ExpressionTree],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_maximum_v2(&mut self, scope: &[ExpressionTree], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
         println!("  [Maximum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
@@ -317,12 +248,7 @@ impl XcspCallback for PrintingSolver {
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
 
-    fn on_constraint_minimum_v2(
-        &mut self,
-        scope: &[ExpressionTree],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_minimum_v2(&mut self, scope: &[ExpressionTree], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
         println!("  [Minimum]  {:?} {:?}, {:?}", scope, operator, operand);
     }
@@ -336,10 +262,7 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Maximum Arg]  {:?} rank={} start={} {:?}, {:?}",
-            scope, rank, start_index, operator, operand
-        );
+        println!("  [Maximum Arg]  {:?} rank={} start={} {:?}, {:?}", scope, rank, start_index, operator, operand);
     }
 
     fn on_constraint_maximum_arg_v2(
@@ -351,10 +274,7 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Maxnimum Arg]  {:?} rank={} start={} {:?}, {:?}",
-            scope, rank, start_index, operator, operand
-        );
+        println!("  [Maxnimum Arg]  {:?} rank={} start={} {:?}, {:?}", scope, rank, start_index, operator, operand);
     }
 
     fn on_constraint_minimum_arg_v1(
@@ -366,10 +286,7 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
-            scope, rank, start_index, operator, operand
-        );
+        println!("  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}", scope, rank, start_index, operator, operand);
     }
 
     fn on_constraint_minimum_arg_v2(
@@ -381,10 +298,7 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}",
-            scope, rank, start_index, operator, operand
-        );
+        println!("  [Minimum Arg]  {:?} rank={} start={} {:?}, {:?}", scope, rank, start_index, operator, operand);
     }
 
     fn on_constraint_count_v1(
@@ -395,38 +309,17 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Count]  {:?} - values: {:?} {:?} {:?}",
-            scope, values, operator, operand
-        );
+        println!("  [Count]  {:?} - values: {:?} {:?} {:?}", scope, values, operator, operand);
     }
 
-    fn on_constraint_count_v2(
-        &mut self,
-        scope: &[String],
-        values: &[i32],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_count_v2(&mut self, scope: &[String], values: &[i32], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [Count]  {:?} - values: {:?} {:?} {:?}",
-            scope, values, operator, operand
-        );
+        println!("  [Count]  {:?} - values: {:?} {:?} {:?}", scope, values, operator, operand);
     }
 
-    fn on_constraint_count_v4(
-        &mut self,
-        scope: &[String],
-        values: &[String],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_count_v4(&mut self, scope: &[String], values: &[String], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [Count]  {:?} - values: {:?} {:?} {:?}",
-            scope, values, operator, operand
-        );
+        println!("  [Count]  {:?} - values: {:?} {:?} {:?}", scope, values, operator, operand);
     }
 
     fn on_constraint_count_v3(
@@ -437,10 +330,7 @@ impl XcspCallback for PrintingSolver {
         operand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Count]  {:?} - values: {:?} {:?} {:?}",
-            scope, values, operator, operand
-        );
+        println!("  [Count]  {:?} - values: {:?} {:?} {:?}", scope, values, operator, operand);
     }
 
     fn on_constraint_cumulative_v1(
@@ -572,26 +462,12 @@ impl XcspCallback for PrintingSolver {
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
 
-    fn on_constraint_nvalues_v2(
-        &mut self,
-        scope: &[String],
-        except: &[i32],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_nvalues_v2(&mut self, scope: &[String], except: &[i32], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [NValues]  {:?} (exception: {:?}) {:?} {:?}",
-            scope, except, operator, operand
-        );
+        println!("  [NValues]  {:?} (exception: {:?}) {:?} {:?}", scope, except, operator, operand);
     }
 
-    fn on_constraint_nvalues_v3(
-        &mut self,
-        scope: &[ExpressionTree],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_nvalues_v3(&mut self, scope: &[ExpressionTree], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
         println!("  [NValues]  {:?}  {:?} {:?}", scope, operator, operand);
     }
@@ -606,31 +482,13 @@ impl XcspCallback for PrintingSolver {
         println!("  [Element V2] {:?} value={}", scope, value);
     }
 
-    fn on_constraint_element_v3(
-        &mut self,
-        list: &[String],
-        start_index: i32,
-        index: String,
-        value: String,
-    ) {
+    fn on_constraint_element_v3(&mut self, list: &[String], start_index: i32, index: String, value: String) {
         self.nb_constraints += 1;
-        println!(
-            "  [Element V3] {:?} start={} index= {} value={}",
-            list, start_index, index, value
-        );
+        println!("  [Element V3] {:?} start={} index= {} value={}", list, start_index, index, value);
     }
-    fn on_constraint_element_v4(
-        &mut self,
-        list: &[String],
-        start_index: i32,
-        index: String,
-        value: i32,
-    ) {
+    fn on_constraint_element_v4(&mut self, list: &[String], start_index: i32, index: String, value: i32) {
         self.nb_constraints += 1;
-        println!(
-            "  [Element V4] {:?} start={} index= {} value={}",
-            list, start_index, index, value
-        );
+        println!("  [Element V4] {:?} start={} index= {} value={}", list, start_index, index, value);
     }
 
     fn on_constraint_element_v5(
@@ -648,31 +506,13 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
-    fn on_constraint_element_v6(
-        &mut self,
-        list: &[i32],
-        start_index: i32,
-        index: String,
-        value: String,
-    ) {
+    fn on_constraint_element_v6(&mut self, list: &[i32], start_index: i32, index: String, value: String) {
         self.nb_constraints += 1;
-        println!(
-            "  [Element V6] {:?} start={} index= {} value={}",
-            list, start_index, index, value
-        );
+        println!("  [Element V6] {:?} start={} index= {} value={}", list, start_index, index, value);
     }
-    fn on_constraint_element_v7(
-        &mut self,
-        list: &[i32],
-        start_index: i32,
-        index: String,
-        value: i32,
-    ) {
+    fn on_constraint_element_v7(&mut self, list: &[i32], start_index: i32, index: String, value: i32) {
         self.nb_constraints += 1;
-        println!(
-            "  [Element V7] {:?} start={} index= {} value={}",
-            list, start_index, index, value
-        );
+        println!("  [Element V7] {:?} start={} index= {} value={}", list, start_index, index, value);
     }
 
     fn on_constraint_element_v8(
@@ -788,43 +628,19 @@ impl XcspCallback for PrintingSolver {
         );
     }
 
-    fn on_constraint_no_overlap_v1(
-        &mut self,
-        scope: &[String],
-        lengths: &[i32],
-        zero_ignored: bool,
-    ) {
+    fn on_constraint_no_overlap_v1(&mut self, scope: &[String], lengths: &[i32], zero_ignored: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
-            scope, lengths, zero_ignored
-        );
+        println!("  [NoOverlap]  {:?}  lengths={:?} zero {}", scope, lengths, zero_ignored);
     }
 
-    fn on_constraint_no_overlap_v2(
-        &mut self,
-        scope: &[String],
-        lengths: &[String],
-        zero_ignored: bool,
-    ) {
+    fn on_constraint_no_overlap_v2(&mut self, scope: &[String], lengths: &[String], zero_ignored: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
-            scope, lengths, zero_ignored
-        );
+        println!("  [NoOverlap]  {:?}  lengths={:?} zero {}", scope, lengths, zero_ignored);
     }
 
-    fn on_constraint_no_overlap_k_dim_v1(
-        &mut self,
-        origins: &Vec<Vec<String>>,
-        lengths: &Vec<Vec<i32>>,
-        zero: bool,
-    ) {
+    fn on_constraint_no_overlap_k_dim_v1(&mut self, origins: &Vec<Vec<String>>, lengths: &Vec<Vec<i32>>, zero: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
-            origins, lengths, zero
-        );
+        println!("  [NoOverlap]  {:?}  lengths={:?} zero {}", origins, lengths, zero);
     }
 
     fn on_constraint_no_overlap_k_dim_v2(
@@ -834,10 +650,7 @@ impl XcspCallback for PrintingSolver {
         zero: bool,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
-            origins, lengths, zero
-        );
+        println!("  [NoOverlap]  {:?}  lengths={:?} zero {}", origins, lengths, zero);
     }
 
     fn on_constraint_no_overlap_k_dim_v3(
@@ -847,80 +660,32 @@ impl XcspCallback for PrintingSolver {
         zero: bool,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [NoOverlap]  {:?}  lengths={:?} zero {}",
-            origins, lengths, zero
-        );
+        println!("  [NoOverlap]  {:?}  lengths={:?} zero {}", origins, lengths, zero);
     }
 
-    fn on_constraint_cardinality_v1(
-        &mut self,
-        scope: &[String],
-        values: &[i32],
-        occurs: &[i32],
-        closed: bool,
-    ) {
+    fn on_constraint_cardinality_v1(&mut self, scope: &[String], values: &[i32], occurs: &[i32], closed: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
-    fn on_constraint_cardinality_v2(
-        &mut self,
-        scope: &[String],
-        values: &[i32],
-        occurs: &[String],
-        closed: bool,
-    ) {
+    fn on_constraint_cardinality_v2(&mut self, scope: &[String], values: &[i32], occurs: &[String], closed: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
-    fn on_constraint_cardinality_v3(
-        &mut self,
-        scope: &[String],
-        values: &[i32],
-        occurs: &[(i32, i32)],
-        closed: bool,
-    ) {
+    fn on_constraint_cardinality_v3(&mut self, scope: &[String], values: &[i32], occurs: &[(i32, i32)], closed: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
-    fn on_constraint_cardinality_v4(
-        &mut self,
-        scope: &[String],
-        values: &[String],
-        occurs: &[i32],
-        closed: bool,
-    ) {
+    fn on_constraint_cardinality_v4(&mut self, scope: &[String], values: &[String], occurs: &[i32], closed: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
-    fn on_constraint_cardinality_v5(
-        &mut self,
-        scope: &[String],
-        values: &[String],
-        occurs: &[String],
-        closed: bool,
-    ) {
+    fn on_constraint_cardinality_v5(&mut self, scope: &[String], values: &[String], occurs: &[String], closed: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
     fn on_constraint_cardinality_v6(
@@ -931,10 +696,7 @@ impl XcspCallback for PrintingSolver {
         closed: bool,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}",
-            scope, occurs, values, closed
-        );
+        println!("  [Cardinality]  {:?}  occurs={:?} values={:?} closed {}", scope, occurs, values, closed);
     }
 
     fn on_constraint_circuit_v1(&mut self, scope: &Vec<String>) {
@@ -959,10 +721,7 @@ impl XcspCallback for PrintingSolver {
 
     fn on_constraint_precedence_v2(&mut self, scope: &[String], values: &[i32], covered: bool) {
         self.nb_constraints += 1;
-        println!(
-            "  [Precedence V2]  {:?} covered={} values={:?}",
-            scope, covered, values
-        );
+        println!("  [Precedence V2]  {:?} covered={} values={:?}", scope, covered, values);
     }
 
     fn on_constraint_channel_v1(&mut self, scope: &[String], start_index: i32) {
@@ -986,44 +745,22 @@ impl XcspCallback for PrintingSolver {
 
     fn on_constraint_channel_v3(&mut self, _list: &[String], _start_index: i32, _value: String) {
         self.nb_constraints += 1;
-        println!(
-            "  [Channel V3]  {:?} start_index={}, _value={:?}",
-            _list, _start_index, _value
-        );
+        println!("  [Channel V3]  {:?} start_index={}, _value={:?}", _list, _start_index, _value);
     }
 
-    fn on_constraint_stretch_v1(
-        &mut self,
-        scope: &[String],
-        values: &[(i32, i32)],
-        widths: &[i32],
-    ) {
+    fn on_constraint_stretch_v1(&mut self, scope: &[String], values: &[(i32, i32)], widths: &[i32]) {
         self.nb_constraints += 1;
-        println!(
-            "  [Stretch V1]  {:?} values={:?} widths={:?}",
-            scope, values, widths
-        );
+        println!("  [Stretch V1]  {:?} values={:?} widths={:?}", scope, values, widths);
     }
 
-    fn on_constraint_stretch_v2(
-        &mut self,
-        scope: &[String],
-        values: &[(i32, i32)],
-        widths: &[i32],
-    ) {
+    fn on_constraint_stretch_v2(&mut self, scope: &[String], values: &[(i32, i32)], widths: &[i32]) {
         self.nb_constraints += 1;
-        println!(
-            "  [Stretch V2]  {:?} values={:?} widths={:?}",
-            scope, values, widths
-        );
+        println!("  [Stretch V2]  {:?} values={:?} widths={:?}", scope, values, widths);
     }
 
     fn on_constraint_clause(&mut self, _positive: &[String], _negative: &[String]) {
         self.nb_constraints += 1;
-        println!(
-            "  [Clause]  pos_lit {:?} neg lit {:?}",
-            _positive, _negative
-        );
+        println!("  [Clause]  pos_lit {:?} neg lit {:?}", _positive, _negative);
     }
 
     fn on_constraint_flow(
@@ -1053,56 +790,32 @@ impl XcspCallback for PrintingSolver {
         _poperand: Operand,
     ) {
         self.nb_constraints += 1;
-        println!(
-            "  [Knapsack]: {:?} weight: {:?} profits:{:?}",
-            _scope, _weights, _profits
-        );
+        println!("  [Knapsack]: {:?} weight: {:?} profits:{:?}", _scope, _weights, _profits);
     }
 
-    fn on_constraint_bin_packing_v1(
-        &mut self,
-        scope: &[String],
-        sizes: &[i32],
-        operator: Operator,
-        operand: Operand,
-    ) {
+    fn on_constraint_bin_packing_v1(&mut self, scope: &[String], sizes: &[i32], operator: Operator, operand: Operand) {
         self.nb_constraints += 1;
-        println!(
-            "  [BinPacking V1]  {:?} sizes={:?} {:?} {:?}",
-            scope, sizes, operator, operand
-        );
+        println!("  [BinPacking V1]  {:?} sizes={:?} {:?} {:?}", scope, sizes, operator, operand);
     }
 
     fn on_constraint_bin_packing_v2(&mut self, scope: &[String], sizes: &[i32], limits: &[i32]) {
         self.nb_constraints += 1;
-        println!(
-            "  [BinPacking V2]  {:?} sizes={:?} limits={:?}",
-            scope, sizes, limits
-        );
+        println!("  [BinPacking V2]  {:?} sizes={:?} limits={:?}", scope, sizes, limits);
     }
 
     fn on_constraint_bin_packing_v3(&mut self, scope: &[String], sizes: &[i32], limits: &[String]) {
         self.nb_constraints += 1;
-        println!(
-            "  [BinPacking V3]  {:?} sizes={:?} limits={:?}",
-            scope, sizes, limits
-        );
+        println!("  [BinPacking V3]  {:?} sizes={:?} limits={:?}", scope, sizes, limits);
     }
 
     fn on_constraint_bin_packing_v4(&mut self, scope: &[String], sizes: &[i32], loads: &[i32]) {
         self.nb_constraints += 1;
-        println!(
-            "  [BinPacking V4]  {:?} sizes={:?} loads={:?}",
-            scope, sizes, loads
-        );
+        println!("  [BinPacking V4]  {:?} sizes={:?} loads={:?}", scope, sizes, loads);
     }
 
     fn on_constraint_bin_packing_v5(&mut self, scope: &[String], sizes: &[i32], loads: &[String]) {
         self.nb_constraints += 1;
-        println!(
-            "  [BinPacking V5]  {:?} sizes={:?} loads={:?}",
-            scope, sizes, loads
-        );
+        println!("  [BinPacking V5]  {:?} sizes={:?} loads={:?}", scope, sizes, loads);
     }
 
     fn on_constraint_lex(&mut self, lists: &Vec<Vec<String>>, operator: Operator) {
@@ -1131,69 +844,35 @@ impl XcspCallback for PrintingSolver {
     }
 
     fn on_minimize_v1(&mut self, _type: XElementOperator, scope: &[String], coefs: &[i32]) {
-        println!(
-            "  [Minimize V1] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Minimize V1] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_maximize_v1(&mut self, _type: XElementOperator, scope: &[String], coefs: &[i32]) {
-        println!(
-            "  [Maximize V1] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Maximize V1] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_minimize_v2(&mut self, _type: XElementOperator, scope: &[String], coefs: &[String]) {
-        println!(
-            "  [Minimize V2] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Minimize V2] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_maximize_v2(&mut self, _type: XElementOperator, scope: &[String], coefs: &[String]) {
-        println!(
-            "  [Maximize V2] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Maximize V2] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_minimize_v3(&mut self, _type: XElementOperator, scope: &[ExpressionTree], coefs: &[i32]) {
-        println!(
-            "  [Minimize V3] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Minimize V3] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_maximize_v3(&mut self, _type: XElementOperator, scope: &[ExpressionTree], coefs: &[i32]) {
-        println!(
-            "  [Maximize V3] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+        println!("  [Maximize V3] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
-    fn on_minimize_v4(
-        &mut self,
-        _type: XElementOperator,
-        scope: &[ExpressionTree],
-        coefs: &[String],
-    ) {
-        println!(
-            "  [Minimize V4] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+    fn on_minimize_v4(&mut self, _type: XElementOperator, scope: &[ExpressionTree], coefs: &[String]) {
+        println!("  [Minimize V4] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
-    fn on_maximize_v4(
-        &mut self,
-        _type: XElementOperator,
-        scope: &[ExpressionTree],
-        coefs: &[String],
-    ) {
-        println!(
-            "  [Maximize V4] type={:?} {:?} coefs={:?}",
-            _type, scope, coefs
-        );
+    fn on_maximize_v4(&mut self, _type: XElementOperator, scope: &[ExpressionTree], coefs: &[String]) {
+        println!("  [Maximize V4] type={:?} {:?} coefs={:?}", _type, scope, coefs);
     }
 
     fn on_minimize_v5(&mut self, _type: XElementOperator, scope: &[String]) {

@@ -108,10 +108,7 @@ pub mod xcsp3_xml {
         pub fn from_string(string: &str) -> Result<XcspXmlModel, DeError> {
             let now = Instant::now();
             let r = from_str(string);
-            println!(
-                "read the instance by {} microseconds",
-                now.elapsed().as_micros()
-            );
+            println!("read the instance by {} microseconds", now.elapsed().as_micros());
             r
         }
 
@@ -133,11 +130,7 @@ pub mod xcsp3_xml {
                 match var_type {
                     VariableType::Var(var_string) => {
                         if var_string.r#as.is_empty() {
-                            variables.build_variable_int(
-                                &var_string.id,
-                                &var_string.value,
-                                &var_string.r#type,
-                            );
+                            variables.build_variable_int(&var_string.id, &var_string.value, &var_string.r#type);
                         } else {
                             variables.build_variable_int_as(&var_string.id, &var_string.r#as);
                         }
@@ -199,12 +192,7 @@ pub mod xcsp3_xml {
                         XcspXmlModel::parse_constraint(e, set);
                     }
                 }
-                ConstraintType::AllDifferent {
-                    vars,
-                    list,
-                    except,
-                    matrix,
-                } => {
+                ConstraintType::AllDifferent { vars, list, except, matrix } => {
                     if !vars.is_empty() {
                         set.build_all_different(vars)
                     } else if matrix.is_empty() {
@@ -254,13 +242,7 @@ pub mod xcsp3_xml {
                     }
                 }
 
-                ConstraintType::Ordered {
-                    vars,
-                    operator,
-                    case,
-                    lengths,
-                    list,
-                } => {
+                ConstraintType::Ordered { vars, operator, case, lengths, list } => {
                     if list.is_empty() {
                         let op: String = match case.as_str() {
                             "increasing" => String::from("ge"),
@@ -282,11 +264,7 @@ pub mod xcsp3_xml {
                         set.build_intention(function);
                     }
                 }
-                ConstraintType::Extension {
-                    vars,
-                    supports,
-                    conflicts,
-                } => {
+                ConstraintType::Extension { vars, supports, conflicts } => {
                     if supports.is_empty() {
                         set.build_extension(vars, conflicts, false)
                     } else if conflicts.is_empty() {
@@ -295,76 +273,37 @@ pub mod xcsp3_xml {
                         panic!("can't build extension, conflicts or supports must be non empty.")
                     }
                 }
-                ConstraintType::Regular {
-                    vars,
-                    transitions,
-                    start,
-                    r#final,
-                } => set.build_regular(vars, transitions, start, r#final),
+                ConstraintType::Regular { vars, transitions, start, r#final } => {
+                    set.build_regular(vars, transitions, start, r#final)
+                }
                 ConstraintType::Mdd { vars, transitions } => set.build_mdd(vars, transitions),
-                ConstraintType::Sum {
-                    vars,
-                    condition,
-                    coeffs,
-                } => set.build_sum(vars, condition, coeffs),
-                ConstraintType::Count {
-                    vars,
-                    values,
-                    condition,
-                } => set.build_count(vars, condition, values),
+                ConstraintType::Sum { vars, condition, coeffs } => set.build_sum(vars, condition, coeffs),
+                ConstraintType::Count { vars, values, condition } => set.build_count(vars, condition, values),
 
-                ConstraintType::NValues {
-                    vars,
-                    except,
-                    condition,
-                } => set.build_n_values(vars, condition, except),
-                ConstraintType::Cardinality {
-                    list,
-                    values,
-                    occurs,
-                } => set.build_cardinality(list, &values.vars, occurs, &values.closed),
+                ConstraintType::NValues { vars, except, condition } => set.build_n_values(vars, condition, except),
+                ConstraintType::Cardinality { list, values, occurs } => {
+                    set.build_cardinality(list, &values.vars, occurs, &values.closed)
+                }
                 ConstraintType::Minimum { list, condition } => set.build_minimum(list, condition),
                 ConstraintType::Maximum { list, condition } => set.build_maximum(list, condition),
-                ConstraintType::MinimumArg {
-                    list,
-                    rank,
-                    condition,
-                } => {
+                ConstraintType::MinimumArg { list, rank, condition } => {
                     set.build_minimum_arg(
                         &*list.value,
                         if rank.is_empty() { "any" } else { rank },
-                        if list.start_index.is_empty() {
-                            0
-                        } else {
-                            list.start_index.parse().unwrap()
-                        },
+                        if list.start_index.is_empty() { 0 } else { list.start_index.parse().unwrap() },
                         condition,
                     );
                 }
-                ConstraintType::MaximumArg {
-                    list,
-                    rank,
-                    condition,
-                } => {
+                ConstraintType::MaximumArg { list, rank, condition } => {
                     set.build_maximum_arg(
                         &*list.value,
                         if rank.is_empty() { "any" } else { rank },
-                        if list.start_index.is_empty() {
-                            0
-                        } else {
-                            list.start_index.parse().unwrap()
-                        },
+                        if list.start_index.is_empty() { 0 } else { list.start_index.parse().unwrap() },
                         condition,
                     );
                 }
 
-                ConstraintType::Element {
-                    vars,
-                    value,
-                    index,
-                    condition,
-                    matrix,
-                } => {
+                ConstraintType::Element { vars, value, index, condition, matrix } => {
                     if matrix.value.is_empty() {
                         set.build_element(&vars.value, value, index, &vars.start_index, condition)
                     } else {
@@ -379,46 +318,29 @@ pub mod xcsp3_xml {
                     }
                 }
 
-                ConstraintType::Stretch {
-                    vars,
-                    values,
-                    widths,
-                    patterns,
-                } => set.build_stretch(vars, values, widths, patterns),
-                ConstraintType::NoOverlap {
-                    origins,
-                    lengths,
-                    zero_ignored,
-                } => {
+                ConstraintType::Stretch { vars, values, widths, patterns } => {
+                    set.build_stretch(vars, values, widths, patterns)
+                }
+                ConstraintType::NoOverlap { origins, lengths, zero_ignored } => {
                     if origins.contains(',') && origins.contains('(') {
                         set.build_no_overlap_k_dim(origins, lengths, zero_ignored);
                     } else {
                         set.build_no_overlap(origins, lengths, zero_ignored);
                     }
                 }
-                ConstraintType::BinPacking {
-                    list,
-                    sizes,
-                    condition,
-                    limits,
-                    loads,
-                } => set.build_bin_packing(list, sizes, condition, limits, loads),
-                ConstraintType::Cumulative {
-                    origins,
-                    lengths,
-                    heights,
-                    condition,
-                    ends,
-                    machines,
-                } => set.build_cumulative(
-                    origins,
-                    lengths,
-                    heights,
-                    &condition.value,
-                    ends,
-                    machines,
-                    &condition.start_index,
-                ),
+                ConstraintType::BinPacking { list, sizes, condition, limits, loads } => {
+                    set.build_bin_packing(list, sizes, condition, limits, loads)
+                }
+                ConstraintType::Cumulative { origins, lengths, heights, condition, ends, machines } => set
+                    .build_cumulative(
+                        origins,
+                        lengths,
+                        heights,
+                        &condition.value,
+                        ends,
+                        machines,
+                        &condition.start_index,
+                    ),
                 ConstraintType::Instantiation { vars, values } => {
                     // println!("{}{:?}", vars, values);
                     set.build_instantiation(vars, values);
@@ -440,60 +362,30 @@ pub mod xcsp3_xml {
                         }
                     }
                 }
-                ConstraintType::Channel {
-                    lists,
-                    with_value,
-                    simplified_list,
-                } => {
+                ConstraintType::Channel { lists, with_value, simplified_list } => {
                     if simplified_list.is_empty() == false {
                         set.build_channel(simplified_list, "0", "", "0", "");
                         return;
                     }
                     if with_value.is_empty() {
-                        let st1 = if lists[0].start_index.is_empty() {
-                            "0"
-                        } else {
-                            &*lists[0].start_index
-                        };
+                        let st1 = if lists[0].start_index.is_empty() { "0" } else { &*lists[0].start_index };
                         if lists.len() == 1 {
                             set.build_channel(&lists[0].value, st1, "", "0", with_value);
                         } else {
-                            let st2 = if lists[1].start_index.is_empty() {
-                                "0"
-                            } else {
-                                &*lists[1].start_index
-                            };
-                            set.build_channel(
-                                &lists[0].value,
-                                st1,
-                                &lists[1].value,
-                                st2,
-                                with_value,
-                            );
+                            let st2 = if lists[1].start_index.is_empty() { "0" } else { &*lists[1].start_index };
+                            set.build_channel(&lists[0].value, st1, &lists[1].value, st2, with_value);
                         }
                     } else {
-                        let st1 = if lists[0].start_index.is_empty() {
-                            "0"
-                        } else {
-                            &*lists[0].start_index
-                        };
+                        let st1 = if lists[0].start_index.is_empty() { "0" } else { &*lists[0].start_index };
                         set.build_channel(&lists[0].value, st1, "", "0", with_value);
                     }
                 }
                 ConstraintType::Clause { vars } => set.build_clause(vars),
-                ConstraintType::Flow {
-                    vars,
-                    balance,
-                    weights,
-                    arcs,
-                    condition,
-                } => set.build_flow(vars, balance, weights, arcs, condition),
+                ConstraintType::Flow { vars, balance, weights, arcs, condition } => {
+                    set.build_flow(vars, balance, weights, arcs, condition)
+                }
 
-                ConstraintType::Lex {
-                    lists,
-                    matrix,
-                    operator,
-                } => {
+                ConstraintType::Lex { lists, matrix, operator } => {
                     if matrix.is_empty() == false {
                         set.build_lex_matrix(matrix, operator)
                     } else {
@@ -501,12 +393,9 @@ pub mod xcsp3_xml {
                     }
                 }
 
-                ConstraintType::Knapsack {
-                    list,
-                    weights,
-                    profits,
-                    condition,
-                } => set.build_knapsack(list, weights, profits, condition),
+                ConstraintType::Knapsack { list, weights, profits, condition } => {
+                    set.build_knapsack(list, weights, profits, condition)
+                }
                 ConstraintType::ConstraintNone => {
                     panic!("Error during parsing");
                 }

@@ -30,8 +30,7 @@ pub mod xcsp3_core {
     use std::fmt::{Display, Formatter};
 
     use crate::utils::utils_functions::xcsp3_utils::{
-        get_all_variables_between_lower_and_upper, size_to_string, sizes_to_double_vec,
-        sizes_to_vec,
+        get_all_variables_between_lower_and_upper, size_to_string, sizes_to_double_vec, sizes_to_vec,
     };
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
 
@@ -78,12 +77,7 @@ pub mod xcsp3_core {
             ret
         }
 
-        pub fn new(
-            id: &str,
-            sizes: &str,
-            domain_for: Vec<&String>,
-            domain_value: Vec<&String>,
-        ) -> Self {
+        pub fn new(id: &str, sizes: &str, domain_for: Vec<&String>, domain_value: Vec<&String>) -> Self {
             let (size_vec, _) = sizes_to_vec(sizes);
             let mut has_others = false;
             let mut nodes: Vec<XVariableTreeNode> = Vec::new();
@@ -167,26 +161,12 @@ pub mod xcsp3_core {
             ret
         }
 
-        pub fn new(
-            lower: Vec<usize>,
-            upper: Vec<usize>,
-            domain: XDomainInteger,
-        ) -> XVariableTreeNode {
-            XVariableTreeNode {
-                upper,
-                lower,
-                domain,
-                is_other: false,
-            }
+        pub fn new(lower: Vec<usize>, upper: Vec<usize>, domain: XDomainInteger) -> XVariableTreeNode {
+            XVariableTreeNode { upper, lower, domain, is_other: false }
         }
 
         pub fn new_other(domain: XDomainInteger) -> XVariableTreeNode {
-            XVariableTreeNode {
-                upper: Vec::default(),
-                lower: Vec::default(),
-                domain,
-                is_other: true,
-            }
+            XVariableTreeNode { upper: Vec::default(), lower: Vec::default(), domain, is_other: true }
         }
     }
 

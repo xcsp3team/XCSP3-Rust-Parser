@@ -47,11 +47,7 @@ pub mod xcsp3_core {
             &self.template
         }
 
-        pub fn from_str(
-            cc: XConstraintType<'a>,
-            arg_str: &[String],
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(cc: XConstraintType<'a>, arg_str: &[String], set: &'a XVariableSet) -> Self {
             let mut args: Vec<Vec<XVarVal>> = vec![];
             args.reserve(arg_str.len());
             for a in arg_str.iter() {
@@ -60,11 +56,9 @@ pub mod xcsp3_core {
                     .flat_map(|e| match e {
                         XVarVal::IntVar(st) if st.contains('(') => vec![e.clone()],
                         XVarVal::IntVar(st) if st.contains('{') => vec![e.clone()],
-                        XVarVal::IntVar(st) => set
-                            .construct_scope(&[st])
-                            .iter()
-                            .map(|(var, _)| XVarVal::IntVar(var.clone()))
-                            .collect(),
+                        XVarVal::IntVar(st) => {
+                            set.construct_scope(&[st]).iter().map(|(var, _)| XVarVal::IntVar(var.clone())).collect()
+                        }
                         _ => vec![e.clone()],
                     })
                     .collect();

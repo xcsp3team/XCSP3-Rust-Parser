@@ -27,8 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -60,10 +59,7 @@ pub mod xcsp3_core {
         }
 
         fn max_args_used(&self) -> i32 {
-            let mut tmp = max(
-                arg_in_operand(&self.profit_operand),
-                arg_in_operand(&self.weight_operand),
-            );
+            let mut tmp = max(arg_in_operand(&self.profit_operand), arg_in_operand(&self.weight_operand));
             tmp = max(tmp, max_arg_in_list(&*self.scope));
 
             tmp = max(tmp, max_arg_in_list(&*self.profits));
@@ -83,16 +79,7 @@ pub mod xcsp3_core {
             let profits = list_to_vec_var_val(profits);
             let (weight_operator, weight_operand) = str_to_condition(&*conditions[0]);
             let (profit_operator, profit_operand) = str_to_condition(&*conditions[1]);
-            Self::new(
-                scope,
-                weights,
-                profits,
-                weight_operator,
-                weight_operand,
-                profit_operator,
-                profit_operand,
-                set,
-            )
+            Self::new(scope, weights, profits, weight_operator, weight_operand, profit_operator, profit_operand, set)
         }
 
         #[allow(clippy::too_many_arguments)]
@@ -106,16 +93,7 @@ pub mod xcsp3_core {
             profit_operand: Operand,
             set: &'a XVariableSet,
         ) -> Self {
-            Self {
-                scope,
-                weights,
-                profits,
-                weight_operator,
-                weight_operand,
-                profit_operator,
-                profit_operand,
-                set,
-            }
+            Self { scope, weights, profits, weight_operator, weight_operand, profit_operator, profit_operand, set }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

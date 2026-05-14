@@ -54,16 +54,8 @@ pub mod xcsp3_core {
             Self::new(pos, neg, set)
         }
 
-        pub fn new(
-            positive_literals: Vec<XVarVal>,
-            negative_literals: Vec<XVarVal>,
-            set: &'a XVariableSet,
-        ) -> Self {
-            Self {
-                positive_literals,
-                negative_literals,
-                set,
-            }
+        pub fn new(positive_literals: Vec<XVarVal>, negative_literals: Vec<XVarVal>, set: &'a XVariableSet) -> Self {
+            Self { positive_literals, negative_literals, set }
         }
 
         pub fn positive_literals(&self) -> &Vec<XVarVal> {

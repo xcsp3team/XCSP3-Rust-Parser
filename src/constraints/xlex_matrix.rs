@@ -46,11 +46,7 @@ pub mod xcsp3_core {
         }
 
         pub fn new(lists: Vec<Vec<XVarVal>>, operator: Operator, set: &'a XVariableSet) -> Self {
-            Self {
-                matrix: lists,
-                operator,
-                set,
-            }
+            Self { matrix: lists, operator, set }
         }
 
         pub fn matrix(&self) -> &Vec<Vec<XVarVal>> {

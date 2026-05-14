@@ -27,15 +27,12 @@
 */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
-    use crate::utils::utils_functions::xcsp3_utils::{
-        list_to_vec_var_val, str_to_condition, tuple_to_vector,
-    };
+    use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, str_to_condition, tuple_to_vector};
     use crate::variables::xvariable_set::xcsp3_core::XVariableSet;
     use std::cmp::max;
 
@@ -91,14 +88,8 @@ pub mod xcsp3_core {
         }
         fn max_args_used(&self) -> i32 {
             max(
-                max(
-                    max_arg_in_list(&*self.scope),
-                    max_arg_in_list(&*self.balances),
-                ),
-                max(
-                    arg_in_operand(&self.operand),
-                    max_arg_in_list(&*self.weights),
-                ),
+                max(max_arg_in_list(&*self.scope), max_arg_in_list(&*self.balances)),
+                max(arg_in_operand(&self.operand), max_arg_in_list(&*self.weights)),
             )
         }
     }
@@ -130,15 +121,7 @@ pub mod xcsp3_core {
             operand: Operand,
             set: &'a XVariableSet,
         ) -> Self {
-            Self {
-                scope,
-                balances,
-                weights,
-                arcs,
-                operator,
-                operand,
-                set,
-            }
+            Self { scope, balances, weights, arcs, operator, operand, set }
         }
     }
 }

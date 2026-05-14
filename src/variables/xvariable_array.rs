@@ -28,8 +28,7 @@
 
 pub mod xcsp3_core {
     use crate::utils::utils_functions::xcsp3_utils::{
-        get_all_variables_between_lower_and_upper, size_to_string, sizes_to_double_vec,
-        sizes_to_vec,
+        get_all_variables_between_lower_and_upper, size_to_string, sizes_to_double_vec, sizes_to_vec,
     };
     use crate::variables::xdomain::xcsp3_core::XDomainInteger;
     use std::fmt::{Display, Formatter};

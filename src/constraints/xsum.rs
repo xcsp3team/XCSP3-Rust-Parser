@@ -28,8 +28,7 @@
 
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -71,11 +70,7 @@ pub mod xcsp3_core {
     impl<'a> XSum<'a> {
         pub fn from_str(list: &str, condition: &str, coeffs: &str, set: &'a XVariableSet) -> Self {
             let scope_vec_str = list_to_vec_var_val(list);
-            let coe = if coeffs.is_empty() {
-                None
-            } else {
-                Some(list_to_vec_var_val(coeffs))
-            };
+            let coe = if coeffs.is_empty() { None } else { Some(list_to_vec_var_val(coeffs)) };
             let (ope, rand) = str_to_condition(condition);
             Self::new(scope_vec_str, set, ope, rand, coe)
         }
@@ -87,13 +82,7 @@ pub mod xcsp3_core {
             operand: Operand,
             coeffs: Option<Vec<XVarVal>>,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                operator,
-                operand,
-                coeffs,
-            }
+            Self { scope, set, operator, operand, coeffs }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

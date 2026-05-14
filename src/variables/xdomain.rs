@@ -227,11 +227,7 @@ pub mod xcsp3_core {
 
     impl XDomainInteger {
         pub fn new() -> XDomainInteger {
-            XDomainInteger {
-                size: 0,
-                top: i32::MIN,
-                values: vec![],
-            }
+            XDomainInteger { size: 0, top: i32::MIN, values: vec![] }
         }
 
         pub fn contain_symbol(&self) -> bool {
@@ -257,11 +253,7 @@ pub mod xcsp3_core {
 
         pub fn from_symbolic(domain: &str) -> XDomainInteger {
             let entity = XIntegerType::XIntegerSymbolic(XIntegerSymbolic::new(domain));
-            XDomainInteger {
-                size: 0,
-                top: 0,
-                values: vec![entity],
-            }
+            XDomainInteger { size: 0, top: 0, values: vec![entity] }
         }
 
         pub fn from_string(domain: &str) -> XDomainInteger {

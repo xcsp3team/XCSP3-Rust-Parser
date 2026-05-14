@@ -26,9 +26,7 @@
 *=============================================================================
 */
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, max_arg_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operator::xcsp3_core::Operator;
 
@@ -63,12 +61,7 @@ pub mod xcsp3_core {
         }
     }
     impl<'a> XOrdered<'a> {
-        pub fn from_str(
-            list: &str,
-            lengths_str: &str,
-            operator: &str,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, lengths_str: &str, operator: &str, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
             let length_vec_str = list_to_vec_var_val(lengths_str);
             let ope = Operator::get_operator_by_str(operator);
@@ -87,12 +80,7 @@ pub mod xcsp3_core {
             lengths: Option<Vec<XVarVal>>,
             operator: Operator,
         ) -> Self {
-            XOrdered {
-                scope,
-                set,
-                lengths,
-                operator,
-            }
+            XOrdered { scope, set, lengths, operator }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

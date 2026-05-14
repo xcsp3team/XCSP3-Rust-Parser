@@ -27,8 +27,7 @@
 */
 pub mod xcsp3_core {
     use crate::constraints::xconstraint_trait::xcsp3_core::{
-        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list,
-        XConstraintUnfold,
+        arg_in_operand, inject_parameters_in_list, inject_parameters_in_operand, max_arg_in_list, XConstraintUnfold,
     };
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
     use crate::data_structs::xrelational_operand::xcsp3_core::Operand;
@@ -59,12 +58,7 @@ pub mod xcsp3_core {
     }
 
     impl<'a> XMaxMin<'a> {
-        pub fn from_str(
-            list: &str,
-            condition: &str,
-            is_maximum_or_minimum: bool,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, condition: &str, is_maximum_or_minimum: bool, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
             let (ope, rand) = str_to_condition(condition);
             Self::new(scope, set, ope, rand, is_maximum_or_minimum)
@@ -76,13 +70,7 @@ pub mod xcsp3_core {
             operand: Operand,
             is_maximum_or_minimum: bool,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                operator,
-                operand,
-                is_maximum_or_minimum,
-            }
+            Self { scope, set, operator, operand, is_maximum_or_minimum }
         }
         pub fn is_maximum(&self) -> bool {
             self.is_maximum_or_minimum

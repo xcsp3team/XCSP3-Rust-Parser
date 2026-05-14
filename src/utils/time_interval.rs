@@ -34,9 +34,7 @@ pub mod xcsp3_utils {
 
     impl TimeInterval {
         pub fn new() -> Self {
-            Self {
-                start: Instant::now(),
-            }
+            Self { start: Instant::now() }
         }
 
         pub fn get(&self) -> Duration {

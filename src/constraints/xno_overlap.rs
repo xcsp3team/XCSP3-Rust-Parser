@@ -27,9 +27,7 @@
 */
 
 pub mod xcsp3_core {
-    use crate::constraints::xconstraint_trait::xcsp3_core::{
-        inject_parameters_in_list, max_arg_in_list, XConstraintUnfold,
-    };
+    use crate::constraints::xconstraint_trait::xcsp3_core::{inject_parameters_in_list, max_arg_in_list, XConstraintUnfold};
     use crate::data_structs::xint_val_var::xcsp3_core::XVarVal;
 
     use crate::utils::utils_functions::xcsp3_utils::{list_to_vec_var_val, to_bool_option};
@@ -52,19 +50,11 @@ pub mod xcsp3_core {
         }
 
         fn max_args_used(&self) -> i32 {
-            max(
-                max_arg_in_list(&*self.scope),
-                max_arg_in_list(&*self.lengths),
-            )
+            max(max_arg_in_list(&*self.scope), max_arg_in_list(&*self.lengths))
         }
     }
     impl<'a> XNoOverlap<'a> {
-        pub fn from_str(
-            list: &str,
-            lengths_str: &str,
-            zero_ignored_str: &str,
-            set: &'a XVariableSet,
-        ) -> Self {
+        pub fn from_str(list: &str, lengths_str: &str, zero_ignored_str: &str, set: &'a XVariableSet) -> Self {
             let scope = list_to_vec_var_val(list);
             let lengths = list_to_vec_var_val(lengths_str);
             let zero_ignored = to_bool_option(zero_ignored_str);
@@ -76,12 +66,7 @@ pub mod xcsp3_core {
             set: &'a XVariableSet,
             zero_ignored: Option<bool>,
         ) -> Self {
-            Self {
-                scope,
-                lengths,
-                set,
-                zero_ignored,
-            }
+            Self { scope, lengths, set, zero_ignored }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {

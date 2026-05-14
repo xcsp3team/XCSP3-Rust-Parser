@@ -50,12 +50,7 @@ pub mod xcsp3_core {
             XVariableType::XVariableArray(array)
         }
 
-        pub fn new_tree(
-            id: &str,
-            sizes: &str,
-            domain_for: Vec<&String>,
-            domain_value: Vec<&String>,
-        ) -> Self {
+        pub fn new_tree(id: &str, sizes: &str, domain_for: Vec<&String>, domain_value: Vec<&String>) -> Self {
             let tmp = XVariableTree::new(id, sizes, domain_for, domain_value);
             XVariableType::XVariableTree(tmp)
         }

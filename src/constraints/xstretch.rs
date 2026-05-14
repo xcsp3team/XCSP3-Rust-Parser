@@ -50,11 +50,7 @@ pub mod xcsp3_core {
             let scope = list_to_vec_var_val(list);
             let value = list_to_vec_var_val(value_str);
             let widths = list_to_vec_var_val(widths_str);
-            let patterns = if patterns_str.is_empty() {
-                None
-            } else {
-                Some(list_to_vec_var_val(patterns_str))
-            };
+            let patterns = if patterns_str.is_empty() { None } else { Some(list_to_vec_var_val(patterns_str)) };
             Self::new(scope, set, value, widths, patterns)
         }
 
@@ -65,13 +61,7 @@ pub mod xcsp3_core {
             widths: Vec<XVarVal>,
             patterns: Option<Vec<XVarVal>>,
         ) -> Self {
-            Self {
-                scope,
-                set,
-                values,
-                widths,
-                patterns,
-            }
+            Self { scope, set, values, widths, patterns }
         }
 
         pub fn scope(&self) -> &Vec<XVarVal> {
