@@ -27,39 +27,6 @@
 */
 pub mod xcsp3_xml {
     use serde::Deserialize;
-    // #[derive(Deserialize, Debug)]
-    // pub enum ObjectiveTarget {
-    //     #[serde(rename = "sum")]
-    //     Sum,
-    //     #[serde(rename = "product")]
-    //     Product,
-    //     #[serde(rename = "minimum")]
-    //     Minimum,
-    //     #[serde(rename = "maximum")]
-    //     Maximum,
-    //     #[serde(rename = "nvalues")]
-    //     Nvalues,
-    //     #[serde(rename = "lex")]
-    //     Lex,
-    //     None,
-    // }
-    // impl Display for ObjectiveTarget {
-    //     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    //         write!(f, "{:?}", &self)
-    //     }
-    // }
-    // impl Default for ObjectiveTarget {
-    //     fn default() -> Self {
-    //         Self::None
-    //     }
-    // }
-    /**
-    ```xml
-    <minimize or maximize [ id="identifier" ]  [ type="expression" ]>
-      intExpr
-    </minimize or maximize>
-    ````
-     */
     #[derive(Deserialize, Debug)]
     pub struct MaximizeMinimize {
         #[serde(rename = "@type", default)]
@@ -71,20 +38,6 @@ pub mod xcsp3_xml {
         #[serde(rename = "$value", default)]
         pub expression: String,
     }
-
-    /**
-    ```xml
-    <objectives  [ combination="combinationType" ]>
-      (<minimize.../> | <maximize.../>)+
-    </objectives>
-    ````
-    or
-      ```xml
-    <minimize  [ id="identifier" ]  [ type="expression" ]>
-      intExpr
-    </minimize>
-     ````
-    */
     #[derive(Deserialize, Debug)]
     pub struct Objective {
         #[serde(rename = "minimize", default)]

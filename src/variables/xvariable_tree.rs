@@ -207,21 +207,4 @@ pub mod xcsp3_core {
             write!(f, "XVariableTree:  id = {}, sizes = {}", self.id, ret)
         }
     }
-
-    // impl XVariableTrait for XVariableTree {
-    //     fn to_string(&self) -> String {
-    //         let mut ret = format!("XVariableTree:  id = {}, sizes = ", self.id);
-    //         for e in self.sizes.iter() {
-    //             ret.push('[');
-    //             ret.push_str(e.to_string().as_str());
-    //             ret.push(']');
-    //         }
-    //         ret.push_str("nodes = ");
-    //         for e in self.nodes.iter() {
-    //             ret += &e.to_string(&self.id);
-    //             ret += "]  ";
-    //         }
-    //         ret
-    //     }
-    // }
 }

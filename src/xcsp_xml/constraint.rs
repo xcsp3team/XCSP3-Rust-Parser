@@ -66,15 +66,6 @@ pub mod xcsp3_xml {
         pub start_index: String,
     }
 
-    /*#[derive(Deserialize, Debug, Default)]
-    pub struct ListWithCase {
-        #[serde(rename = "$value", default)]
-        pub value: String,
-        #[serde(rename = "@case", default)]
-        pub order: String,
-    }
-    */
-
     #[derive(Deserialize, Debug, Default)]
     pub struct ListWithCovered {
         // #[serde(rename = "constraint", default)]

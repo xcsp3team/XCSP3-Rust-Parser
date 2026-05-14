@@ -32,10 +32,6 @@ use crate::objectives::xobjective_element::xcsp3_core::XElementOperator;
 use crate::xcsp_xml::xcsp_xml_model::xcsp3_xml::InstanceType;
 
 pub trait XcspCallback {
-    // -------------------------------------------------------------------------
-    // Hooks de cycle de vie — appelés avant/après chaque section du fichier XML
-    // -------------------------------------------------------------------------
-
     /**
      * Start to parse a XCSP instance.
      * Related to tag <instance type="CSP/COP">

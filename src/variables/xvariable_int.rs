@@ -56,14 +56,4 @@ pub mod xcsp3_core {
             )
         }
     }
-
-    // impl XVariableTrait for XVariableInt {
-    //     fn to_string(&self) -> String {
-    //         format!(
-    //             "XVariableInt: id = {}, domain = {}",
-    //             self.id,
-    //             self.domain.to_string()
-    //         )
-    //     }
-    // }
 }

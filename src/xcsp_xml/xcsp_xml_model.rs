@@ -26,31 +26,6 @@
 *=============================================================================
 */
 
-/**
-the SYNTAX of xcsp3 is as follows:
-```xml
-<instance format="XCSP<sup>3</sup>" type="frameworkType">
-  <variables>
-    ( <var .../>
-    | <array .../>
-    )+
-  </variables>
-  <constraints>
-    ( <constraint .../>
-    | <metaConstraint .../>
-    | <group .../>
-    | <block .../>
-    )*
-  </constraints>
-  [<objectives  [ combination="combinationType" ]>
-    ( <minimize .../>
-    | <maximize .../>
-    )+
-  </objectives>]
-  [<annotations .../>]
-</instance>
-```
- */
 pub mod xcsp3_xml {
     use crate::constraints::xconstraint_set::xcsp3_core::XConstraintSet;
     use crate::objectives::xobjectives_set::xcsp3_core::XObjectivesSet;
@@ -532,16 +507,9 @@ pub mod xcsp3_xml {
                     profits,
                     condition,
                 } => set.build_knapsack(list, weights, profits, condition),
-                // ConstraintType::AllDistant { .. } => {}
-                // ConstraintType::Precedence { .. } => {}
-                // ConstraintType::Balance { .. } => {}
-                // ConstraintType::Spread { .. } => {}
-                // ConstraintType::Deviation { .. } => {}
-                // ConstraintType::BinPacking { .. } => {}
-                // ConstraintType::Lex { .. } => {}
-                // ConstraintType::Clause { .. } => {}
-                // _ => {}
-                ConstraintType::ConstraintNone => {}
+                ConstraintType::ConstraintNone => {
+                    panic!("Error during parsing");
+                }
             }
         }
 

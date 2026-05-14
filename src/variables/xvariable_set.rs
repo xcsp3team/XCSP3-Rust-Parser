@@ -64,13 +64,6 @@ pub mod xcsp3_core {
             self.variables.iter()
         }
 
-        // pub fn to_string(&self) -> String {
-        //     let mut ret = String::from("XVariableSet: \n");
-        //     for e in self.variables.iter() {
-        //         ret = format!("{} \t{}\n", ret, e);
-        //     }
-        //     ret
-        // }
         pub fn new() -> XVariableSet {
             XVariableSet {
                 variables: vec![],
