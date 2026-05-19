@@ -183,14 +183,14 @@ pub trait XcspCallback {
      *   <conflicts> (1,2,3,4)(3,1,3,4) </conflicts>
      * </extension>
      *
-     * @param list the scope of the constraint
+     * @param list the list of the constraint
      * @param tuples the set of tuples in the constraint
      * @param support  support or conflicts?
      * @param hasStar is the tuples contain star values?
      */
     fn on_constraint_extension(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _tuples: &Vec<Vec<i32>>,
         _is_support: bool,
         _has_star: bool,
@@ -200,7 +200,7 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_unary(&mut self, _scope: &String, _values: &[i32], _is_support: bool) {
+    fn on_constraint_unary(&mut self, _list: &String, _values: &[i32], _is_support: bool) {
         println!("c Unary not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -213,9 +213,9 @@ pub trait XcspCallback {
      *   x1 x2 x3 x4 x5
      * &lt;/allDifferent>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      */
-    fn on_constraint_all_different_v1(&mut self, _scope: &[String]) {
+    fn on_constraint_all_different_v1(&mut self, _list: &[String]) {
         println!("c Alldifferent Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -229,9 +229,9 @@ pub trait XcspCallback {
      *   add(q[0],0) add(q[1],1) add(q[2],2) add(q[3],3) add(q[4],4) add(q[5],5) add(q[6],6) add(q[7],7)
      * &lt;/allDifferent>
      *
-     * @param scope the trees of the constraint
+     * @param list the trees of the constraint
      */
-    fn on_constraint_all_different_v2(&mut self, _scope: &[ExpressionTree]) {
+    fn on_constraint_all_different_v2(&mut self, _list: &[ExpressionTree]) {
         println!("c Alldifferent Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -246,10 +246,10 @@ pub trait XcspCallback {
      *   &lt;except>0</except>
      * &lt;/allDifferent>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param except the set of excepted values
      */
-    fn on_constraint_all_different_except(&mut self, _scope: &[String], _except: &[i32]) {
+    fn on_constraint_all_different_except(&mut self, _list: &[String], _except: &[i32]) {
         println!("c Alldifferent except not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -264,7 +264,7 @@ pub trait XcspCallback {
      *    <list> y1 y2 y3 y4 </list>
      * </allDifferent>
      *
-     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param lists the set of lists (not the list, a variable may appear at different place!)
      */
     fn on_constraint_all_different_list(&mut self, _lists: &[Vec<String>]) {
         println!("c Alldifferent lists not yet implemented");
@@ -284,7 +284,7 @@ pub trait XcspCallback {
      *    </matrix>
      * </allDifferent>
      *
-     * @param matrix the matrix (not the scope, a variable may appear at different place!)
+     * @param matrix the matrix (not the list, a variable may appear at different place!)
      */
     fn on_constraint_all_different_matrix(&mut self, _lists: &[Vec<String>]) {
         println!("c Alldifferent matrix not yet implemented");
@@ -299,10 +299,10 @@ pub trait XcspCallback {
      *  x1 x2 x3 x4 x5
      * &lt;/allEqual>
      *
-     * @param list the scope of the constraint
+     * @param list the list of the constraint
      *
      */
-    fn on_constraint_all_equal_v1(&mut self, _scope: &[String]) {
+    fn on_constraint_all_equal_v1(&mut self, _list: &[String]) {
         println!("c AllEqual Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -318,8 +318,8 @@ pub trait XcspCallback {
      *
      * @param list the trees of the constraint
      */
-    fn on_constraint_all_equal_v2(&mut self, _scope: &[ExpressionTree]) {
-        println!("c AllEqual Variant 2 with expressions in scope not yet implemented");
+    fn on_constraint_all_equal_v2(&mut self, _list: &[ExpressionTree]) {
+        println!("c AllEqual Variant 2 with expressions in list not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
@@ -332,7 +332,7 @@ pub trait XcspCallback {
      * @param id the id (name) of the constraint
      * @param tree the canonized form related to the tree
      */
-    fn on_constraint_intention(&mut self, _scope: &[String], _tree: &ExpressionTree) {
+    fn on_constraint_intention(&mut self, _list: &[String], _tree: &ExpressionTree) {
         println!("c Intension not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -347,11 +347,11 @@ pub trait XcspCallback {
      *   &lt;condition> (gt,y) &lt;/condition>
      * &lt;/sum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operaor the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
-    fn on_constraint_sum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+    fn on_constraint_sum_v1(&mut self, _list: &[String], _operator: Operator, _operand: Operand) {
         println!("c Sum Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -367,12 +367,12 @@ pub trait XcspCallback {
      *   &lt;condition> (gt,y) &lt;/condition>
      * &lt;/sum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param coeefs the coefficient of the sum (int)
      * @param Operaor the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
-    fn on_constraint_sum_v2(&mut self, _scope: &[String], _coeffs: &[i32], _operator: Operator, _operand: Operand) {
+    fn on_constraint_sum_v2(&mut self, _list: &[String], _coeffs: &[i32], _operator: Operator, _operand: Operand) {
         println!("c Sum Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -388,12 +388,12 @@ pub trait XcspCallback {
      *   &lt;condition> (gt,y) &lt;/condition>
      * &lt;/sum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param coeefs the coefficient of the sum (variables)
      * @param tperator the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
-    fn on_constraint_sum_v3(&mut self, _scope: &[String], _coeffs: &[String], _operator: Operator, _operand: Operand) {
+    fn on_constraint_sum_v3(&mut self, _list: &[String], _coeffs: &[String], _operator: Operator, _operand: Operand) {
         println!("c Sum Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -408,14 +408,14 @@ pub trait XcspCallback {
      *   &lt;condition> (gt,y) </condition>
      * &lt;/sum>
      *
-     * @param _scope the different trees
+     * @param _list the different trees
      * @param coeefs the coefficient of the sum (variables)
      * @param _operaor the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
     fn on_constraint_sum_v5(
         &mut self,
-        _scope: &[ExpressionTree],
+        _list: &[ExpressionTree],
         _coeffs: &[i32],
         _operator: Operator,
         _operand: Operand,
@@ -433,11 +433,11 @@ pub trait XcspCallback {
      *   &lt;condition> (gt,y) </condition>
      * &lt;/sum>
      *
-     * @param _scope the different trees
+     * @param _list the different trees
      * @param Operaor the condition (Le, Gt...)
      * @param operand the operant (Var, val, ...)
      */
-    fn on_constraint_sum_v4(&mut self, _scope: &[ExpressionTree], _operator: Operator, _operand: Operand) {
+    fn on_constraint_sum_v4(&mut self, _list: &[ExpressionTree], _operator: Operator, _operand: Operand) {
         println!("c Sum Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -454,10 +454,10 @@ pub trait XcspCallback {
      *   &lt;operator> lt </operator>
      * &lt;/ordered>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the order Lt, Le...
      */
-    fn on_constraint_ordered_v1(&mut self, _scope: &[String], _operator: Operator) {
+    fn on_constraint_ordered_v1(&mut self, _list: &[String], _operator: Operator) {
         println!("c Ordered Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -473,12 +473,12 @@ pub trait XcspCallback {
      *   <&lt;operator> lt </operator>
      * &lt;/ordered>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _lengths the lengths
 
     * @param order the order Lt, Le...
      */
-    fn on_constraint_ordered_v2(&mut self, _scope: &[String], _lengths: &[i32], _operator: Operator) {
+    fn on_constraint_ordered_v2(&mut self, _list: &[String], _lengths: &[i32], _operator: Operator) {
         println!("c Ordered Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -495,12 +495,12 @@ pub trait XcspCallback {
      *   <&lt;operator> lt </operator>
      * &lt;/ordered>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _lengths the lengths
 
     * @param order the order Lt, Le...
     */
-    fn on_constraint_ordered_v3(&mut self, _scope: &[String], _lengths: &[String], _operator: Operator) {
+    fn on_constraint_ordered_v3(&mut self, _list: &[String], _lengths: &[String], _operator: Operator) {
         println!("c Ordered Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -519,14 +519,14 @@ pub trait XcspCallback {
      * XTransition is an object with 3 fields: from (string), val(int) and to(string)
      * Then, in the first transition of the example from=a, to=a and val=0
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _start the starting node
      * @param _final the set of final nodes
      * @param _transitions the set of transitions
      */
     fn on_constraint_regular(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _start: String,
         _finals: &[String],
         _transitions: &[(String, i32, String)],
@@ -549,10 +549,10 @@ pub trait XcspCallback {
      *   &lt;/transitions>
      * &lt;/mdd>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param transitions the set of transitions
      */
-    fn on_constraint_mdd(&mut self, _scope: &[String], _transitions: &Vec<(String, i32, String)>) {
+    fn on_constraint_mdd(&mut self, _list: &[String], _transitions: &Vec<(String, i32, String)>) {
         println!("c MDD not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -567,10 +567,10 @@ pub trait XcspCallback {
      *   &lt;values> 12 4 30 </values>
      * </instantiation>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _values the value for each variable
      */
-    fn on_constraint_instantiation(&mut self, _scope: &[String], _values: &[i32]) {
+    fn on_constraint_instantiation(&mut self, _list: &[String], _values: &[i32]) {
         println!("c Instantiation not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -585,18 +585,18 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/maximum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
-    fn on_constraint_maximum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+    fn on_constraint_maximum_v1(&mut self, _list: &[String], _operator: Operator, _operand: Operand) {
         println!("c Maximum Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
     /**
-     * The callback function related to a maximum constraint with expressions in scope
+     * The callback function related to a maximum constraint with expressions in list
      * See http://xcsp.org/specifications/maximum
      *
      * Example:
@@ -605,12 +605,12 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/maximum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
-    fn on_constraint_maximum_v2(&mut self, _scope: &[ExpressionTree], _operator: Operator, _operand: Operand) {
+    fn on_constraint_maximum_v2(&mut self, _list: &[ExpressionTree], _operator: Operator, _operand: Operand) {
         println!("c Maximum Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -625,18 +625,18 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
-    fn on_constraint_minimum_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+    fn on_constraint_minimum_v1(&mut self, _list: &[String], _operator: Operator, _operand: Operand) {
         println!("c Minimum Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
     /**
-     * The callback function related to a minimum constraint with expressions in scope
+     * The callback function related to a minimum constraint with expressions in list
      * See http://xcsp.org/specifications/minimum
      *
      * Example:
@@ -645,14 +645,14 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimumArg>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
     fn on_constraint_minimum_arg_v2(
         &mut self,
-        _scope: &[ExpressionTree],
+        _list: &[ExpressionTree],
         _start_index: i32,
         _rank: String,
         _operator: Operator,
@@ -672,14 +672,14 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimumArg>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
     fn on_constraint_minimum_arg_v1(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _start_index: i32,
         _rank: String,
         _operator: Operator,
@@ -690,7 +690,7 @@ pub trait XcspCallback {
     }
 
     /**
-     * The callback function related to a minimum constraint with expressions in scope
+     * The callback function related to a minimum constraint with expressions in list
      * See http://xcsp.org/specifications/minimum
      *
      * Example:
@@ -699,18 +699,18 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimum>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
-    fn on_constraint_minimum_v2(&mut self, _scope: &[ExpressionTree], _operator: Operator, _operand: Operand) {
+    fn on_constraint_minimum_v2(&mut self, _list: &[ExpressionTree], _operator: Operator, _operand: Operand) {
         println!("c Minimum Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
     /**
-     * The callback function related to a minimum constraint with expressions in scope
+     * The callback function related to a minimum constraint with expressions in list
      * See http://xcsp.org/specifications/minimum
      *
      * Example:
@@ -719,14 +719,14 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimumArg>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
     fn on_constraint_maximum_arg_v2(
         &mut self,
-        _scope: &[ExpressionTree],
+        _list: &[ExpressionTree],
         _start_index: i32,
         _rank: String,
         _operator: Operator,
@@ -746,14 +746,14 @@ pub trait XcspCallback {
      *    &lt;condition> (ge,2) &lt;/condition>
      * &lt;/minimumArg>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
 
     fn on_constraint_maximum_arg_v1(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _start_index: i32,
         _rank: String,
         _operator: Operator,
@@ -773,13 +773,13 @@ pub trait XcspCallback {
      *     &lt;condition> (ne,k1) </condition>
      * &lt;/count>
      *
-     * @param _scope the expression
+     * @param _list the expression
      * @param values the set of integer values
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)     */
     fn on_constraint_count_v1(
         &mut self,
-        _scope: &[ExpressionTree],
+        _list: &[ExpressionTree],
         _values: &[i32],
         _operator: Operator,
         _operand: Operand,
@@ -798,11 +798,11 @@ pub trait XcspCallback {
      *     &lt;condition> (ne,k1) </condition>
      * &lt;/count>
      *
-     * @param _scope the expression
+     * @param _list the expression
      * @param values the set of integer values
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)     */
-    fn on_constraint_count_v2(&mut self, _scope: &[String], _values: &[i32], _operator: Operator, _operand: Operand) {
+    fn on_constraint_count_v2(&mut self, _list: &[String], _values: &[i32], _operator: Operator, _operand: Operand) {
         println!("c Count Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -817,13 +817,13 @@ pub trait XcspCallback {
      *     &lt;condition> (ne,k1) </condition>
      * &lt;/count>
      *
-     * @param _scope the expression
+     * @param _list the expression
      * @param values the set of variables values
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)     */
     fn on_constraint_count_v3(
         &mut self,
-        _scope: &[ExpressionTree],
+        _list: &[ExpressionTree],
         _values: &[String],
         _operator: Operator,
         _operand: Operand,
@@ -842,18 +842,12 @@ pub trait XcspCallback {
      *     &lt;condition> (ne,k1) </condition>
      * &lt;/count>
      *
-     * @param _scope the expression
+     * @param _list the expression
      * @param values the set of variables values
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
-    fn on_constraint_count_v4(
-        &mut self,
-        _scope: &[String],
-        _values: &[String],
-        _operator: Operator,
-        _operand: Operand,
-    ) {
+    fn on_constraint_count_v4(&mut self, _list: &[String], _values: &[String], _operator: Operator, _operand: Operand) {
         println!("c Count Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -867,11 +861,11 @@ pub trait XcspCallback {
      *    &lt;condition> (eq,2) &lt;/condition>
      * &lt;/nValues>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
-    fn on_constraint_nvalues_v1(&mut self, _scope: &[String], _operator: Operator, _operand: Operand) {
+    fn on_constraint_nvalues_v1(&mut self, _list: &[String], _operator: Operator, _operand: Operand) {
         println!("c NValues Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -886,12 +880,12 @@ pub trait XcspCallback {
      *    &lt;condition> (eq,2) &lt;/condition>
      * &lt;/nValues>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _except the set of exceptions
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
-    fn on_constraint_nvalues_v2(&mut self, _scope: &[String], _except: &[i32], _operator: Operator, _operand: Operand) {
+    fn on_constraint_nvalues_v2(&mut self, _list: &[String], _except: &[i32], _operator: Operator, _operand: Operand) {
         println!("c NValues Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -905,11 +899,11 @@ pub trait XcspCallback {
      *    &lt;condition> (eq,2) &lt;/condition>
      * &lt;/nValues>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param operator the operator (Le,...)
      * @param operand the operand (int, var...)
      */
-    fn on_constraint_nvalues_v3(&mut self, _scope: &[ExpressionTree], _operator: Operator, _operand: Operand) {
+    fn on_constraint_nvalues_v3(&mut self, _list: &[ExpressionTree], _operator: Operator, _operand: Operand) {
         println!("c NValues Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -925,12 +919,12 @@ pub trait XcspCallback {
      *   <occurs> 1 2 3 </occurs>
      * </cardinality>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _values the set of values (here int)
      * @param _occurs the number of occurrences (here int)
      * @param _closed is the constraint is closed
      */
-    fn on_constraint_cardinality_v1(&mut self, _scope: &[String], _values: &[i32], _occurs: &[i32], _closed: bool) {
+    fn on_constraint_cardinality_v1(&mut self, _list: &[String], _values: &[i32], _occurs: &[i32], _closed: bool) {
         println!("c Cardinality Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -946,12 +940,12 @@ pub trait XcspCallback {
      *   <occurs> z0 z1 z2 z3 </occurs>
      * </cardinality>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _values the set of values (here int)
      * @param _occurs the number of occurrences (here variables)
      * @param _closed is the constraint is closed
      */
-    fn on_constraint_cardinality_v2(&mut self, _scope: &[String], _values: &[i32], _occurs: &[String], _closed: bool) {
+    fn on_constraint_cardinality_v2(&mut self, _list: &[String], _values: &[i32], _occurs: &[String], _closed: bool) {
         println!("c Cardinality Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -968,14 +962,14 @@ pub trait XcspCallback {
      * </cardinality>
      *
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param _values the set of values (here int)
      * @param _occurs the number of occurrences (here interval)
      * @param _closed is the constraint is closed
      */
     fn on_constraint_cardinality_v3(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _values: &[i32],
         _occurs: &[(i32, i32)],
         _closed: bool,
@@ -995,12 +989,12 @@ pub trait XcspCallback {
      *   <occurs> 1 2 3 </occurs>
      * </cardinality>
      *
-     * @param _scope the list of the constraint (not the scope...)
+     * @param _list the list of the constraint (not the list...)
      * @param _values the set of values (here variable)
      * @param _occurs the number of occurences (here int)
      * @param closed is the constraint is closed
      */
-    fn on_constraint_cardinality_v4(&mut self, _scope: &[String], _values: &[String], _occurs: &[i32], _closed: bool) {
+    fn on_constraint_cardinality_v4(&mut self, _list: &[String], _values: &[String], _occurs: &[i32], _closed: bool) {
         println!("c Cardinality Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1015,14 +1009,14 @@ pub trait XcspCallback {
      *   <occurs> y1 y2 y3 </occurs>
      * </cardinality>
      *
-     * @param scope the list of the constraint (not the scope)
+     * @param list the list of the constraint (not the list)
      * @param values the set of values (here variables)
      * @param occurs the number of occurences (here variables)
      * @param closed is the constraint is closed
      */
     fn on_constraint_cardinality_v5(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _values: &[String],
         _occurs: &[String],
         _closed: bool,
@@ -1042,7 +1036,7 @@ pub trait XcspCallback {
      *   <occurs> 1..2 3..5 2..4 </occurs>
      * </cardinality>
      *
-     * @param scope the list of the constraint (not the scope)
+     * @param list the list of the constraint (not the list)
      * @param values the set of values (here variables)
      * @param occurs the number of occurences (here intervals)
      * @param closed is the constraint is closed
@@ -1050,7 +1044,7 @@ pub trait XcspCallback {
 
     fn on_constraint_cardinality_v6(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _values: &[String],
         _occurs: &[(i32, i32)],
         _closed: bool,
@@ -1319,10 +1313,10 @@ pub trait XcspCallback {
      *    <value> 2 </value>
      * </element>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param value the value (here an int)
      */
-    fn on_constraint_element_v1(&mut self, _scope: &[String], _value: i32) {
+    fn on_constraint_element_v1(&mut self, _list: &[String], _value: i32) {
         println!("c Element Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1336,10 +1330,10 @@ pub trait XcspCallback {
      *    <value> v </value>
      * </element>
      *
-     * @param scope the scope of the constraint
+     * @param list the list of the constraint
      * @param value the value (here a variable)
      */
-    fn on_constraint_element_v2(&mut self, _scope: &[String], _value: String) {
+    fn on_constraint_element_v2(&mut self, _list: &[String], _value: String) {
         println!("c Element Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1677,9 +1671,9 @@ pub trait XcspCallback {
      *    <list> z1 z2 z3 z4 z5 </list>
      * </channel>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      */
-    fn on_constraint_channel_v1(&mut self, _scope: &[String], _start_index: i32) {
+    fn on_constraint_channel_v1(&mut self, _list: &[String], _start_index: i32) {
         println!("c Channel Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1727,7 +1721,7 @@ pub trait XcspCallback {
      * </channel>
      *
      * @param id the id (name) of the constraint
-     * @param list the list of the constraint not necessary the scope)
+     * @param list the list of the constraint not necessary the list)
      * @param startIndex the starting index for list
      * @param value the vaule
      */
@@ -1735,12 +1729,12 @@ pub trait XcspCallback {
         println!("c Channel Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-    fn on_constraint_no_overlap_v1(&mut self, _scope: &[String], _lengths: &[i32], _zero_ignored: bool) {
+    fn on_constraint_no_overlap_v1(&mut self, _list: &[String], _lengths: &[i32], _zero_ignored: bool) {
         println!("c No Overlap Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_no_overlap_v2(&mut self, _scope: &[String], _lengths: &[String], _zero_ignored: bool) {
+    fn on_constraint_no_overlap_v2(&mut self, _list: &[String], _lengths: &[String], _zero_ignored: bool) {
         println!("c No Overlap Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1826,10 +1820,10 @@ pub trait XcspCallback {
      *   <list> x y z </list>
      * </circuit>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      */
 
-    fn on_constraint_circuit_v1(&mut self, _scope: &Vec<String>) {
+    fn on_constraint_circuit_v1(&mut self, _list: &Vec<String>) {
         println!("c Circuit Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1844,11 +1838,11 @@ pub trait XcspCallback {
      *   <size> 4 </size>
      * </circuit>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param startIndex the start index for the list
      * @param size the size of the circuit (here an int)
      */
-    fn on_constraint_circuit_v2(&mut self, _scope: &Vec<String>, _size: i32) {
+    fn on_constraint_circuit_v2(&mut self, _list: &Vec<String>, _size: i32) {
         println!("c Circuit Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1863,11 +1857,11 @@ pub trait XcspCallback {
      *   <size> 4 </size>
      * </circuit>
      *
-     * @param _scope the scope of the constraint
+     * @param _list the list of the constraint
      * @param startIndex the start index for the list
      * @param size the size of the circuit (here an int)
      */
-    fn on_constraint_circuit_v3(&mut self, _scope: &Vec<String>, _ssize: String) {
+    fn on_constraint_circuit_v3(&mut self, _list: &Vec<String>, _ssize: String) {
         println!("c Circuit Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1880,9 +1874,9 @@ pub trait XcspCallback {
      * <list> x[][] </list>
      * </precedence>
      *
-     * @param  the list of variables (not necessary the scope)
+     * @param  the list of variables (not necessary the list)
      */
-    fn on_constraint_precedence_v1(&mut self, _scope: &[String], _covered: bool) {
+    fn on_constraint_precedence_v1(&mut self, _list: &[String], _covered: bool) {
         println!("c Precedence Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1896,10 +1890,10 @@ pub trait XcspCallback {
      * <values> 1 2 </values>
      * </precedence>
      *
-     * @param list the list of variables (not necessary the scope)
+     * @param list the list of variables (not necessary the list)
      * @param values the different vaules
      */
-    fn on_constraint_precedence_v2(&mut self, _scope: &[String], _values: &[i32], _covered: bool) {
+    fn on_constraint_precedence_v2(&mut self, _list: &[String], _values: &[i32], _covered: bool) {
         println!("c Precedence Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1914,11 +1908,11 @@ pub trait XcspCallback {
      *   <widths> 1..3 1..3 2..3 2..4 </widths>
      * </stretch>
      *
-     * @param list the scope of the constraint
+     * @param list the list of the constraint
      * @param values thelist of values
      * @param widths the list of intervals for widths
      */
-    fn on_constraint_stretch_v1(&mut self, _scope: &[String], _values: &[(i32, i32)], _widths: &[i32]) {
+    fn on_constraint_stretch_v1(&mut self, _list: &[String], _values: &[(i32, i32)], _widths: &[i32]) {
         println!("c Stretch Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1927,13 +1921,13 @@ pub trait XcspCallback {
      * See http://xcsp.org/specifications/stretch
      *
      * @param id the id (name) of the constraint
-     * @param list the scope of the constraint
+     * @param list the list of the constraint
      * @param values thelist of values
      * @param widths the list of intervals for widths
      * @param patterns
      *
      */
-    fn on_constraint_stretch_v2(&mut self, _scope: &[String], _values: &[(i32, i32)], _widths: &[i32]) {
+    fn on_constraint_stretch_v2(&mut self, _list: &[String], _values: &[(i32, i32)], _widths: &[i32]) {
         println!("c Stretch Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -1957,7 +1951,7 @@ pub trait XcspCallback {
     /**
      * The callback function related to knapsack  constraint
      *
-     * @param list the list of variables (not necessary the scope)
+     * @param list the list of variables (not necessary the list)
      * @param weights
      * @param _woperator: Operator,
      * @param _woperand: Operand,
@@ -1967,7 +1961,7 @@ pub trait XcspCallback {
      */
     fn on_constraint_knapsack(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _weights: &[i32],
         _woperator: Operator,
         _woperand: Operand,
@@ -1981,7 +1975,7 @@ pub trait XcspCallback {
 
     fn on_constraint_bin_packing_v1(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _sizes: &[i32],
         _operator: Operator,
         _operand: Operand,
@@ -1990,21 +1984,21 @@ pub trait XcspCallback {
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_bin_packing_v2(&mut self, _scope: &[String], _sizes: &[i32], _limits: &[i32]) {
+    fn on_constraint_bin_packing_v2(&mut self, _list: &[String], _sizes: &[i32], _limits: &[i32]) {
         println!("c Bin Packing Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_bin_packing_v3(&mut self, _scope: &[String], _sizes: &[i32], _limits: &[String]) {
+    fn on_constraint_bin_packing_v3(&mut self, _list: &[String], _sizes: &[i32], _limits: &[String]) {
         println!("c Bin Packing Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
-    fn on_constraint_bin_packing_v4(&mut self, _scope: &[String], _sizes: &[i32], _loads: &[i32]) {
+    fn on_constraint_bin_packing_v4(&mut self, _list: &[String], _sizes: &[i32], _loads: &[i32]) {
         println!("c Bin Packing Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
 
-    fn on_constraint_bin_packing_v5(&mut self, _scope: &[String], _sizes: &[i32], _loads: &[String]) {
+    fn on_constraint_bin_packing_v5(&mut self, _list: &[String], _sizes: &[i32], _loads: &[String]) {
         println!("c Bin Packing Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2021,7 +2015,7 @@ pub trait XcspCallback {
      *   <operator> lt </operator>
      * </ordered>
      *
-     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param lists the set of lists (not the list, a variable may appear at different place!)
      * @param order the order LT, LE...
      */
     fn on_constraint_lex(&mut self, _lists: &Vec<Vec<String>>, _operator: Operator) {
@@ -2042,7 +2036,7 @@ pub trait XcspCallback {
      *   <operator> lt </operator>
      * </ordered>
      *
-     * @param lists the set of lists (not the scope, a variable may appear at different place!)
+     * @param lists the set of lists (not the list, a variable may appear at different place!)
      * @param order the order LT, LE...
      */
     fn on_constraint_lex_matrix(&mut self, _matrix: &Vec<Vec<String>>, _operator: Operator) {
@@ -2053,7 +2047,7 @@ pub trait XcspCallback {
     /**
      * The callback function related to flow  constraint
      *
-     * @param list the list of variables (not necessary the scope)
+     * @param list the list of variables (not necessary the list)
      * @param balance the different values
      * @param weights the different values
      * @param arcs the different values
@@ -2062,7 +2056,7 @@ pub trait XcspCallback {
      */
     fn on_constraint_flow(
         &mut self,
-        _scope: &[String],
+        _list: &[String],
         _balance: &[i32],
         _weights: &[i32],
         _arcs: &[(i32, i32)],
@@ -2152,11 +2146,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_minimize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+    fn on_minimize_v1(&mut self, _type: XElementOperator, _list: &[String], _coefs: &[i32]) {
         println!("c Objective Minimize Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2174,11 +2168,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_maximize_v1(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[i32]) {
+    fn on_maximize_v1(&mut self, _type: XElementOperator, _list: &[String], _coefs: &[i32]) {
         println!("c Objective Maximize Variant 1 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2195,11 +2189,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_minimize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+    fn on_minimize_v2(&mut self, _type: XElementOperator, _list: &[String], _coefs: &[String]) {
         println!("c Objective Minimize Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2217,11 +2211,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_maximize_v2(&mut self, _type: XElementOperator, _scope: &[String], _coefs: &[String]) {
+    fn on_maximize_v2(&mut self, _type: XElementOperator, _list: &[String], _coefs: &[String]) {
         println!("c Objective Maximize Variant 2 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2239,11 +2233,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_minimize_v3(&mut self, _type: XElementOperator, _scope: &[ExpressionTree], _coefs: &[i32]) {
+    fn on_minimize_v3(&mut self, _type: XElementOperator, _list: &[ExpressionTree], _coefs: &[i32]) {
         println!("c Objective Minimize Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2261,11 +2255,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_maximize_v3(&mut self, _type: XElementOperator, _scope: &[ExpressionTree], _coefs: &[i32]) {
+    fn on_maximize_v3(&mut self, _type: XElementOperator, _list: &[ExpressionTree], _coefs: &[i32]) {
         println!("c Objective Maximize Variant 3 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2282,11 +2276,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_minimize_v4(&mut self, _type: XElementOperator, _scope: &[ExpressionTree], _coefs: &[String]) {
+    fn on_minimize_v4(&mut self, _type: XElementOperator, _list: &[ExpressionTree], _coefs: &[String]) {
         println!("c Objective Minimize Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2304,11 +2298,11 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      * @param coefs the vector of coefficients
      */
 
-    fn on_maximize_v4(&mut self, _type: XElementOperator, _scope: &[ExpressionTree], _coefs: &[String]) {
+    fn on_maximize_v4(&mut self, _type: XElementOperator, _list: &[ExpressionTree], _coefs: &[String]) {
         println!("c Objective Maximize Variant 4 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2325,10 +2319,10 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      */
 
-    fn on_minimize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+    fn on_minimize_v5(&mut self, _type: XElementOperator, _list: &[String]) {
         println!("c Objective Minimize Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2345,10 +2339,10 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      */
 
-    fn on_maximize_v5(&mut self, _type: XElementOperator, _scope: &[String]) {
+    fn on_maximize_v5(&mut self, _type: XElementOperator, _list: &[String]) {
         println!("c Objective Maximize Variant 5 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2365,10 +2359,10 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      */
 
-    fn on_minimize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+    fn on_minimize_v6(&mut self, _type: XElementOperator, _list: &[ExpressionTree]) {
         println!("c Objective Minimize Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
@@ -2385,10 +2379,10 @@ pub trait XcspCallback {
      * <objectives>
      *
      * @param type SUM, PRODUCT...
-     * @param list the scope
+     * @param list the list
      */
 
-    fn on_maximize_v6(&mut self, _type: XElementOperator, _scope: &[ExpressionTree]) {
+    fn on_maximize_v6(&mut self, _type: XElementOperator, _list: &[ExpressionTree]) {
         println!("c Objective Maximize Variant 6 not yet implemented");
         panic!("s UNSUPPORTED");
     }
